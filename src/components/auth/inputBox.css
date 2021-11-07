@@ -1,0 +1,21 @@
+.auth-inputBox {
+  width: 350px;
+  height: 60px;
+  margin-bottom: 26px;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 5px solid #667089;
+  outline: none;
+}
+
+.auth-inputBox:hover {
+  border-bottom: 5px solid #5064c5;
+}
+
+.auth-inputBox::placeholder {
+  font-family: Noto Sans KR;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.444;
+  color: #dad8e0;
+}
