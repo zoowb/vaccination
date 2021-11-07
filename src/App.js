@@ -1,5 +1,6 @@
 import React from "react";
 import Login from "./pages/login";
+import SignUp from "./pages/signup";
 import { Routes, Route } from "react-router";
 import "./App.css";
 
@@ -16,6 +17,7 @@ class App extends React.Component {
     return (
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
       // <div className="App">
       //   <header className="App-header">
