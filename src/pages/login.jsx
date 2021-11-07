@@ -17,7 +17,7 @@ const Login = () => {
             <BlueBtn text={"로그인"}></BlueBtn>
             <LinkBtnSet
               text1={"회원가입"}
-              url1={"/signUp"}
+              url1={"/signup"}
               text2={"아이디 찾기"}
               url2={"/findID"}
               text3={"비밀번호 찾기"}

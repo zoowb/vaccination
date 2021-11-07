@@ -1,10 +1,10 @@
 import "./inputBox.css";
-const InputBox = ({ type, placeholder }) => {
+const InputBox = ({ type, placeholder, page }) => {
   return (
     <input
       type={type}
       placeholder={placeholder}
-      className="auth-inputBox"
+      className={page == "회원가입" ? "auth-inputBox2" : "auth-inputBox"}
     ></input>
   );
 };
