@@ -1,0 +1,20 @@
+.linkBtn-text,
+.line {
+  margin: 0;
+  font-family: Noto Sans KR;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.4375;
+  text-align: center;
+  color: #667089;
+}
+
+.linkBtn-link {
+  text-decoration: none;
+  text-decoration-line: none;
+}
+
+.linkBtnSet {
+  display: flex;
+}

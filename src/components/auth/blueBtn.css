@@ -1,0 +1,25 @@
+.auth-blueBtn,
+.auth-blueBtn2 {
+  width: 350px;
+  height: 70px;
+  margin-top: 60px;
+  margin-bottom: 7px;
+  cursor: pointer;
+  background-color: #5064c5;
+  border: 0;
+  border-radius: 30px;
+  outline: none;
+}
+
+.auth-blueBtn2 {
+  margin-top: 20px;
+}
+
+.text {
+  font-family: Noto Sans KR;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.4375;
+  text-align: center;
+  color: #fff;
+}
