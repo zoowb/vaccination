@@ -1,5 +1,6 @@
 import React from "react";
-import logo from "./logo.svg";
+import Login from "./pages/login";
+import { Routes, Route } from "react-router";
 import "./App.css";
 
 class App extends React.Component {
@@ -11,13 +12,16 @@ class App extends React.Component {
   }
 
   render() {
-    const { username } = this.state;
+    //    const { username } = this.state;
     return (
-      <div className="App">
-        <header className="App-header">
-          {username ? `Hello ${username}` : "Hello World"}
-        </header>
-      </div>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+      </Routes>
+      // <div className="App">
+      //   <header className="App-header">
+      //     {username ? `Hello ${username}` : "Hello World"}
+      //   </header>
+      // </div>
     );
   }
 }
