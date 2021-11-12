@@ -14,7 +14,7 @@ const Login = () => {
   axios.defaults.baseURL = "http://localhost:5000";
   const onClick = () => {
     axios
-      .post("/sign/login", { loginEmail: id, loginPasswd: pw })
+      .post("/sign/login", { email: id, passwd: pw })
       .then((response) => {
         console.log(response);
         const accessToken = response.data; //확인 필요

@@ -20,12 +20,12 @@ const SignUp = () => {
   const onClick = () => {
     axios
       .post("/sign/signup", {
-        loginName: name,
-        loginSsn: ssn,
-        loginTel: tel,
-        loginEmail: email,
-        loginPasswd: pw,
-        loginLocation: addr,
+        name: name,
+        ssn: ssn,
+        tel: tel,
+        email: email,
+        passwd: pw,
+        location: addr,
       })
       .then((response) => {
         console.log(response);
