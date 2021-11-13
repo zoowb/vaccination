@@ -4,7 +4,7 @@ import SignUp from "./pages/signup";
 import FindID from "./pages/findID";
 import FindPW from "./pages/findPW";
 import { Routes, Route } from "react-router";
-import Header from "./components/header";
+import Header from "./pages/header";
 import "./App.css";
 
 class App extends React.Component {
