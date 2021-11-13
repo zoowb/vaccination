@@ -1,0 +1,46 @@
+.categoryBox {
+  width: 1018px;
+  height: 298px;
+  background-color: #fff;
+  border-radius: 30px;
+  box-shadow: 0px 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.categoryBox .bigTitle {
+  color: #5064c5;
+  font-family: Roboto;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.17;
+  letter-spacing: 0em;
+}
+
+.categoryBox .smallTitle {
+  color: #5064c5;
+  font-family: Roboto;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: 0em;
+}
+
+.categoryBox .content {
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #667089;
+}
+
+.categoryBox .img {
+  width: 449px;
+  height: 298px;
+  border-radius: 30px;
+  background-image: url("../../pages/image/reservation.png");
+  background-repeat: no-repeat;
+}
