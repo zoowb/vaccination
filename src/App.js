@@ -1,35 +1,30 @@
 import React from "react";
+import { Route, Routes } from "react-router-dom";
 import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import FindID from "./pages/findID";
 import FindPW from "./pages/findPW";
-import { Routes, Route } from "react-router";
+import ResMain from "./pages/reservationMain";
+import ReservationCheck from "./pages/reservationCheck";
+import ReservationUnable from "./pages/reservationUnable";
+import ReservationComplete from "./pages/reservationComplete";
+import Reservation from "./pages/reservation";
 import "./App.css";
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: null,
-    };
-  }
-
-  render() {
-    //    const { username } = this.state;
-    return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/findID" element={<FindID />} />
-        <Route path="/findPW" element={<FindPW />} />
-      </Routes>
-      // <div className="App">
-      //   <header className="App-header">
-      //     {username ? `Hello ${username}` : "Hello World"}
-      //   </header>
-      // </div>
-    );
-  }
-}
+const App = () => {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/findID" element={<FindID />} />
+      <Route path="/findPW" element={<FindPW />} />
+      <Route path="/reservationMain" element={<ResMain />} />
+      <Route path="/reservationCheck" element={<ReservationCheck />} />
+      <Route path="/reservationUnable" element={<ReservationUnable />} />
+      <Route path="/reservationComplete" element={<ReservationComplete />} />
+      <Route path="/reservation" element={<Reservation />} />
+    </Routes>
+  );
+};
 
 export default App;
