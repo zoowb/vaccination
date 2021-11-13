@@ -1,0 +1,29 @@
+.reservationMain .titleSection {
+  display: flex;
+  width: 1018px;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 38px;
+}
+
+.reservationMain .titleSection .title {
+  margin: 0;
+  color: #5064c5;
+  font-family: Noto Sans KR;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0em;
+}
+
+.reservationMain .titleSection .subtitle {
+  color: #667089;
+  font-family: Noto Sans KR;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0em;
+  text-align: left;
+}

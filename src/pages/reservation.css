@@ -1,0 +1,139 @@
+.reservation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.reservation .whiteSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 1103px;
+  height: 1083px;
+  margin-top: 51px;
+  margin-bottom: 51px;
+  padding: 22px;
+  border: 0;
+  border-radius: 20px;
+  background-color: #fff;
+  box-shadow: 0px 4px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.reservation .whiteSection .title {
+  color: #667089;
+  margin-bottom: 22px;
+  font-family: Roboto;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: 0em;
+}
+
+.reservation .whiteSection .searchSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: 85%;
+}
+
+.reservation .searchSection {
+  margin-bottom: 30px;
+}
+
+.reservation .searchSection .location {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.reservation .searchSection .others .date {
+  width: 354px;
+  height: 60px;
+  border: 0;
+  outline: none;
+}
+
+.reservation .searchSection .others {
+  display: flex;
+  justify-content: space-between;
+}
+
+.reservation .searchSection .others .searchBtn {
+  width: 202px;
+  height: 60px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 30px;
+  outline: none;
+  background-color: #cd2a82;
+}
+
+.reservation .searchBtn .text {
+  color: #fff;
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: 0em;
+  text-align: center;
+}
+
+.reservation .hospitalSection {
+  display: flex;
+  width: 100%;
+  height: 761px;
+}
+
+.reservation .hospitalSection .preview {
+  width: 459px;
+  height: 761px;
+  overflow-y: scroll;
+}
+.reservation .hospitalSection .preview::-webkit-scrollbar,
+.reservation .hospitalSection .detail::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 30px;
+}
+
+.reservation .hospitalSection .preview::-webkit-scrollbar-thumb,
+.reservation .hospitalSection .detail::-webkit-scrollbar-thumb {
+  background-color: #c4c4c4;
+  border-radius: 30px;
+}
+
+.reservation .hospitalSection .preview::-webkit-scrollbar-track,
+.reservation .hospitalSection .detail::-webkit-scrollbar-track {
+  background-color: #f4f4f4;
+  border-radius: 30px;
+}
+
+.reservation .hospitalSection .detail {
+  width: 573px;
+  height: 761px;
+  overflow-y: scroll;
+}
+
+.reservation .reservationBtn {
+  width: 365px;
+  height: 90px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 30px;
+  background-color: #5064c5;
+  outline: none;
+}
+
+.reservationBtn > .btnText {
+  color: #fff;
+  font-family: Roboto;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: 0em;
+  text-align: center;
+}
