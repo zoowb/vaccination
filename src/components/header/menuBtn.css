@@ -1,0 +1,18 @@
+.menuBtn-text{
+  margin: 0;
+  font-family: Roboto;
+  font-size: 36px;
+  font-style: bold;
+  text-align: center;
+  color: #000000;
+  margin-left: 89px;
+}
+
+.menuBtn-link {
+  text-decoration: none;
+  text-decoration-line: none;
+}
+
+.menuBtnSet {
+    display: flex;
+}

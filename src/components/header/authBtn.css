@@ -1,0 +1,21 @@
+.authBtn-text,
+.line {
+  margin: 0;
+  font-family: Noto Sans KR;
+  font-size: 20px;
+  font-style: medium;
+  font-weight: 500;
+  line-height: 1.4375;
+  text-align: center;
+  color: #000000;
+}
+
+.authBtn-link {
+  text-decoration: none;
+  text-decoration-line: none;
+}
+
+.authBtnSet {
+  display: flex;
+  margin-left: 250px;
+}
