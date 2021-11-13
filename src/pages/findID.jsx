@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 import WholeScreen from "../components/wholeScreen";
 import WhiteScreen from "../components/auth/whiteScreen";
 import BlueBtn from "../components/auth/blueBtn";
@@ -5,16 +8,49 @@ import InputBox from "../components/auth/inputBox";
 import LinkBtnSet from "../components/auth/linkBtn";
 import "./find.css";
 const FindID = () => {
+  const [name, setName] = useState("");
+  const [ssn, setSsn] = useState("");
+  const [error, setError] = useState(false);
+  const [errorContent, setErrorContent] = useState("");
+
+  const onClick = () => {
+    axios
+      .post("/sign/findID", { name: name, ssn: ssn })
+      .then((response) => {
+        //아이디 페이지로 이동
+        console.log(response);
+      })
+      .catch(function (error) {
+        setError(true);
+        setErrorContent(error);
+        console.log(error);
+      });
+  };
+
   return (
     <section className="find">
       <WholeScreen>
+        <Link to={"/"}>
+          <div className="logo" />
+        </Link>
         <WhiteScreen>
           <div className="authImg" />
           <div className="content">
             <h1 className="title">아이디 찾기</h1>
-            <InputBox type={"text"} placeholder={"이름"} />
-            <InputBox type={"number"} placeholder={"주민번호"} />
-            <BlueBtn text={"아이디 찾기"}></BlueBtn>
+            <InputBox
+              type={"text"}
+              placeholder={"이름"}
+              value={name}
+              setValue={setName}
+            />
+            <InputBox
+              type={"number"}
+              placeholder={"주민번호"}
+              value={ssn}
+              setValue={setSsn}
+            />
+            {error ? <span className="error">{errorContent}</span> : <></>}
+            <BlueBtn text={"아이디 찾기"} onClick={onClick}></BlueBtn>
             <LinkBtnSet
               text1={"로그인"}
               url1={"/login"}
