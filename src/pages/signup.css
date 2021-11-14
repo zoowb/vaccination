@@ -4,6 +4,15 @@
   background-image: url("./image/authImg.png");
 }
 
+.signup .logo {
+  display: block;
+  margin-bottom: 10px;
+  cursor: pointer;
+  width: 281px;
+  height: 118px;
+  background-image: url("./image/logo.svg");
+}
+
 .signup .content {
   display: flex;
   flex-direction: column;
@@ -20,4 +29,10 @@
   text-align: center;
   color: #667089;
   margin-bottom: 16px;
+}
+
+.signup .error {
+  font-size: 16px;
+  color: #e0412f;
+  text-align: center;
 }

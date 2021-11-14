@@ -1,0 +1,26 @@
+.titleSection {
+  width: 100%;
+}
+
+.titleSection .title {
+  margin: 0;
+  color: #5064c5;
+  font-family: Noto Sans KR;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 93px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.titleSection .subtitle {
+  color: #667089;
+  font-family: Noto Sans KR;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 35px;
+  letter-spacing: 0em;
+  text-align: left;
+}
