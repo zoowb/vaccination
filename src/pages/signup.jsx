@@ -31,8 +31,8 @@ const SignUp = () => {
         console.log(response);
       })
       .catch(function (error) {
-        setError(true);
-        setErrorContent(error);
+        // setError(true);
+        // setErrorContent(error);
         console.log(error);
       });
   };
@@ -55,7 +55,7 @@ const SignUp = () => {
               setValue={setName}
             />
             <InputBox
-              type={"number"}
+              type={"text"}
               placeholder={"주민번호"}
               page={"회원가입"}
               value={ssn}
