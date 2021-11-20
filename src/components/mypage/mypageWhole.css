@@ -1,0 +1,8 @@
+.mypageWhole {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  padding-bottom: 50px;
+  background: #eef5fc;
+}
