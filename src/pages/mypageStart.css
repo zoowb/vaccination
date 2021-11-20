@@ -1,0 +1,23 @@
+.mypageWhole {
+  display: flex;
+}
+
+.mypageWhole .mypageStartText {
+  color: #667089;
+  font-family: Roboto;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 42px;
+  letter-spacing: 0em;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.mypageWhole .inputs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 55px;
+}

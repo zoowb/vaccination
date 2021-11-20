@@ -9,6 +9,9 @@ import ReservationCheck from "./pages/reservationCheck";
 import ReservationUnable from "./pages/reservationUnable";
 import ReservationComplete from "./pages/reservationComplete";
 import Reservation from "./pages/reservation";
+import MyPageStart from "./pages/mypageStart";
+import MyPageInfoEdit from "./pages/mypageInfoEdit";
+import MyPageResInquiry from "./pages/mypageResInquiry";
 import Header from "./pages/header";
 import "./App.css";
 
@@ -28,6 +31,9 @@ const App = () => {
         <Route path="/reservationUnable" element={<ReservationUnable />} />
         <Route path="/reservationComplete" element={<ReservationComplete />} />
         <Route path="/reservation" element={<Reservation />} />
+        <Route path="/mypageStart" element={<MyPageStart />} />
+        <Route path="/mypageInfoEdit" element={<MyPageInfoEdit />} />
+        <Route path="/mypageResInquiry" element={<MyPageResInquiry />} />
       </Routes>
     </div>
   );

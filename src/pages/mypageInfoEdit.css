@@ -1,0 +1,4 @@
+.mypageInfoEdit .btnSection {
+  display: flex;
+  justify-content: flex-end;
+}
