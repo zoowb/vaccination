@@ -12,6 +12,7 @@ import Reservation from "./pages/reservation";
 import MyPageStart from "./pages/mypageStart";
 import MyPageInfoEdit from "./pages/mypageInfoEdit";
 import MyPageResInquiry from "./pages/mypageResInquiry";
+import Home from "./pages/home";
 import Header from "./pages/header";
 import "./App.css";
 
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/mypageStart" element={<MyPageStart />} />
         <Route path="/mypageInfoEdit" element={<MyPageInfoEdit />} />
         <Route path="/mypageResInquiry" element={<MyPageResInquiry />} />
+        <Route path="/home" element={<Home />} />
       </Routes>
     </div>
   );
