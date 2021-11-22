@@ -17,5 +17,5 @@
 
 .authBtnSet {
   display: flex;
-  margin-left: 250px;
+  justify-content: space-around;
 }

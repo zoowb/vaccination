@@ -1,11 +1,11 @@
-.menuBtn-text{
+.menuBtn-text {
   margin: 0;
   font-family: Roboto;
   font-size: 36px;
   font-style: bold;
   text-align: center;
   color: #000000;
-  margin-left: 89px;
+  margin: 0;
 }
 
 .menuBtn-link {
@@ -14,5 +14,7 @@
 }
 
 .menuBtnSet {
-    display: flex;
+  display: flex;
+  width: 935px;
+  justify-content: space-around;
 }
