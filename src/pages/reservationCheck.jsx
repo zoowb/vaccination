@@ -1,6 +1,6 @@
 import "./reservationCheck.css";
 import Title from "../components/reservation/title";
-import WholeScreen from "../components/wholeScreen";
+import { WholeScreenWithHeader } from "../components/wholeScreen";
 import InputBox from "../components/auth/inputBox";
 import { useState } from "react";
 import axios from "axios";
@@ -13,7 +13,7 @@ const ReservationCheck = () => {
     });
   };
   return (
-    <WholeScreen>
+    <WholeScreenWithHeader>
       <section className="reservationContent">
         <Title
           title={"사전예약"}
@@ -44,7 +44,7 @@ const ReservationCheck = () => {
           </button>
         </section>
       </section>
-    </WholeScreen>
+    </WholeScreenWithHeader>
   );
 };
 export default ReservationCheck;
