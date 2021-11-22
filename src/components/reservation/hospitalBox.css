@@ -103,6 +103,16 @@
   background-color: pink;
 }
 
+.hospitalDetailSection .hospitalLoc .detailAddr {
+  margin-top: 10px;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.22;
+  letter-spacing: 0;
+  text-align: left;
+}
+
 .selectBoxes {
   height: 257px;
   margin-top: 31px;
