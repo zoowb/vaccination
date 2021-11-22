@@ -1,11 +1,17 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import WholeScreen from "../components/wholeScreen";
 import WhiteScreen from "../components/auth/whiteScreen";
 import BlueBtn from "../components/auth/blueBtn";
 import InputBox from "../components/auth/inputBox";
 import LinkBtnSet from "../components/auth/linkBtn";
+import {
+  telValidator,
+  ssnValidator,
+  emailValidator,
+  pwValidator,
+} from "../components/modules/validation";
 import "./signup.css";
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -36,6 +42,29 @@ const SignUp = () => {
         console.log(error);
       });
   };
+
+  useEffect(() => {
+    console.log(error);
+
+    if (!telValidator(tel) && tel != "") {
+      setError(true);
+      setErrorContent("전화번호 형식이 잘못되었습니다.");
+    } else if (!ssnValidator(ssn) && ssn != "") {
+      setError(true);
+      setErrorContent("주민번호 형식이 잘못되었습니다.");
+    } else if (!emailValidator(email) && email != "") {
+      setError(true);
+      setErrorContent("이메일 형식이 잘못되었습니다.");
+    } else if (!pwValidator(pw) && pw != "") {
+      setError(true);
+      setErrorContent(
+        "비밀번호는 문자와 숫자를 모두 포함해\n 6~10자로 입력해주세요."
+      );
+    } else {
+      console.log(error);
+      setError(false);
+    }
+  }, [tel, ssn, email, pw]);
 
   return (
     <section className="signup">
