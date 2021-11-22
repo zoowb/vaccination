@@ -13,31 +13,32 @@ import MyPageStart from "./pages/mypageStart";
 import MyPageInfoEdit from "./pages/mypageInfoEdit";
 import MyPageResInquiry from "./pages/mypageResInquiry";
 import Home from "./pages/home";
-import Header from "./pages/header";
 import "./App.css";
 
 const App = () => {
   return (
-    <div>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/findID" element={<FindID />} />
-        <Route path="/findPW" element={<FindPW />} />
-      </Routes>
-      <Header />
-      <Routes>
-        <Route path="/reservationMain" element={<ResMain />} />
-        <Route path="/reservationCheck" element={<ReservationCheck />} />
-        <Route path="/reservationUnable" element={<ReservationUnable />} />
-        <Route path="/reservationComplete" element={<ReservationComplete />} />
-        <Route path="/reservation" element={<Reservation />} />
-        <Route path="/mypageStart" element={<MyPageStart />} />
-        <Route path="/mypageInfoEdit" element={<MyPageInfoEdit />} />
-        <Route path="/mypageResInquiry" element={<MyPageResInquiry />} />
-        <Route path="/home" element={<Home />} />
-      </Routes>
-    </div>
+    <>
+      <div>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/findID" element={<FindID />} />
+          <Route path="/findPW" element={<FindPW />} />
+          <Route path="/reservationMain" element={<ResMain />} />
+          <Route path="/reservationCheck" element={<ReservationCheck />} />
+          <Route path="/reservationUnable" element={<ReservationUnable />} />
+          <Route
+            path="/reservationComplete"
+            element={<ReservationComplete />}
+          />
+          <Route path="/reservation" element={<Reservation />} />
+          <Route path="/mypageStart" element={<MyPageStart />} />
+          <Route path="/mypageInfoEdit" element={<MyPageInfoEdit />} />
+          <Route path="/mypageResInquiry" element={<MyPageResInquiry />} />
+          <Route path="/home" element={<Home />} />
+        </Routes>
+      </div>
+    </>
   );
 };
 
