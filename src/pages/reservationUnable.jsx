@@ -1,11 +1,11 @@
 import "./reservationUnable.css";
 import Title from "../components/reservation/title";
-import WholeScreen from "../components/wholeScreen";
+import { WholeScreenWithHeader } from "../components/wholeScreen";
 import { useState } from "react";
 import axios from "axios";
 const ReservationUnable = () => {
   return (
-    <WholeScreen>
+    <WholeScreenWithHeader>
       <section className="reservationUnable">
         <Title
           title={"사전예약"}
@@ -22,7 +22,7 @@ const ReservationUnable = () => {
           <span className="text">잔여백신 예약하러 가기</span>
         </button>
       </section>
-    </WholeScreen>
+    </WholeScreenWithHeader>
   );
 };
 export default ReservationUnable;

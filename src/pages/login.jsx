@@ -7,16 +7,20 @@ import BlueBtn from "../components/auth/blueBtn";
 import InputBox from "../components/auth/inputBox";
 import LinkBtnSet from "../components/auth/linkBtn";
 import "./login.css";
+import { useNavigate } from "react-router-dom";
+axios.defaults.baseURL = "http://localhost:5000";
 const Login = () => {
   const [id, setID] = useState("");
   const [pw, setPW] = useState("");
   const [error, setError] = useState(false);
-  axios.defaults.baseURL = "http://localhost:5000";
+  const navigate = useNavigate();
   const onClick = () => {
     axios
       .post("/sign/login", { email: id, passwd: pw })
       .then((response) => {
+        setError(false);
         console.log(response);
+        //        navigate("/");
         const accessToken = response.data; //확인 필요
         localStorage.setItem("accessToken", accessToken);
       })

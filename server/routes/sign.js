@@ -11,7 +11,7 @@ var pool = mysql.createPool({
   connectionLimit: 5,
   host: "localhost",
   user: "root",
-  password: "*",
+  password: "1234",
   database: "covid19",
   multipleStatements: true,
 });
@@ -64,7 +64,6 @@ router.post("/signup", function (req, res, next) {
     "Access-Control-Allow-Headers",
     "Content-Type, Authorization, Content-Length, X-Requested-With"
   );
-  res.header("Access-Control-Allow-Credentials", true);
   var name = req.body.name;
   var ssn = req.body.ssn;
   var phone = req.body.tel;

@@ -1,13 +1,13 @@
 import "./reservation.css";
-import WholeScreen from "../components/wholeScreen";
 import Title from "../components/reservation/title";
 import { SelectBox, DateSelectBox } from "../components/reservation/selectBox";
-import axios from "axios";
 import { useState } from "react";
 import {
   HospitalBigBox,
   HospitalDetail,
 } from "../components/reservation/hospitalBox";
+import { WholeScreenWithHeader } from "../components/wholeScreen";
+
 const Reservation = () => {
   const [response, setResponse] = useState("");
   const [info, setInfo] = useState("");
@@ -29,7 +29,7 @@ const Reservation = () => {
   };
   //병원 이름 클릭하면 id 넘겨줘서 hospitalDetail에서 표현하기
   return (
-    <WholeScreen>
+    <WholeScreenWithHeader>
       <section className="reservation">
         <Title
           title={"사전 예약"}
@@ -102,7 +102,7 @@ const Reservation = () => {
           <span className="btnText">예약하기</span>
         </button>
       </section>
-    </WholeScreen>
+    </WholeScreenWithHeader>
   );
 };
 export default Reservation;
