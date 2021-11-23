@@ -1,22 +1,22 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
 /* ===== MySQL 연동 =====
  *
  * MySQL DB와 연결합니다
  *
 */
-var mysql = require('mysql');
-var pool = mysql.createPool({
+const mysql = require('mysql');
+const pool = mysql.createPool({
     connectionLimit: 5,
     host: 'localhost',
     user: 'root',
     password: '1234',
-    database: 'vaccine',
+    database: 'covid19',
     multipleStatements: true
 });
 
-/* ===== 간편조회 처리 =====
+/* ===== 간편조회 처리 ===== (테스트 X)
  *
  * 예약번호와 이름을 통해 예약 정보를 조회합니다
  *
@@ -45,7 +45,7 @@ router.post('/quicklook', function (req, res, next) {
 });
 
 
-/* ===== 마이페이지 입장 처리 =====
+/* ===== 마이페이지 입장 처리 ===== (테스트 X)
  *
  * 로그인과 동일한 동작을 수행합니다
  *
@@ -74,7 +74,7 @@ router.post('/mypagecheck', function (req, res, next) {
 });
 
 
-/* ===== 마이페이지 처리 =====
+/* ===== 마이페이지 처리 ===== (테스트 X)
  *
  * 클라이언트 로그인 정보를 기준으로 예약정보를 반환합니다
  *
@@ -102,7 +102,7 @@ router.get('/mypage', function (req, res, next) {
     });
 });
 
-/* ===== 회원정보 수정 get 처리 =====
+/* ===== 회원정보 수정 get 처리 ===== (테스트 X)
  *
  * 로그인 정보를 기반으로 사용자 정보를 반환합니다
  *
@@ -131,7 +131,7 @@ router.get('/changeinfoget', function (req, res, next) {
 });
 
 
-/* ===== 회원정보 수정 post 처리 =====
+/* ===== 회원정보 수정 post 처리 ===== (테스트 X)
  *
  * 회원정보를 수정합니다
  * ?? 이메일을 아이디로 사용하는데 이메일을 수정할 수 있다?
@@ -163,7 +163,7 @@ router.post('/changeinfopost', function (req, res, next) {
 });
 
 
-/* ===== 예약정보 수정 get 처리 =====
+/* ===== 예약정보 수정 get 처리 ===== (테스트 X)
  *
  * 로그인 정보를 기반으로 1, 2차 예약정보 정보를 반환합니다
  *
@@ -192,7 +192,7 @@ router.get('/changerevget', function (req, res, next) {
 });
 
 
-/* ===== 1차 예약정보 수정 post 처리 =====
+/* ===== 1차 예약정보 수정 post 처리 ===== (테스트 X)
  *
  * 1차 예약정보를 수정합니다
  *
@@ -220,7 +220,7 @@ router.post('/changerev1post', function (req, res, next) {
     });
 });
 
-/* ===== 2차 예약정보 수정 post 처리 =====
+/* ===== 2차 예약정보 수정 post 처리 ===== (테스트 X)
  *
  * 2차 예약정보를 수정합니다
  *
@@ -249,7 +249,7 @@ router.post('/changerev2post', function (req, res, next) {
 });
 
 
-/* ===== 기관조회 전체검색 처리 =====
+/* ===== 기관조회 전체검색 처리 ===== (테스트 X)
  *
  * 시군구/기관명을 통해 기관을 검색합니다
  * ?? 대상 항목은 제외 가능? ??
@@ -287,7 +287,7 @@ router.post('/search', function (req, res, next) {
     });
 });
 
-/* ===== 기관조회 세부정보 처리 =====
+/* ===== 기관조회 세부정보 처리 ===== (테스트 X)
  *
  * 기관을 클릭하면 해당 기관의 세부 정보를 반환합니다
  *
