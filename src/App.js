@@ -9,6 +9,7 @@ import ReservationCheck from "./pages/reservationCheck";
 import ReservationUnable from "./pages/reservationUnable";
 import ReservationComplete from "./pages/reservationComplete";
 import Reservation from "./pages/reservation";
+import ReservationNoShow from "./pages/reservationNoShow";
 import "./App.css";
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
       <Route path="/reservationUnable" element={<ReservationUnable />} />
       <Route path="/reservationComplete" element={<ReservationComplete />} />
       <Route path="/reservation" element={<Reservation />} />
+      <Route path="/reservationNoShow" element={<ReservationNoShow />} />
     </Routes>
   );
 };
