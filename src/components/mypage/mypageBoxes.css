@@ -1,0 +1,67 @@
+.mypageInputBox {
+  width: 453px;
+  height: 57px;
+  padding: 13px 40px;
+  border: 0;
+  border-radius: 20px;
+  background-color: #f2f2f4;
+  outline: none;
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.16;
+  text-align: left;
+}
+
+.mypageShowBox {
+  width: 453px;
+  height: 57px;
+  padding: 13px 40px;
+  color: #000;
+  border-radius: 20px;
+  background-color: #dad8e0;
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.16;
+  text-align: left;
+}
+
+.mypageBoxSet,
+.mypageAlarm {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.mypageBoxSet .boxTitle,
+.mypageAlarm .boxTitle {
+  width: 200px;
+  height: 32px;
+  color: #667089;
+  font-family: Roboto;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+}
+
+.mypageAlarm .alarmCheckBox {
+  width: 25px;
+  height: 25px;
+  border: 3px solid #667089;
+  margin-right: 11px;
+}
+
+.mypageAlarm .alarmLabel {
+  font-family: Roboto;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.16;
+  margin-right: 60px;
+}

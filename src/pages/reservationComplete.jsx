@@ -1,4 +1,4 @@
-import WholeScreen from "../components/wholeScreen";
+import { WholeScreenWithHeader } from "../components/wholeScreen";
 import "./reservationComplete.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -16,10 +16,10 @@ const ReservationComplete = () => {
   }, []);
 
   return (
-    <section className="reservationComplete">
-      <WholeScreen>
+    <WholeScreenWithHeader>
+      <section className="reservationComplete">
         <section className="whiteSection">
-          <span>
+          <span className="nameSection">
             <strong className="name">김지수</strong>
             <span className="text">&nbsp;님의 예약이 완료되었습니다.</span>
           </span>
@@ -70,8 +70,8 @@ const ReservationComplete = () => {
             <span className="btnText">홈 화면으로 돌아가기</span>
           </button>
         </Link>
-      </WholeScreen>
-    </section>
+      </section>
+    </WholeScreenWithHeader>
   );
 };
 export default ReservationComplete;

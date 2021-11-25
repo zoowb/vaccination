@@ -1,4 +1,7 @@
 import "./hospitalBox.css";
+import { useEffect } from "react";
+import initTmap from "../tmap";
+
 const HospitalBigBox = ({ name, address }) => {
   return (
     <button type="button" className="hospitalBigBox">
@@ -19,6 +22,10 @@ const SelectInfoBtn = ({ title, content }) => {
 
 const HospitalDetail = ({ name }) => {
   //시간=>axios로 데이터 받아와서 map으로 처리!
+  useEffect(() => {
+    initTmap(126.7248987, 37.4848309);
+  }, []);
+
   return (
     <section className="hospitalDetailSection">
       <div className="selectionInfo">
@@ -60,7 +67,10 @@ const HospitalDetail = ({ name }) => {
       </div>
       <div className="hospitalLoc">
         <strong className="title">병원 위치</strong>
-        <div className="map"></div>
+        <div id="map_div" />
+        <div className="detailAddr">
+          상세주소: 인천광역시 부평구 부평동 동수로 56
+        </div>
       </div>
     </section>
   );

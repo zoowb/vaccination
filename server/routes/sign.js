@@ -1,24 +1,35 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const jwt = require('../modules/jwt');
 
 /* ===== MySQL 연동 =====
  *
  * MySQL DB와 연결합니다
  *
 */
-var mysql = require('mysql');
-var pool = mysql.createPool({
+const mysql = require('mysql');
+const pool = mysql.createPool({
     connectionLimit: 5,
     host: 'localhost',
     user: 'root',
     password: '1234',
-    database: 'vaccine',
+    database: 'covid19',
     multipleStatements: true
 });
 
+
 /* ===== 로그인 페이지 처리 =====
  *
- * 사용자 정보(이메일, 비밀번호)를 비교하고 일치하면 로그인을 승인합니다
+ * 사용자 정보(이메일, 비밀번호)를 비교합니다
+ * 정보 일치시, 로그인을 승인하고 토큰을 반환합니다
+ *
+ * === client-input ===
+ * email = 사용자 아이디 [DB person.email]
+ * passwd = 사용자 비밀번호 [DB person.password]
+ *
+ * === server-return ===
+ * ok = 회원가입 성공 여부. 성공 시 true 반환
+ * jwtToken = jwt토큰 문자열
  *
 */
 router.post('/login', function (req, res, next) {
@@ -28,25 +39,44 @@ router.post('/login', function (req, res, next) {
 
     pool.getConnection(function (err, connection) {
         var sql = "SELECT * FROM PERSON WHERE Email=? and Password=?;";
-        connection.query(sql, datas, function (err, result) {
-            if (err) console.error("err : " + err);
+        connection.query(sql, datas, async function (err, result) {
+            if (err)
+            {
+                res.status(500).send({ err : err });
+                console.error("err : " + err);
+            }
 
-            if (result.length > 0) { // 로그인 성공
-                res.send({ "msg" : "로그인 성공! " + result[0].Name + "님, 환영합니다!"});
+            var check = true; // 로그인 조건 검사
+            if(result === undefined) check = false;
+            else if(result.length <= 0) check = false;
+
+            if(check) // 로그인 성공
+            {
+                const jwtToken = await jwt.sign({id : result[0].Email, ssn : result[0].Ssn}); // 토큰 생성
+                res.send({ "ok" : true, "jwtToken" : jwtToken.token });
             }
-            else { // 로그인 실패
-                res.send({ "msg" : "아이디 또는 비밀번호가 잘못되었습니다" });
-            }
-            console.log(result);
+            else res.send({ "ok" : false, "jwtToken" : null });
 
             connection.release();
         });
     });
 });
 
+
 /* ===== 회원가입 페이지 처리 =====
  *
  * 새로운 사용자 정보를 등록합니다
+ *
+ * === client-input ===
+ * name = 사용자 이름 [DB person.name]
+ * ssn = 사용자 주민번호 [DB person.ssn]
+ * tel = 사용자 전화번호 [DB person.phone]
+ * email = 사용자 아이디 [DB person.email]
+ * passwd = 사용자 비밀번호 [DB person.password]
+ * location = 사용자 거주지 주소 [DB person.location]
+ *
+ * === server-return ===
+ * ok = 회원가입 성공 여부. 성공 시 true 반환
  *
 */
 router.post('/signup', function (req, res, next) {
@@ -61,13 +91,12 @@ router.post('/signup', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         var sql = "INSERT INTO PERSON(Name, Ssn, Phone, Email, Password, Location) values(?,?,?,?,?,?)";
         connection.query(sql, datas, function (err, rows) {
-            if (err) // 회원가입 오류
+            if (err)
             {
-                res.send({ "msg" : "회원정보를 등록할 수 없습니다. 이미 등록된 아이디가 있는지 확인하세요!"});
+                res.status(500).send({ err : err, ok : false });
                 console.error("err : " + err);
             }
-
-            res.send({ "msg" : "회원가입 성공!"});
+            else res.send({ ok : true });
             connection.release();
         });
     });
@@ -77,6 +106,14 @@ router.post('/signup', function (req, res, next) {
 /* ===== 아이디 찾기 페이지 처리 =====
  *
  * 사용자 정보(이름, 주민번호)를 비교하고 일치하면 아이디(이메일)을 반환합니다
+ * 사용자를 찾지 못하면 null을 반환합니다
+ *
+ * === client-input ===
+ * name = 사용자 이름 [DB person.name]
+ * ssn = 사용자 주민번호 [DB person.ssn]
+ *
+ * === server-return ===
+ * id = 사용자 이메일. 검색 실패시 null 반환 [DB person.email]
  *
 */
 router.post('/findID', function (req, res, next) {
@@ -87,15 +124,14 @@ router.post('/findID', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         var sql = "SELECT * FROM PERSON WHERE Name=? and Ssn=?;";
         connection.query(sql, datas, function (err, result) {
-            if (err) console.error("err : " + err);
+            if (err)
+            {
+                res.status(500).send({ err : err });
+                console.error("err : " + err);
+            }
 
-            if (result.length > 0) { // 아이디 찾기 성공
-                res.send({ "msg" : result[0].Name + "님의 아이디는 " + result[0].Email + "입니다."});
-            }
-            else { // 아이디 찾기 실패
-                res.send({ "msg" : "일치하는 회원정보가 없습니다!" });
-            }
-            console.log(result);
+            if (result.length > 0) res.send({ id : result[0].Email });
+            else res.send({ id : null });
 
             connection.release();
         });
@@ -107,6 +143,13 @@ router.post('/findID', function (req, res, next) {
  *
  * 사용자 정보(이름, 아이디)를 비교하고 일치하면 패스워드를 반환합니다
  *
+ * === client-input ===
+ * name = 사용자 이름 [DB person.name]
+ * email = 사용자 아이디 [DB person.email]
+ *
+ * === server-return ===
+ * passwd = 사용자 비밀번호. 검색 실패시 null 반환 [DB person.password]
+ *
 */
 router.post('/findPW', function (req, res, next) {
     var name = req.body.name;
@@ -116,15 +159,14 @@ router.post('/findPW', function (req, res, next) {
     pool.getConnection(function (err, connection) {
         var sql = "SELECT * FROM PERSON WHERE Name=? and Email=?;";
         connection.query(sql, datas, function (err, result) {
-            if (err) console.error("err : " + err);
+            if (err)
+            {
+                res.status(500).send({ err : err });
+                console.error("err : " + err);
+            }
 
-            if (result.length > 0) { // 비밀번호 찾기 성공
-                res.send({ "msg" : result[0].Name + "님의 패스워드는 " + result[0].Password + "입니다."});
-            }
-            else { // 비밀번호 찾기 실패
-                res.send({ "msg" : "일치하는 회원정보가 없습니다!" });
-            }
-            console.log(result);
+            if (result.length > 0) res.send({ passwd : result[0].Password });
+            else res.send({ passwd : null });
 
             connection.release();
         });

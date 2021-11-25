@@ -1,0 +1,7 @@
+.btnSection {
+  display: flex;
+  padding: 0 64px;
+  width: 1033px;
+  justify-content: space-between;
+  align-items: center;
+}

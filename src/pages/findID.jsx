@@ -20,9 +20,9 @@ const FindID = () => {
         //아이디 페이지로 이동
         console.log(response);
       })
-      .catch(function (error) {
+      .catch((error) => {
         setError(true);
-        setErrorContent(error);
+        // setErrorContent(error);
         console.log(error);
       });
   };
@@ -44,7 +44,7 @@ const FindID = () => {
               setValue={setName}
             />
             <InputBox
-              type={"number"}
+              type={"text"}
               placeholder={"주민번호"}
               value={ssn}
               setValue={setSsn}

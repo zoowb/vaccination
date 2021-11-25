@@ -1,0 +1,45 @@
+.mypageCategory {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 373px;
+  height: 100vh;
+  margin-top: 100px;
+}
+
+.mypageCategory .title {
+  margin-bottom: 48px;
+  font-family: Roboto;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 75px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #5064c5;
+}
+
+.mypageCategory .selectedBtn,
+.mypageCategory .unselectedBtn {
+  width: 360px;
+  height: 70px;
+  cursor: pointer;
+  font-family: Roboto;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 35px;
+  text-align: left;
+  border: 0;
+  outline: none;
+}
+
+.mypageCategory .selectedBtn {
+  background-color: #fff;
+  color: #cd2a82;
+}
+
+.mypageCategory .unselectedBtn {
+  background-color: transparent;
+  color: #667089;
+}
