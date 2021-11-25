@@ -1,0 +1,57 @@
+.leftside
+{
+    width: 720px;
+    height: 1034px;
+    align-items: flex-end;
+}
+
+.head
+{
+    width: 720px;
+    height: 188px;
+}
+
+.checkbig{
+    display: flex;
+    align-items: center;
+    width: 502px;
+    height: 64px;
+    left: 12px;
+    background-color: white;
+    box-shadow: 0px 4px 4px 4px
+    rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    margin-bottom : 20px;
+    z-index: 1500;
+}
+
+.contents
+{
+    display: flex;
+    align-items: flex-end;
+}
+
+.hospitalListBox
+{
+    width: 720px;
+    height: 761px;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+}
+
+.hospitalListBox::-webkit-scrollbar{
+    display: none;
+    width: 0 !important;
+}
+
+.mapBox
+{
+    width: 720px;
+    height: 1034px;
+    background-color:bisque;
+}
+
+.mpaMap{
+    width: 720px;
+    height: 100%;
+}
