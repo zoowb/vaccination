@@ -28,8 +28,8 @@ const pool = mysql.createPool({
  * passwd = 사용자 비밀번호 [DB person.password]
  *
  * === server-return ===
- * ok = 회원가입 성공 여부. 성공 시 true 반환
- * jwtToken = jwt토큰 문자열
+ * ok = 회원가입 성공 여부. 성공 시 true, 실패 시 false
+ * jwtToken = jwt토큰 문자열 (로그인 실패시 토큰이 생성되지 않습니다. null을 전송합니다)
  *
 */
 router.post('/login', function (req, res, next) {
@@ -42,7 +42,7 @@ router.post('/login', function (req, res, next) {
         connection.query(sql, datas, async function (err, result) {
             if (err)
             {
-                res.status(500).send({ err : err });
+                res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
 
@@ -55,7 +55,7 @@ router.post('/login', function (req, res, next) {
                 const jwtToken = await jwt.sign({id : result[0].Email, ssn : result[0].Ssn}); // 토큰 생성
                 res.send({ "ok" : true, "jwtToken" : jwtToken.token });
             }
-            else res.send({ "ok" : false, "jwtToken" : null });
+            else res.send({ "ok" : false, "jwtToken" : null, err : "일치하는 회원정보가 없습니다" });
 
             connection.release();
         });
@@ -93,7 +93,7 @@ router.post('/signup', function (req, res, next) {
         connection.query(sql, datas, function (err, rows) {
             if (err)
             {
-                res.status(500).send({ err : err, ok : false });
+                res.status(500).send({ err : "회원가입 실패! 아이디나 이메일이 중복되었거나 DB에서 오류가 발생했습니다", ok : false });
                 console.error("err : " + err);
             }
             else res.send({ ok : true });
@@ -113,7 +113,7 @@ router.post('/signup', function (req, res, next) {
  * ssn = 사용자 주민번호 [DB person.ssn]
  *
  * === server-return ===
- * id = 사용자 이메일. 검색 실패시 null 반환 [DB person.email]
+ * id = 사용자 아이디(이메일). 검색 실패시 null 반환
  *
 */
 router.post('/findID', function (req, res, next) {
@@ -126,12 +126,12 @@ router.post('/findID', function (req, res, next) {
         connection.query(sql, datas, function (err, result) {
             if (err)
             {
-                res.status(500).send({ err : err });
+                res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
 
             if (result.length > 0) res.send({ id : result[0].Email });
-            else res.send({ id : null });
+            else res.send({ err : "일치하는 회원정보가 없습니다", id : null });
 
             connection.release();
         });
@@ -148,8 +148,8 @@ router.post('/findID', function (req, res, next) {
  * email = 사용자 아이디 [DB person.email]
  *
  * === server-return ===
- * passwd = 사용자 비밀번호. 검색 실패시 null 반환 [DB person.password]
- *
+ * passwd = 사용자 비밀번호. 검색 실패시 null 반환
+ * 
 */
 router.post('/findPW', function (req, res, next) {
     var name = req.body.name;
@@ -161,12 +161,12 @@ router.post('/findPW', function (req, res, next) {
         connection.query(sql, datas, function (err, result) {
             if (err)
             {
-                res.status(500).send({ err : err });
+                res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
 
             if (result.length > 0) res.send({ passwd : result[0].Password });
-            else res.send({ passwd : null });
+            else res.send({ err : "일치하는 회원정보가 없습니다", passwd : null });
 
             connection.release();
         });
