@@ -9,12 +9,14 @@
 }
 
 .menuBtn-link {
+  width: 250px;
   text-decoration: none;
   text-decoration-line: none;
+  text-align: left;
 }
 
 .menuBtnSet {
   display: flex;
   width: 935px;
-  justify-content: space-around;
+  /* justify-content: space-around; */
 }

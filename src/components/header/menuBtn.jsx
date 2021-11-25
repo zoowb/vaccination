@@ -13,7 +13,7 @@ const MenuBtnSet = ({ text1, url1, text2, url2, text3, url3 }) => {
     <div className="menuBtnSet">
       <MenuBtn text={text1} url={url1} />
       <MenuBtn text={text2} url={url2} />
-      <MenuBtn text={text3} url={url3} />
+      {text3 && url3 ? <MenuBtn text={text3} url={url3} /> : <></>}
     </div>
   );
 };
