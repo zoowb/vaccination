@@ -35,4 +35,5 @@
   font-size: 16px;
   color: #e0412f;
   text-align: center;
+  white-space: pre-wrap;
 }
