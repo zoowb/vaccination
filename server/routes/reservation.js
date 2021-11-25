@@ -20,7 +20,7 @@ const pool = mysql.createPool({
 
 /* ===== 사전예약-본인확인 처리 =====
  *
- * 사용자 정보(이메일, 비밀번호)를 비교하고 일치하면 사전예약을 승인합니다
+ * 사용자 정보(이메일, 비밀번호)를 비교하고 일치하면 사전예약을 승인합니다 (+예약요일을 검증합니다)
  * 또한 인증을 완료하면 person.IsAuth를 true로 전환합니다
  *
  * === client-input ===
@@ -28,10 +28,7 @@ const pool = mysql.createPool({
  * passwd : 사용자 아이디 [DB person.Password]
  *
  * === server-return ===
- * ok : 인증 성공시 true
- *
- * ??? 사전예약이 가능한 요일인지 여부? -> 자세한 조건 필요 ???
- * ??? 이미 로그인 중일 때만 예약이 가능? -> 만약 로그인이 아닌 상태에서 본인인증이 가능하면 토큰 발급이 필요함 ???
+ * ok : 인증 성공시 true, 실패 시 false
  *
 */
 router.post('/selfcheck', function (req, res, next) {
@@ -65,21 +62,35 @@ router.post('/selfcheck', function (req, res, next) {
  * NONE
  *
  * === server-return ===
- * loc_info : 시군구 코드 리스트 [DB sigungu tuple]
+ * sido : 시도 코드 리스트 [{Code: 시도 코드 (정수형), SiDo: 시도명}]
+ * sigungu : 시군구 코드 리스트 [{Code: 시군구 코드 (정수형), SiGunGu: 시군구명}]
  *
 */
 router.get('/getloclist', function (req, res, next) {
     
     pool.getConnection(function (err, connection) {
         var sql = "SELECT * FROM SIGUNGU";
-        connection.query(sql, function (err, result) {
+        connection.query(sql, function (err, result1) {
             if (err)
             {
-                res.status(500).send({ err : err });
+                res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
 
-            res.send({ loc_info : result});
+            pool.getConnection(function (err, connection) {
+                var sql = "SELECT * FROM SIDO";
+                connection.query(sql, function (err, result2) {
+                    if (err)
+                    {
+                        res.status(500).send({ err : "DB 오류" });
+                        console.error("err : " + err);
+                    }
+
+                    res.send({ sigungu : result1, sido : result2});
+                    connection.release();
+                });
+            });
+
             connection.release();
         });
     });
@@ -94,7 +105,7 @@ router.get('/getloclist', function (req, res, next) {
  * data : 시군구 코드 [DB sigungu.code]
  *
  * === server-return ===
- * hos_info : 병원 정보 리스트 [Hnumber: 병원 아이디, Hname: 병원 이름, Hlocation: 병원 도로명주소]
+ * hos_info : 병원 정보 리스트 [{Hnumber: 병원 아이디, Hname: 병원 이름, Hlocation: 병원 상세주소}]
  *
 */
 router.post('/search', function (req, res, next) {
@@ -107,7 +118,7 @@ router.post('/search', function (req, res, next) {
         connection.query(sql, data, function (err, result) {
             if (err)
             {
-                res.status(500).send({ err : err });
+                res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
 
@@ -128,8 +139,9 @@ router.post('/search', function (req, res, next) {
  * date : 예약 날짜 문자열 (ex. "2021-10-31")
  *
  * === server-return ===
- * hos_info : 병원 정보 [DB hospital, hospital_vaccine tuple]  // 아직 병원 time 정보는 반환하지 않습니다
- * revp_bytime : 예약인원 객체 배열 [date: 예약 날짜, time: 예약 시간, count: 예약 인원수]
+ * hos_info : 병원 정보 [{Hnumber: 병원 이름, Hlocation: 병원 상세주소, Hname: 병원 이름, Hclass: 병원 종류, 
+        Other: 기타사항, Hphone: 병원 전화번호, x: 병원 x좌표, y: 병원 y좌표, Sigungucode: 시군구 코드, Sidocode: 시도 코드 }]  // 아직 병원 time 정보는 반환하지 않습니다
+ * revp_bytime : 예약인원 객체 배열 [{date: 예약 날짜, time: 예약 시간, count: 해당 시간대 예약 인원수}]
  *
 */
 router.get('/search/:idx/:date', function (req, res, next) {
@@ -139,11 +151,11 @@ router.get('/search/:idx/:date', function (req, res, next) {
     var data2 = [idx, date];
 
     pool.getConnection(function (err, connection) {
-        var sql = "SELECT * FROM HOSPITAL NATURAL JOIN HOSPITAL_VACCINE WHERE Hnumber=?"; // 기관의 세부 정보 반환
+        var sql = "SELECT * FROM HOSPITAL WHERE Hnumber=?"; // 기관의 세부 정보 반환
         connection.query(sql, data1, function (err, result) {
             if (err)
             {
-                res.status(500).send({ err : err });
+                res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
             if(result === undefined) // 검색 결과가 없어도 오류를 반환
@@ -161,7 +173,7 @@ router.get('/search/:idx/:date', function (req, res, next) {
                 connection.query(sql2, data2, function (err, resultg) {
                     if (err)
                     {
-                        res.status(500).send({ err : err });
+                        res.status(500).send({ err : "DB 오류" });
                         console.error("err : " + err);
                     }
 
@@ -192,7 +204,7 @@ router.get('/search/:idx/:date', function (req, res, next) {
  * vac2_date =  2차예약 날짜&시간
  *
  * === server-return ===
- * ok = 예약 성공시 true
+ * ok = 예약 성공시 true, 실패시 false 반환
  *
 */
 router.post('/register', async function (req, res, next) {
@@ -217,7 +229,7 @@ router.post('/register', async function (req, res, next) {
         connection.query(sql1, data1, function (err, result) {
             if (err)
             {
-                res.status(500).send({ err : err, ok : false });
+                res.status(500).send({ err : "DB 오류", ok : false });
                 console.error("err : " + err);
             }
 
@@ -226,7 +238,7 @@ router.post('/register', async function (req, res, next) {
                 connection.query(sql2, data2, function (err, result) {
                     if (err)
                     {
-                        res.status(500).send({ err : err, ok : false });
+                        res.status(500).send({ err : "DB 오류", ok : false });
                         console.error("err : " + err);
                     }
 
@@ -235,7 +247,7 @@ router.post('/register', async function (req, res, next) {
                         connection.query(sql3, data3, function (err, result) {
                         if (err)
                         {
-                            res.status(500).send({ err : err, ok : false });
+                            res.status(500).send({ err : "DB 오류", ok : false });
                             console.error("err : " + err);
                         }
 
