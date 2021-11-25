@@ -23,6 +23,7 @@ const SignUp = () => {
   const [addr, setAddr] = useState("");
   const [error, setError] = useState(false);
   const [errorContent, setErrorContent] = useState("");
+  const [dup, setDup] = useState("");
   const onClick = () => {
     axios
       .post("/sign/signup", {
@@ -37,9 +38,9 @@ const SignUp = () => {
         console.log(response);
       })
       .catch(function (error) {
-        // setError(true);
-        // setErrorContent(error);
-        console.log(error);
+        setError(true);
+        setErrorContent(error.response.data.err);
+        // console.log("client: ", error.response.data.err);
       });
   };
 
