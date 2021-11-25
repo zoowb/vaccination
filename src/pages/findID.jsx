@@ -6,17 +6,20 @@ import WhiteScreen from "../components/auth/whiteScreen";
 import BlueBtn from "../components/auth/blueBtn";
 import InputBox from "../components/auth/inputBox";
 import LinkBtnSet from "../components/auth/linkBtn";
+import { useNavigate } from "react-router-dom";
 import "./find.css";
 const FindID = () => {
   const [name, setName] = useState("");
   const [ssn, setSsn] = useState("");
   const [error, setError] = useState(false);
   const [errorContent, setErrorContent] = useState("");
+  const navigate = useNavigate();
 
   const onClick = () => {
     axios
       .post("/sign/findID", { name: name, ssn: ssn })
       .then((response) => {
+        navigate("/findIDResult", { state: { id: response.data.id } });
         //아이디 페이지로 이동
         console.log(response);
       })

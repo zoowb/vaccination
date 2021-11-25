@@ -15,6 +15,8 @@ import MyPageInfoEdit from "./pages/mypageInfoEdit";
 import MyPageResInquiry from "./pages/mypageResInquiry";
 import Home from "./pages/home";
 import Lookup from "./pages/lookup";
+import FindIDResult from "./pages/findIDResult";
+import FindPWResult from "./pages/findPWResult";
 import "./App.css";
 
 const App = () => {
@@ -40,6 +42,8 @@ const App = () => {
           <Route path="/mypageResInquiry" element={<MyPageResInquiry />} />
           <Route path="/home" element={<Home />} />
           <Route path="/lookup" element={<Lookup />} />
+          <Route path="/findIDResult" element={<FindIDResult />} />
+          <Route path="/findPWResult" element={<FindPWResult />} />
         </Routes>
       </div>
     </>
