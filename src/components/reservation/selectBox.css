@@ -40,5 +40,31 @@
   height: 39px;
   top: 10px;
   right: 10px;
+  cursor: pointer;
   background: url("../../pages/image/calendar.svg") no-repeat;
+}
+
+.react-datepicker {
+  font-size: 1.5rem !important;
+}
+
+.react-datepicker__current-month {
+  font-size: 2rem !important;
+}
+
+.react-datepicker__header {
+  padding-top: 10px !important;
+}
+
+.react-datepicker__navigation {
+  top: 13px !important;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day {
+  margin: 0.7rem !important;
+}
+
+.react-datepicker__day--disabled {
+  color: #cccccc !important;
 }

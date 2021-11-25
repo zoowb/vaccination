@@ -20,7 +20,7 @@ const SelectInfoBtn = ({ title, content }) => {
   );
 };
 
-const HospitalDetail = ({ name }) => {
+const HospitalDetail = ({ name, pickTime, selectedTime }) => {
   //시간=>axios로 데이터 받아와서 map으로 처리!
   useEffect(() => {
     initTmap(126.7248987, 37.4848309);
@@ -31,7 +31,7 @@ const HospitalDetail = ({ name }) => {
       <div className="selectionInfo">
         <h1 className="name">{name}</h1>
         <div className="btns">
-          <SelectInfoBtn title={"시간 선택"} content={"11:00"} />
+          <SelectInfoBtn title={"시간 선택"} content={selectedTime} />
           <SelectInfoBtn title={"예약 현황"} content={"6/20명"} />
         </div>
       </div>
@@ -41,24 +41,28 @@ const HospitalDetail = ({ name }) => {
           time2={"10:30"}
           time3={"11:00"}
           time4={"11:30"}
+          pickTime={pickTime}
         />
         <TimeSelectLine
           time1={"12:00"}
           time2={"12:30"}
           time3={"13:00"}
           time4={"13:30"}
+          pickTime={pickTime}
         />
         <TimeSelectLine
           time1={"14:00"}
           time2={"14:30"}
           time3={"15:00"}
           time4={"15:30"}
+          pickTime={pickTime}
         />
         <TimeSelectLine
           time1={"16:00"}
           time2={"16:30"}
           time3={"17:00"}
           time4={"17:30"}
+          pickTime={pickTime}
         />
       </div>
       <div className="hospitalInfo">
@@ -105,15 +109,15 @@ const HospitalInfo = () => {
   );
 };
 
-const TimeSelect = ({ time }) => {
+const TimeSelect = ({ time, pickTime }) => {
   return (
     <section className="timeSelect">
       <input
         type="radio"
         id={time}
         name="time"
-        value="time"
         className="radioBtn"
+        onChange={() => pickTime()}
       />
       <label htmlFor={time} className="text">
         {time}
@@ -122,13 +126,13 @@ const TimeSelect = ({ time }) => {
   );
 };
 
-const TimeSelectLine = ({ time1, time2, time3, time4 }) => {
+const TimeSelectLine = ({ time1, time2, time3, time4, pickTime }) => {
   return (
     <section className="timeSelectLine">
-      <TimeSelect time={time1} />
-      <TimeSelect time={time2} />
-      <TimeSelect time={time3} />
-      <TimeSelect time={time4} />
+      <TimeSelect time={time1} pickTime={pickTime} />
+      <TimeSelect time={time2} pickTime={pickTime} />
+      <TimeSelect time={time3} pickTime={pickTime} />
+      <TimeSelect time={time4} pickTime={pickTime} />
     </section>
   );
 };

@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./selectBox.css";
-const SelectBox = () => {
-  //axios+map으로 할 예정
-  //시/군/구 데이터 필요
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+import ko from "date-fns/locale/ko";
+registerLocale("ko", ko);
+const SelectBox = ({ pick }) => {
   return (
     <section className="selectBoxSection">
-      <select className="selectBox" placholeder={"선택"} name={"si"}>
+      <select
+        className="selectBox"
+        placholeder={"선택"}
+        name={"si"}
+        id="loc"
+        onChange={() => pick()}
+      >
         <option className="text" value="서울">
           서울
         </option>
@@ -24,14 +31,24 @@ const SelectBox = () => {
 
 const DateSelectBox = () => {
   const [startDate, setStartDate] = useState(new Date());
+
+  useEffect(() => {
+    console.log(
+      `선택한 날짜는 ${startDate.toISOString().substr(0, 10)}입니다.`
+    );
+  }, [startDate]);
+
   return (
     <section className="dateSection">
       <DatePicker
+        locale="ko"
         className="datePicker"
         selected={startDate}
+        minDate={new Date()}
         onChange={(date) => setStartDate(date)}
+        id="datePicker"
       />
-      <div className="calendarImg" />
+      <label htmlFor="datePicker" className="calendarImg" />
     </section>
   );
 };
