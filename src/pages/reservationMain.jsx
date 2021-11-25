@@ -16,7 +16,7 @@ const ResMain = () => {
           <CategoryBox
             bTitle={"잔여백신 조회"}
             content={"우리 집 근처의 잔여백신을 조회해보세요!"}
-            url={"/residual"}
+            url={"/reservationNoShow"}
           />
           <CategoryBox
             bTitle={"접종 예약 변경"}

@@ -14,19 +14,22 @@ const Login = () => {
   const [pw, setPW] = useState("");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+
   const onClick = () => {
     axios
       .post("/sign/login", { email: id, passwd: pw })
       .then((response) => {
         setError(false);
-        console.log(response);
-        //        navigate("/");
-        const accessToken = response.data; //확인 필요
+        console.log("response: ", response);
+        const accessToken = response.data.jwtToken;
         localStorage.setItem("accessToken", accessToken);
+        if (accessToken) {
+          navigate("/");
+        }
       })
       .catch(function (error) {
+        console.log("error: ", error);
         setError(true);
-        console.log(error);
       });
   };
   return (
