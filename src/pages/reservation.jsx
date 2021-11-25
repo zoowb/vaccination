@@ -12,6 +12,21 @@ const Reservation = () => {
   const [response, setResponse] = useState("");
   const [info, setInfo] = useState("");
   const [individual, setIndividual] = useState(false);
+  const [selectedTime, setSelectedTime] = useState("없음");
+
+  const pickLoc = () => {
+    let select = document.getElementById("loc");
+    let value = select.options[select.selectedIndex].value;
+    console.log(value);
+  };
+
+  const pickTime = () => {
+    let select = document.querySelector('input[name="time"]:checked');
+    let value = select.id.valueOf();
+    setSelectedTime(value);
+    console.log(value);
+  };
+
   const Search = () => {
     // const param = {};
     // axios.post("/search", { params: param }).then((response) => {
@@ -40,9 +55,9 @@ const Reservation = () => {
 
           <section className="searchSection">
             <div className="location">
-              <SelectBox />
-              <SelectBox />
-              <SelectBox />
+              <SelectBox pick={pickLoc} />
+              <SelectBox pick={pickLoc} />
+              <SelectBox pick={pickLoc} />
             </div>
             <div className="others">
               <div className="date">
@@ -94,7 +109,11 @@ const Reservation = () => {
               />
             </div>
             <div className="detail">
-              <HospitalDetail name={"참좋은 병원"} />
+              <HospitalDetail
+                name={"참좋은 병원"}
+                pickTime={pickTime}
+                selectedTime={selectedTime}
+              />
             </div>
           </section>
         </section>
