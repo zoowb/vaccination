@@ -1,10 +1,20 @@
 import "./authBtn.css";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const AuthBtn = ({ text, url }) => {
+  const navigate = useNavigate();
   return (
-    <Link to={url} className="authBtn-link">
+    <button
+      type="button"
+      className="authBtn-link"
+      onClick={() => {
+        if (text == "로그아웃") {
+          localStorage.removeItem("accessToken");
+        }
+        navigate(url);
+      }}
+    >
       <h3 className="authBtn-text">{text}</h3>
-    </Link>
+    </button>
   );
 };
 

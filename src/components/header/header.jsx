@@ -5,26 +5,46 @@ import { Link } from "react-router-dom";
 import "./header.css";
 
 const Header = () => {
+  const token = localStorage?.getItem("accessToken");
   return (
     <header className="header">
       <div className="contents">
         <Link to={"/"}>
           <img className="img" src={Logo} alt="logo" />
         </Link>
-        <MenuBtnSet
-          text1={"접종예약"}
-          url1={"/reservation"}
-          text2={"기관조회"}
-          url2={"/lookup"}
-          text3={"간편조회"}
-          url3={"/simple"}
-        />
-        <AuthBtnSet
-          text1={"로그인"}
-          url1={"/login"}
-          text2={"회원가입"}
-          url2={"/signup"}
-        />
+        {token ? (
+          <>
+            <MenuBtnSet
+              text1={"접종예약"}
+              url1={"/reservation"}
+              text2={"기관조회"}
+              url2={"/lookup"}
+            />
+            <AuthBtnSet
+              text1={"마이페이지"}
+              url1={"/mypage"}
+              text2={"로그아웃"}
+              url2={"/"}
+            />
+          </>
+        ) : (
+          <>
+            <MenuBtnSet
+              text1={"접종예약"}
+              url1={"/reservation"}
+              text2={"기관조회"}
+              url2={"/lookup"}
+              text3={"간편조회"}
+              url3={"/simple"}
+            />
+            <AuthBtnSet
+              text1={"로그인"}
+              url1={"/login"}
+              text2={"회원가입"}
+              url2={"/signup"}
+            />
+          </>
+        )}
       </div>
     </header>
   );
