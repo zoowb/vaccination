@@ -6,18 +6,21 @@ import WhiteScreen from "../components/auth/whiteScreen";
 import BlueBtn from "../components/auth/blueBtn";
 import InputBox from "../components/auth/inputBox";
 import LinkBtnSet from "../components/auth/linkBtn";
+import { useNavigate } from "react-router-dom";
 import "./find.css";
 const FindPW = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState(false);
   const [errorContent, setErrorContent] = useState("");
+  const navigate = useNavigate();
 
   const onClick = () => {
     axios
       .post("/sign/findPW", { name: name, email: email })
       .then((response) => {
         //비밀번호 페이지로 이동
+        navigate("/findPWResult", { state: { pw: response.data.passwd } });
         console.log(response);
       })
       .catch(function (error) {
@@ -44,7 +47,7 @@ const FindPW = () => {
               setValue={setName}
             />
             <InputBox
-              type={"number"}
+              type={"email"}
               placeholder={"아이디(이메일)"}
               value={email}
               setValue={setEmail}
