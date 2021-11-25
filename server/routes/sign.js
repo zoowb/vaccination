@@ -42,7 +42,7 @@ router.post('/login', function (req, res, next) {
         connection.query(sql, datas, async function (err, result) {
             if (err)
             {
-                res.send({ err : err });
+                res.status(500).send({ err : err });
                 console.error("err : " + err);
             }
 
@@ -93,11 +93,10 @@ router.post('/signup', function (req, res, next) {
         connection.query(sql, datas, function (err, rows) {
             if (err)
             {
-                res.send({ err : err, ok : false });
+                res.status(500).send({ err : err, ok : false });
                 console.error("err : " + err);
             }
-
-            res.send({ ok : true });
+            else res.send({ ok : true });
             connection.release();
         });
     });
@@ -127,7 +126,7 @@ router.post('/findID', function (req, res, next) {
         connection.query(sql, datas, function (err, result) {
             if (err)
             {
-                res.send({ err : err });
+                res.status(500).send({ err : err });
                 console.error("err : " + err);
             }
 
@@ -162,7 +161,7 @@ router.post('/findPW', function (req, res, next) {
         connection.query(sql, datas, function (err, result) {
             if (err)
             {
-                res.send({ err : err });
+                res.status(500).send({ err : err });
                 console.error("err : " + err);
             }
 
