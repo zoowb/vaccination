@@ -1,13 +1,13 @@
 import EasyCheck from "../components/home/easyCheck";
-import WholeScreen from "../components/wholeScreen";
+import { WholeScreenWithHeader } from "../components/wholeScreen";
 import LineChart from "../components/home/linechart";
 import TableChart from "../components/home/tablechart";
 import "./home.css";
 
 const Home = () => {
   return(
-    <WholeScreen>
-      <div className={"all"}>
+    <WholeScreenWithHeader>
+      <div className={"homeall"}>
         <div className={"leftside"}>
           <div className={"smallleft"}>
             <div className={"boldtitle"}>백신 접종 완료자</div>
@@ -44,7 +44,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-    </WholeScreen>
+    </WholeScreenWithHeader>
   );
 };
 export default Home;
