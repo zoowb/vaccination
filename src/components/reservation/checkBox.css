@@ -7,14 +7,14 @@
     justify-content: center;
 }
 
-.checkbox{
+.checkset .checkbox{
     width: 24px;
     height: 24px;
     margin: 5px;
     background-color: white;
 }
 
-.checkboxtext{
+.checkset .checkboxtext{
     font-family: Roboto;
     font-size: 24px;
     font-style: normal;

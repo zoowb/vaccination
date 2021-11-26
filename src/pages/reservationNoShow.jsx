@@ -14,7 +14,7 @@ const  ReservationNoShow = () => {
 
     return (
         <WholeScreen>
-            <section className="contents">
+            <section className="noshow">
                 <section className="leftside">
                 <div className="head">
                         <Title
