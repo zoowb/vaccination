@@ -1,24 +1,4 @@
-.biglayout {
-  display: flex;
-  margin-bottom: 35.56px;
-}
-
-.titlelu {
-  display: flex;
-  width: 114px;
-  height: 46.13px;
-  background-color: #dad8e0;
-  border-radius: 20px;
-  font-family: Roboto;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 24px;
-  justify-content: center;
-  align-items: center;
-  margin-right: 60.31px;
-}
-
-.targetBox {
+.lookuptargetBox {
   width: 606px;
   height: 46.13px;
   background-color: white;
@@ -31,7 +11,7 @@
   border: none;
 }
 
-.locationBox {
+.lookuplocationBox {
   width: 183px;
   height: 46.13px;
   background-color: white;
@@ -45,76 +25,16 @@
   border: none;
 }
 
-.checkset {
-  width: 220px;
-  height: 26.91px;
+.lookupsearchset {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 45.17px;
-  margin-left: 100px;
+  justify-content: space-between;
+  width: 1300px;
+  text-align: left;
+  margin-bottom: 41px;
 }
 
-.checkbox {
-  width: 25px;
-  height: 25px;
-  margin-right: 11px;
-  background-color: white;
-}
-
-.checkboxtext {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  color: #000000;
-}
-
-.bluebtn {
-  width: 144.15px;
-  height: 46.13px;
-  background: #5064c5;
-  border-radius: 20px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  color: white;
-  margin-right: 20px;
-  border: none;
-}
-
-.redbtn {
-  width: 144.15px;
-  height: 46.13px;
-  background: #cd2a82;
-  border-radius: 20px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  color: white;
-  border: none;
-}
-
-.biglayout .btnset {
-  display: flex;
-  margin-left: 79.5px;
-}
-
-.topside {
-  justify-content: left;
-  margin-right: 110px;
-}
-
-.hr {
-  background-color: #9a9a9a;
-  width: 100%;
-  height: 0px;
-  margin: 41px;
-}
-
-.searchbar {
+.lookupsearchset .searchbar {
   width: 606px;
   height: 46.13px;
   background: #ffffff;
@@ -128,7 +48,7 @@
   border: none;
 }
 
-.searchbtn {
+.lookupsearchset .searchbtn {
   width: 144.15px;
   height: 46.13px;
   background: #5064c5;
@@ -144,34 +64,24 @@
   border: none;
 }
 
-.searchset {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 1300px;
-  text-align: left;
-  margin-bottom: 41px;
-  /* margin-right: 150px; */
-}
-
-.radioset {
+.lookupsearchset .radioset {
   display: flex;
   align-items: center;
 }
 
-.radioset .hSelect {
+.lookupsearchset .radioset .hSelect {
   display: flex;
   align-items: center;
   width: 100px;
 }
 
-.searchradio {
+.lookupsearchset .radioset .hSelect .searchradio {
   width: 20px;
   height: 20px;
   margin-right: 15px;
 }
 
-.radiotext {
+.lookupsearchset .radioset .hSelect.radiotext {
   display: flex;
   font-family: Roboto;
   font-style: normal;
@@ -180,7 +90,7 @@
   color: black;
 }
 
-.hospitalist {
+.lookuphospitalist {
   width: 451px;
   height: 104.75px;
   background-color: white;
@@ -188,7 +98,7 @@
   box-sizing: border-box;
 }
 
-.haddress {
+.lookuphospitalist .haddress {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -198,7 +108,7 @@
   text-align: left;
 }
 
-.hname {
+.lookuphospitalist .hname {
   font-family: Roboto;
   font-style: normal;
   font-weight: 500;
@@ -208,20 +118,7 @@
   text-align: left;
 }
 
-.hlist {
-  width: 451px;
-  height: 473.76px;
-  overflow-y: scroll;
-  -ms-overflow-style: none;
-  margin-right: 33px;
-}
-
-.hlist::-webkit-scrollbar {
-  display: none;
-  width: 0 !important;
-}
-
-.whitebox {
+.lookupwhitebox {
   width: 838px;
   height: 473.76px;
   background-color: white;
@@ -230,12 +127,12 @@
   align-items: center;
 }
 
-.whitebox::-webkit-scrollbar {
+.lookupwhitebox::-webkit-scrollbar {
   display: none;
   width: 0 !important;
 }
 
-.whitebox .firstline {
+.lookupwhitebox .firstline {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -244,7 +141,7 @@
   margin-bottom: 34px;
 }
 
-.whitebox .firstline .detailname {
+.lookupwhitebox .firstline .detailname {
   width: 573px;
   font-family: Roboto;
   font-style: normal;
@@ -257,7 +154,7 @@
   margin-right: 50px;
 }
 
-.whitebox .firstline .redbutton {
+.lookupwhitebox .firstline .redbutton {
   width: 151.13px;
   height: 45.66px;
   background: #cd2a82;
@@ -275,13 +172,13 @@
   justify-content: center;
 }
 
-.whitebox .secondline {
+.lookupwhitebox .secondline {
   display: flex;
   margin-left: 39px;
   margin-bottom: 26.64px;
 }
 
-.whitebox .secondline .detailaddress {
+.lookupwhitebox .secondline .detailaddress {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -292,13 +189,13 @@
   color: #667089;
 }
 
-.whitebox .secondline .detailimage {
+.lookupwhitebox .secondline .detailimage {
   width: 33.55px;
   height: 30.44px;
   margin-left: 46px;
 }
 
-.whitebox .secondline .detailvacnum {
+.lookupwhitebox .secondline .detailvacnum {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -309,18 +206,7 @@
   color: #000000;
 }
 
-.whitebox .hr2 {
-  display: flex;
-  background-color: #9a9a9a;
-  width: 100%;
-  height: 0px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  align-items: center;
-  justify-content: center;
-}
-
-.whitebox .tabletitle {
+.lookupwhitebox .tabletitle {
   width: 133.57px;
   height: 110px;
   font-family: Roboto;
@@ -338,7 +224,7 @@
   justify-content: center;
 }
 
-.whitebox .tablecontents {
+.lookupwhitebox .tablecontents {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -350,7 +236,7 @@
   margin-left: 6px;
 }
 
-.whitebox .tablecontentsbox {
+.lookupwhitebox .tablecontentsbox {
   display: flex;
   width: 606px;
   height: 110px;
@@ -360,11 +246,11 @@
   align-items: center;
 }
 
-.whitebox .timetext {
+.lookupwhitebox .timetext {
   display: flex;
 }
 
-.whitebox .normal {
+.lookupwhitebox .normal {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -376,7 +262,7 @@
   margin-left: 6px;
 }
 
-.whitebox .sat {
+.lookupwhitebox .sat {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -388,7 +274,7 @@
   margin-left: 6px;
 }
 
-.whitebox .sun {
+.lookupwhitebox .sun {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -400,7 +286,7 @@
   margin-left: 6px;
 }
 
-.whitebox .holyday {
+.lookupwhitebox .holyday {
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -412,11 +298,119 @@
   margin-left: 6px;
 }
 
-.bottom {
+.lookupwhitebox .tableline {
+  display: flex;
+  margin-left: 39px;
+}
+
+
+.lookuptopside {
+  justify-content: left;
+  margin-right: 110px;
+}
+
+.lookuptopside .biglayout {
+  display: flex;
+  margin-bottom: 35.56px;
+}
+
+.lookuptopside .biglayout .titlelu {
+  display: flex;
+  width: 114px;
+  height: 46.13px;
+  background-color: #dad8e0;
+  border-radius: 20px;
+  font-family: Roboto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 60.31px;
+}
+
+.lookuptopside .biglayout .checkset {
+  width: 220px;
+  height: 26.91px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 45.17px;
+  margin-left: 100px;
+}
+
+.lookuptopside .biglayout .checkset .checkbox {
+  width: 25px;
+  height: 25px;
+  margin-right: 11px;
+  background-color: white;
+}
+
+.lookuptopside .biglayout .checkset .checkboxtext {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  color: #000000;
+}
+
+.lookuptopside .biglayout .btnset .bluebtn {
+  width: 144.15px;
+  height: 46.13px;
+  background: #5064c5;
+  border-radius: 20px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  color: white;
+  margin-right: 20px;
+  border: none;
+}
+
+.lookuptopside .biglayout .btnset .redbtn {
+  width: 144.15px;
+  height: 46.13px;
+  background: #cd2a82;
+  border-radius: 20px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  color: white;
+  border: none;
+}
+
+.lookuptopside .biglayout .btnset {
+  display: flex;
+  margin-left: 79.5px;
+}
+
+.lookuphr {
+  background-color: #9a9a9a;
+  width: 100%;
+  height: 0px;
+  margin: 41px;
+}
+
+.lookupbottomside .hlist {
+  width: 451px;
+  height: 473.76px;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  margin-right: 33px;
+}
+
+.lookupbottomside .hlist::-webkit-scrollbar {
+  display: none;
+  width: 0 !important;
+}
+
+.lookupbottomside {
   display: flex;
 }
 
-.searchnum {
+.lookupsearchnum {
   width: 1294px;
   font-family: Roboto;
   font-style: normal;
@@ -428,9 +422,4 @@
   text-align: left;
   color: #667089;
   margin-bottom: 15px;
-}
-
-.tableline {
-  display: flex;
-  margin-left: 39px;
 }
