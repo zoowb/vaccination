@@ -65,7 +65,7 @@ router.post('/login', function (req, res, next) {
 
 /* ===== 회원가입 페이지 처리 =====
  *
- * 새로운 사용자 정보를 등록합니다
+ * 새로운 사용자 정보를 등록합니다 (+아이디, 주민번호 중복 검사)
  *
  * === client-input ===
  * name = 사용자 이름 [DB person.name]
@@ -88,18 +88,56 @@ router.post('/signup', function (req, res, next) {
     var location = req.body.location;
     var datas = [name, ssn, phone, email, pass, location];
 
+    var erridd = 0;
+    var errssnd = 0;
     pool.getConnection(function (err, connection) {
-        var sql = "INSERT INTO PERSON(Name, Ssn, Phone, Email, Password, Location) values(?,?,?,?,?,?)";
-        connection.query(sql, datas, function (err, rows) {
+        var sql = "select * from person where Email=?";
+        connection.query(sql, [email], function (err, rows) {
             if (err)
             {
-                res.status(500).send({ err : "회원가입 실패! 아이디나 이메일이 중복되었거나 DB에서 오류가 발생했습니다", ok : false });
+                res.status(500).send({ err : "DB 오류", ok : false });
                 console.error("err : " + err);
             }
-            else res.send({ ok : true });
+            if(rows.length > 0) erridd = 1;
             connection.release();
         });
     });
+    pool.getConnection(function (err, connection) {
+        var sql = "select * from person where Ssn=?";
+        connection.query(sql, [ssn], function (err, rows) {
+            if (err)
+            {
+                res.status(500).send({ err : "DB 오류", ok : false });
+                console.error("err : " + err);
+            }
+            if(rows.length > 0) errssnd = 1;
+            connection.release();
+        });
+    });
+
+    if(erridd == 1)
+    {
+        res.status(500).send({ err : "아이디 중복", ok : false });
+    }
+    else if(errssnd == 1)
+    {
+        res.status(500).send({ err : "주민번호 중복", ok : false });
+    }
+    else
+    {
+        pool.getConnection(function (err, connection) {
+            var sql = "INSERT INTO PERSON(Name, Ssn, Phone, Email, Password, Location) values(?,?,?,?,?,?)";
+            connection.query(sql, datas, function (err, rows) {
+                if (err)
+                {
+                    res.status(500).send({ err : "DB 오류", ok : false });
+                    console.error("err : " + err);
+                }
+                else res.send({ ok : true });
+                connection.release();
+            });
+        });
+    }
 });
 
 

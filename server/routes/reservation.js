@@ -30,23 +30,64 @@ const pool = mysql.createPool({
  * === server-return ===
  * ok : 인증 성공시 true, 실패 시 false
  *
+ *
+ *  월 - 1, 6
+    화 - 2, 7
+    수 - 3, 8
+    목 - 4, 9
+    금 - 5, 0
+    주말 - 모두 가능
+    ex) 990821 -> 1(월요일 신청)
+ * 
 */
 router.post('/selfcheck', function (req, res, next) {
     var email = req.body.email;
     var pass = req.body.passwd;
     var datas = [email, pass];
 
+    var ssn = "";
+    pool.getConnection(function (err, connection) {
+        var sql = "select ssn from person where Email=? and Password=?";
+        connection.query(sql, datas, function (err, result) {
+            if (err)
+            {
+                res.status(500).send({ err : "DB 오류" });
+                console.error("err : " + err);
+            }
+
+            if (result > 0) ssn = result[0];
+            else res.status(500).send({ err : "일치하는 회원정보가 없습니다", ok : false });
+
+            connection.release();
+        });
+    });
+    if(ssn == "") return;
+
+    var today = new Date().getDay(); // 일월화수목금토 = 0123456
+    var authok = false; // 인증 통과 조건
+    if(today >= 1 && today <= 5) // 월-금
+    {
+        if(ssn[5] == today || ssn[5] == (today + 5) % 10) authok = true;
+    }
+    else authok = true; // 주말
+    
+    if(!authok)
+    {
+        res.status(500).send({ err : "사전 예약 대상자가 아닙니다. 잔여백신은 당일 예약이 가능합니다.", ok : false });
+        return;
+    }
+
     pool.getConnection(function (err, connection) {
         var sql = "set sql_safe_updates=0; UPDATE PERSON SET IsAuth=1 WHERE Email=? and Password=?";
         connection.query(sql, datas, function (err, result) {
             if (err)
             {
-                res.status(500).send({ err : err });
+                res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
 
             if (result > 0) res.send({ ok : true}); // 인증 성공 (result : UPDATE 성공한 tuple 개수)
-            else res.send({ ok : false});
+            else res.send({ err : "일치하는 회원정보가 없습니다", ok : false});
 
             connection.release();
         });
@@ -62,8 +103,7 @@ router.post('/selfcheck', function (req, res, next) {
  * NONE
  *
  * === server-return ===
- * sido : 시도 코드 리스트 [{Code: 시도 코드 (정수형), SiDo: 시도명}]
- * sigungu : 시군구 코드 리스트 [{Code: 시군구 코드 (정수형), SiGunGu: 시군구명}]
+ * sigungu : 시군구 코드 리스트 [{Code: 시군구 코드, SiGunGu: 시군구명, sido: 시도 코드}]
  *
 */
 router.get('/getloclist', function (req, res, next) {
@@ -77,20 +117,7 @@ router.get('/getloclist', function (req, res, next) {
                 console.error("err : " + err);
             }
 
-            pool.getConnection(function (err, connection) {
-                var sql = "SELECT * FROM SIDO";
-                connection.query(sql, function (err, result2) {
-                    if (err)
-                    {
-                        res.status(500).send({ err : "DB 오류" });
-                        console.error("err : " + err);
-                    }
-
-                    res.send({ sigungu : result1, sido : result2});
-                    connection.release();
-                });
-            });
-
+            res.send({ sigungu : result1 });
             connection.release();
         });
     });
