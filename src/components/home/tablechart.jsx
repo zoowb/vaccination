@@ -3,7 +3,7 @@ import "./tablechart.css";
 
 const TableChart = ({location, first, done}) => {
     return (
-        <div className={"line"}>
+        <div className={"visualline"}>
             <div className={"location"}>{location}</div>
             <div className={"first"}>{first}</div>
             <div className={"done"}>{done}</div>
