@@ -13,7 +13,7 @@ const HospitalList = ( {name, vname1, vnum1, vname2, vnum2, vname3, vnum3, vname
 
     const Modal = () => {
         return (
-            <div className = "modal">
+            <div className = "noshowmodal">
                 <div className = "bg"></div>
                 <div className = "modalBox">
                         <div className = "modaltext">접종할 백신을 선택해주세요.</div>
@@ -36,7 +36,7 @@ const HospitalList = ( {name, vname1, vnum1, vname2, vnum2, vname3, vnum3, vname
     }
 
     return(
-        <button type="button" className={"listBigBox"}>
+        <button type="button" className={"hospitallistBigBox"}>
             <section className={"listBox"}>
                 <div>
                     <div className={"hospitalName"}>{name}</div>

@@ -1,4 +1,4 @@
-.listBigBox
+.hospitallistBigBox
 {
     display: flex;
     width: 720px;
@@ -8,7 +8,7 @@
     border: none;
 }
 
-.listBox
+.hospitallistBigBox .listBox
 {
     display: flex;
     justify-content: space-between;
@@ -17,7 +17,7 @@
     margin: auto;
 }
 
-.hospitalName
+.hospitallistBigBox .listBox .hospitalName
 {
     font-size: 36px;
     font-family: Roboto;
@@ -27,13 +27,13 @@
     margin-left: 7px;
 }
 
-.vaccine{
+.hospitallistBigBox .listBox .vaccine 
+{
     display: flex;
 }
 
-.vaccineName,
-.vaccineNum,
-.comma
+.hospitallistBigBox .listBox .vaccine .vaccineName,
+.hospitallistBigBox .listBox .vaccine .vaccineNum
 {
     display: flex;
     font-size: 25px;
@@ -44,7 +44,7 @@
     margin-left: 7px;
 }
 
-.hospitalTime
+.hospitallistBigBox .listBox .hospitalTime
 {
     font-size: 28px;
     font-weight: 600;
@@ -54,7 +54,7 @@
     margin-left: 7px;
 }
 
-.redButton
+.hospitallistBigBox .listBox .redButton 
 {
     width: 160px;
     height: 42px;
@@ -65,7 +65,7 @@
     border: none;
 }
 
-.redButtonText
+.hospitallistBigBox .listBox .redButton .redButtonText
 {
     color: white;
     font-family: Roboto;
@@ -74,7 +74,7 @@
     text-align: center;
 }
 
-.modal
+.noshowmodal
 { 
     position: fixed;
     top: 0;
@@ -87,14 +87,14 @@
     z-index: 1000;
 }
 
-.modal .bg
+.noshowmodal .bg
 { 
     width: 100%;
     height: 100%;
     background-color: rgba(238, 245, 252, 0.6);
 }
 
-.modalBox
+.noshowmodal .modalBox
 {
     position: absolute;
     background-color: #fff;
@@ -107,7 +107,7 @@
     border-radius: 20px;
 }
 
-.modalBox .closeBtn
+.noshowmodal .modalBox .closeBtn
 {
     display: flex;
     align-items: center;
@@ -119,7 +119,7 @@
     margin: 30px auto
 }
 
-.modalBox .closeBtn .btnText
+.noshowmodal .modalBox .closeBtn .btnText
 {
     color: white;
     font-family: Roboto;
@@ -128,14 +128,14 @@
     text-align: center;
 }
 
-.modalBox .modalsm{
+.noshowmodal .modalBox .modalsm{
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
 }
 
-.modalBox .modaltext
+.noshowmodal .modalBox .modaltext
 {
     display: flex;
     font-family: Roboto;
@@ -149,7 +149,7 @@
     margin-top: 66px;
 }
 
-.modalBox .checkset{
+.noshowmodal .modalBox .checkset{
     display: flex;
     width: 1000px;
     height: 93px;
@@ -158,14 +158,14 @@
     justify-content: center;
 }
 
-.modalBox .checkbox{
+.noshowmodal .modalBox .checkbox{
     width: 30px;
     height: 30px;
     margin: 5px;
     background-color: white;
 }
 
-.modalBox .checkboxtext{
+.noshowmodal .modalBox .checkboxtext{
     font-family: Roboto;
     font-size: 48px;
     font-style: normal;

@@ -1,17 +1,17 @@
-.leftside
+.noshow .leftside
 {
     width: 720px;
     height: 1034px;
     align-items: flex-end;
 }
 
-.head
+.noshow .head
 {
     width: 720px;
     height: 188px;
 }
 
-.checkbig{
+.noshow .checkbig{
     display: flex;
     align-items: center;
     width: 502px;
@@ -25,13 +25,13 @@
     z-index: 1500;
 }
 
-.contents
+.noshow
 {
     display: flex;
     align-items: flex-end;
 }
 
-.hospitalListBox
+.noshow .hospitalListBox
 {
     width: 720px;
     height: 761px;
@@ -39,19 +39,19 @@
     -ms-overflow-style: none;
 }
 
-.hospitalListBox::-webkit-scrollbar{
+.noshow .hospitalListBox::-webkit-scrollbar{
     display: none;
     width: 0 !important;
 }
 
-.mapBox
+.noshow .mapBox
 {
     width: 720px;
     height: 1034px;
     background-color:bisque;
 }
 
-.mpaMap{
+.noshow .mpaMap{
     width: 720px;
     height: 100%;
 }
