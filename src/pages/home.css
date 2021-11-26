@@ -138,7 +138,7 @@
     
 }
 
-.homeall .btnset{
+.homeall .mondaybtnset{
     width: 612px;
     height: 58px;
     background: #FFFFFF;
@@ -147,6 +147,17 @@
     justify-content: center;
     align-items: center;
     margin: none;
+}
+
+.homeall .locagebtnset{
+    width: 612px;
+    height: 58px;
+    background: #FFFFFF;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .homeall .btnset .monweekday{
@@ -173,7 +184,7 @@
     margin-left: auto;
 }
 
-.locage{
+.homeall .selectbutton{
     display: flex;
     align-items: center;
     justify-content: center;
