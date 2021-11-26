@@ -13,7 +13,7 @@ const LOCATIONS3 = [{ value: 1, name: "수서동" }];
 
 const SelectBoxT = (props) => {
   return (
-    <select className="targetBox">
+    <select className="lookuptargetBox">
       {props.inform.map((option) => (
         <option key={option.value} value={option.value}>
           {option.name}
@@ -25,7 +25,7 @@ const SelectBoxT = (props) => {
 
 const SelectBoxL = (props) => {
   return (
-    <select className="locationBox">
+    <select className="lookuplocationBox">
       {props.inform.map((option) => (
         <option key={option.value} value={option.value}>
           {option.name}
@@ -37,7 +37,7 @@ const SelectBoxL = (props) => {
 
 const Search = () => {
   return (
-    <div className="searchset">
+    <div className="lookupsearchset">
       <div>
         <input
           className={"searchbar"}
@@ -79,7 +79,7 @@ const Search = () => {
 
 const Hospitallist = ({ address, hname }) => {
   return (
-    <button type="button" className="hospitalist">
+    <button type="button" className="lookuphospitalist">
       <div className="haddress">{address}</div>
       <div className="hname">{hname}</div>
     </button>
@@ -98,7 +98,7 @@ const HospitalLookDetail = ({
   etc,
 }) => {
   return (
-    <div className="whitebox">
+    <div className="lookupwhitebox">
       <div className="firstline">
         <div className="detailname">{hname}</div>
         <button type="button" className="redbutton">
@@ -153,7 +153,7 @@ const HospitalLookDetail = ({
 const Lookup = () => {
   return (
     <WholeScreen>
-      <div className="topside">
+      <div className="lookuptopside">
         <div className="biglayout">
           <div className="titlelu">대상</div>
           <SelectBoxT inform={TARGETS}></SelectBoxT>
@@ -179,10 +179,10 @@ const Lookup = () => {
           </div>
         </div>
       </div>
-      <hr className={"hr"}></hr>
+      <hr className={"lookuphr"}></hr>
       <Search />
-      <div className="searchnum">검색결과 총 24개</div>
-      <div className="bottom">
+      <div className="lookupsearchnum">검색결과 총 24개</div>
+      <div className="lookupbottomside">
         <div className="hlist">
           <Hospitallist
             address={"서울특별시 강남구 세곡동"}
