@@ -26,20 +26,21 @@ const Home = () => {
             <div className={"linechart"}>
               <LineChart />
             </div>
-            <div className={"btnset"}>
-              <button type="button" className={"monweekday"}>월별</button>
-              <button type="button" className={"monweekday"}>주별</button>
-              <button type="button" className={"monweekday"}>날짜별</button>
+            <div className={"mondaybtnset"}>
+              <button type="button" className={"selectbutton"}>월별</button>
+              <button type="button" className={"selectbutton"}>날짜별</button>
             </div>
           </div>
         </div>
         <div className={"rightside"}>
-          <div>
-            <div className={"btnset"}>
-              <button type="button" className={"locage"}>지역별 접종 현황</button>
-              <button type="button" className={"locage"}>연령별 접종 현황</button>
-            </div>
-            <div className={"tablechart"}>
+          <div className={"smallright"}>
+            <div>
+              <div className={"locagebtnset"}>
+                <button type="button" className={"selectbutton"}>지역별 접종 현황</button>
+                <button type="button" className={"selectbutton"}>연령별 접종 현황</button>
+              </div>
+              <div className={"tablechart"}>
+              </div>
             </div>
           </div>
         </div>
