@@ -1,8 +1,8 @@
-.all{ 
+.homeall{ 
     display: flex;
 }
 
-.smallleft{
+.homeall .leftside .smallleft{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,7 +22,7 @@
     margin-bottom: 28px;
 }
 
-.leftside{
+.homeall .leftside{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -30,7 +30,7 @@
     height: 890px;
 }
 
-.boldtitle{
+.homeall .leftside .smallleft .boldtitle{
     width: 100%;
     display: flex;
     justify-content: center;
@@ -43,7 +43,7 @@
     margin-bottom: 36px; 
 }
 
-.donebox{
+.homeall .leftside .smallleft .donebox{
     width:100%;
     height: 113px;
     padding:0 70px; 
@@ -53,7 +53,7 @@
     margin-bottom: 23px;
 }
 
- .done{
+.homeall .leftside .smallleft .donebox .done{
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -62,7 +62,7 @@
     margin-right: 15px;
 } 
 
-.bluetitle{
+.homeall .leftside .smallleft .donebox .done .bluetitle{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,7 +79,7 @@
     margin-bottom: 13px;
 }
 
-.bluenum{
+.homeall .leftside .smallleft .donebox .done .bluenum{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -91,7 +91,7 @@
     color: #5064C5;
 }
 
-.blueper{
+.homeall .leftside .smallleft .donebox .done .blueper{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -103,7 +103,7 @@
     color: #5064C5;
 }
 
-.redtitle{
+.homeall .leftside .smallleft .donebox .done .redtitle{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -119,7 +119,7 @@
     margin-bottom: 13px;
 }
 
-.rednum{
+.homeall .leftside .smallleft .donebox .done .rednum{
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
@@ -128,7 +128,7 @@
     color: #CD2A82;
 }
 
-.redper{
+.homeall .leftside .smallleft .donebox .done .redper{
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
@@ -138,7 +138,7 @@
     
 }
 
-.btnset{
+.homeall .btnset{
     width: 612px;
     height: 58px;
     background: #FFFFFF;
@@ -149,7 +149,7 @@
     margin: none;
 }
 
-.monweekday{
+.homeall .btnset .monweekday{
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
@@ -164,7 +164,7 @@
     margin: 7px 12px;
 }
 
-.rightside{
+.homeall .rightside{
     display: flex;
     align-items: center;
     justify-content: center;
