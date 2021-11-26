@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import WholeScreen from "../components/wholeScreen";
+import {WholeScreenWithHeader} from "../components/wholeScreen";
 import Vaccineicon from "./image/vaccineicon.png";
 import "./lookup.css";
 
@@ -152,7 +152,7 @@ const HospitalLookDetail = ({
 
 const Lookup = () => {
   return (
-    <WholeScreen>
+    <WholeScreenWithHeader>
       <div className="lookuptopside">
         <div className="biglayout">
           <div className="titlelu">대상</div>
@@ -217,7 +217,7 @@ const Lookup = () => {
           etc={"평일점심 12:00 - 13:00"}
         />
       </div>
-    </WholeScreen>
+    </WholeScreenWithHeader>
   );
 };
 export default Lookup;
