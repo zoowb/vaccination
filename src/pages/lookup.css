@@ -1,18 +1,11 @@
-.lookuptargetBox {
-  width: 606px;
-  height: 46.13px;
-  background-color: white;
-  border: 1px solid #9a9a9a;
-  box-sizing: border-box;
-  font-family: Roboto;
-  font-weight: 400px;
-  font-style: normal;
-  font-size: 22px;
-  border: none;
+.lookup{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .lookuplocationBox {
-  width: 183px;
+  width: 230px;
   height: 46.13px;
   background-color: white;
   border: 1px solid #9a9a9a;
@@ -72,7 +65,7 @@
 .lookupsearchset .radioset .hSelect {
   display: flex;
   align-items: center;
-  width: 100px;
+  width: 127px;
 }
 
 .lookupsearchset .radioset .hSelect .searchradio {
@@ -81,12 +74,12 @@
   margin-right: 15px;
 }
 
-.lookupsearchset .radioset .hSelect.radiotext {
+.lookupsearchset .radioset .hSelect .radiotext {
   display: flex;
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
-  font-size: 24px;
+  font-size: 28px;
   color: black;
 }
 
@@ -123,13 +116,24 @@
   height: 473.76px;
   background-color: white;
   overflow-y: scroll;
-  -ms-overflow-style: none;
   align-items: center;
+  padding-top: 30px;
+  padding-bottom: 50px;
 }
 
 .lookupwhitebox::-webkit-scrollbar {
-  display: none;
-  width: 0 !important;
+  width: 10px;
+  border-radius: 30px;
+}
+
+.lookupwhitebox::-webkit-scrollbar-thumb{
+  background-color: #c4c4c4;
+  border-radius: 30px;
+}
+
+.lookupwhitebox::-webkit-scrollbar-track {
+  background-color: #f4f4f4;
+  border-radius: 30px;
 }
 
 .lookupwhitebox .firstline {
@@ -306,11 +310,11 @@
 
 .lookuptopside {
   justify-content: left;
-  margin-right: 110px;
 }
 
 .lookuptopside .biglayout {
   display: flex;
+  align-items: center;
   margin-bottom: 35.56px;
 }
 
@@ -330,13 +334,11 @@
 }
 
 .lookuptopside .biglayout .checkset {
-  width: 220px;
-  height: 26.91px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 45.17px;
-  margin-left: 100px;
+  width: 220px;
+  height: 26.91px;
+  margin-left: 2px;
 }
 
 .lookuptopside .biglayout .checkset .checkbox {
@@ -390,20 +392,30 @@
   background-color: #9a9a9a;
   width: 100%;
   height: 0px;
-  margin: 41px;
+  margin-top: 41px;
+  margin-bottom: 41px;
 }
 
 .lookupbottomside .hlist {
-  width: 451px;
+  width: 461px;
   height: 473.76px;
   overflow-y: scroll;
-  -ms-overflow-style: none;
   margin-right: 33px;
 }
 
 .lookupbottomside .hlist::-webkit-scrollbar {
-  display: none;
-  width: 0 !important;
+  width: 10px;
+  border-radius: 30px;
+}
+
+.lookupbottomside .hlist::-webkit-scrollbar-thumb {
+  background-color: #c4c4c4;
+  border-radius: 30px;
+}
+
+.lookupbottomside .hlist::-webkit-scrollbar-track {
+  background-color: #f4f4f4;
+  border-radius: 30px;
 }
 
 .lookupbottomside {
