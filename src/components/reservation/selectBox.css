@@ -1,9 +1,13 @@
 .selectBoxSection {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
 
 .selectBoxSection .selectBox {
-  width: 280px;
+  width: 422.39px;
   height: 60px;
   padding: 10px;
   /* background: url("../../pages/image/down.svg") no-repeat 95% 50%; */
