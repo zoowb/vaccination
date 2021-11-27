@@ -1,8 +1,9 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const jwt = require("../modules/jwt");
-const pool = require("../modules/mysql");
-const pool2 = require("../modules/mysql2");
+const jwt = require('../modules/jwt');
+const pool = require('../modules/mysql');
+const pool2 = require('../modules/mysql2');
+const locationList = require('../modules/locationList');
 
 /* ===== 사전예약-본인확인 처리 =====
  *
@@ -24,64 +25,63 @@ const pool2 = require("../modules/mysql2");
  *  금 - 5, 0
  *  주말 - 모두 가능
  *  ex) 990821 -> 1(월요일 신청)
- *
- */
-router.post("/selfcheck", async function (req, res, next) {
-  const email = req.body.email;
-  const pass = req.body.passwd;
+ * 
+*/
+router.post('/selfcheck', async function (req, res, next) {
+    const email = req.body.email;
+    const pass = req.body.passwd;
 
-  let err_code = 0;
-  let err_msg = "";
+    let err_code = 0;
+    let err_msg = "";
 
-  const connection = await pool2.getConnection(async (conn) => conn);
-  try {
-    const result1 = await connection.query(
-      "select ssn from person where Email=? and Password=?",
-      [email, pass]
-    );
-    const data1 = result1[0];
+    const connection = await pool2.getConnection(async conn => conn);
+    try {
+        const result1 = await connection.query("select ssn from person where Email=? and Password=?", [email, pass]);
+        const data1 = result1[0];
+        
+        if(data1.length == 0)
+        {
+            err_code = 2;
+            throw new Error("일치하는 회원정보가 없습니다.");
+        }
 
-    if (data1.length == 0) {
-      err_code = 2;
-      throw new Error("일치하는 회원정보가 없습니다.");
+        // 요일별 통과조건 결정 //
+        const icon = data1[0].ssn.charAt(5);
+        const today = new Date().getDay();      // 일월화수목금토 = 0123456
+        let authok = false;                     // 인증 통과 조건
+        if(today >= 1 && today <= 5)            // 월-금
+        {
+            if(icon == String(today) || icon == String((today + 5) % 10)) authok = true;
+        }
+        else authok = true;                     // 주말
+        
+        if(!authok)
+        {
+            err_code = 2;
+            throw new Error("사전 예약 대상자가 아닙니다. 잔여백신은 당일 예약이 가능합니다.");
+        }
+
+        await connection.query("set sql_safe_updates=0; UPDATE PERSON SET IsAuth=1 WHERE Email=? and Password=?", [email, pass]);
     }
-
-    // 요일별 통과조건 결정 //
-    const icon = data1[0].ssn.charAt(5);
-    const today = new Date().getDay(); // 일월화수목금토 = 0123456
-    let authok = false; // 인증 통과 조건
-    if (today >= 1 && today <= 5) {
-      // 월-금
-      if (icon == String(today) || icon == String((today + 5) % 10))
-        authok = true;
-    } else authok = true; // 주말
-
-    if (!authok) {
-      err_code = 2;
-      throw new Error(
-        "사전 예약 대상자가 아닙니다. 잔여백신은 당일 예약이 가능합니다."
-      );
+    catch (err) {
+        if(err_code < 2)
+        {
+            err_code = 1;
+            err_msg = "서버에서 오류가 발생했습니다.";
+            console.error("err : " + err);
+            throw err;
+        }
+        else err_msg = err.message;
     }
-
-    await connection.query(
-      "set sql_safe_updates=0; UPDATE PERSON SET IsAuth=1 WHERE Email=? and Password=?",
-      [email, pass]
-    );
-  } catch (err) {
-    if (err_code < 2) {
-      err_code = 1;
-      err_msg = "서버에서 오류가 발생했습니다.";
-      console.error("err : " + err);
-      throw err;
-    } else err_msg = err.message;
-  } finally {
-    if (err_code == 0) res.send({ ok: true });
-    else res.status(500).send({ err: err_msg, ok: false });
-    connection.release();
-  }
+    finally {
+        if(err_code == 0) res.send({ ok : true });
+        else res.status(500).send({ err : err_msg, ok : false });
+        connection.release();
+    }
 });
 
-/* ===== 사전예약-예약 페이지 get 표시 =====
+
+/* ===== 시도 리스트 데이터 가져오기 =====
  *
  * 모든 주소 정보를 반환합니다
  *
@@ -89,42 +89,33 @@ router.post("/selfcheck", async function (req, res, next) {
  * NONE
  *
  * === server-return ===
- * sigungu : 시군구 코드 리스트 [{Code: 시군구 코드, SiGunGu: 시군구명, sido: 시도 코드}]
+ * sido : 시도 코드 리스트 [{Code: 시도 코드, sido: 시도명}]
  *
- */
-
-router.get("/getSidoList", function (req, res, next) {
-  pool.getConnection(function (err, connection) {
-    var sql = "SELECT * FROM SIDO";
-    connection.query(sql, function (err, result1) {
-      if (err) {
-        res.status(500).send({ err: "DB 오류" });
-        console.error("err : " + err);
-      }
-
-      res.send({ sido: result1 });
-      connection.release();
-    });
-  });
+*/
+router.get('/getSidoList', async function (req, res, next) {
+    const result = await locationList.GetSido();
+    if(result !== undefined) res.send({ sido : result });
+    else res.status(500).send({ err : "DB 오류" });
 });
 
-router.post("/getSigunguList", function (req, res, next) {
-  var sido = req.body.sido;
-  var data = [sido];
 
-  pool.getConnection(function (err, connection) {
-    var sql =
-      "SELECT G.SiGunGu FROM SIGUNGU G, SIDO D WHERE G.sido=D.Code AND D.Sido=?;";
-    connection.query(sql, data, async function (err, result) {
-      if (err) {
-        res.status(500).send({ err: "DB 오류" });
-        console.error("err : " + err);
-      }
-      res.send({ SiGunGu: result });
-      connection.release();
-    });
-  });
+/* ===== 시군구 리스트 데이터 가져오기 =====
+ *
+ * 시도에 포함되는 시군구 목록을 가져옵니다
+ *
+ * === client-input ===
+ * sido : 시도 코드 (int)
+ *
+ * === server-return ===
+ * SiGunGu : 시군구 코드 리스트 [{Code: 시군구 코드, SiGunGu: 시군구명}]
+ *
+*/
+router.post("/getSigunguList", async function (req, res, next) {
+    const result = await locationList.GetSigunguBySido(req.body.sido);
+    if(result !== undefined) res.send({ SiGunGu : result });
+    else res.status(500).send({ err : "DB 오류" });
 });
+
 
 /* ===== 사전예약-예약 전체검색 처리 =====
  *
@@ -136,26 +127,27 @@ router.post("/getSigunguList", function (req, res, next) {
  * === server-return ===
  * hos_info : 병원 정보 리스트 [{Hnumber: 병원 아이디, Hname: 병원 이름, Hlocation: 병원 상세주소}]
  *
- */
-router.post("/search", function (req, res, next) {
-  var data = req.body.data; // 시군구주소
-  var data = [data];
+*/
+router.post('/search', function (req, res, next) {
+    var data = req.body.data; // 시군구주소
+    var data = [data];
 
-  var sql =
-    "SELECT Hnumber, Hname, Hlocation FROM hospital as h, sigungu as s WHERE s.Code=h.Sigungucode and s.Code=?;";
+    var sql = "SELECT Hnumber, Hname, Hlocation FROM hospital as h, sigungu as s WHERE s.Code=h.Sigungucode and s.Code=?;";
 
-  pool.getConnection(function (err, connection) {
-    connection.query(sql, data, function (err, result) {
-      if (err) {
-        res.status(500).send({ err: "DB 오류" });
-        console.error("err : " + err);
-      }
+    pool.getConnection(function (err, connection) {
+        connection.query(sql, data, function (err, result) {
+            if (err)
+            {
+                res.status(500).send({ err : "DB 오류" });
+                console.error("err : " + err);
+            }
 
-      res.send({ hos_info: result }); // 검색 결과 반환
-      connection.release();
+            res.send({hos_info: result}); // 검색 결과 반환
+            connection.release();
+        });
     });
-  });
 });
+
 
 /* ===== 사전예약-예약 세부검색 get 처리 =====  (일부 완성 - 아직 time 정보 반환 X)
  *
@@ -172,49 +164,51 @@ router.post("/search", function (req, res, next) {
  * revp_bytime : 예약인원 객체 배열 [{date: 예약 날짜, time: 예약 시간, count: 해당 시간대 예약 인원수}]
  *
 */
-router.get("/search/:idx/:date", function (req, res, next) {
-  var idx = req.params.idx;
-  var date = req.params.date;
-  var data1 = [idx];
-  var data2 = [idx, date];
+router.get('/search/:idx/:date', function (req, res, next) {
+    var idx = req.params.idx;
+    var date = req.params.date;
+    var data1 = [idx];
+    var data2 = [idx, date];
 
-  pool.getConnection(function (err, connection) {
-    var sql = "SELECT * FROM HOSPITAL WHERE Hnumber=?"; // 기관의 세부 정보 반환
-    connection.query(sql, data1, function (err, result) {
-      if (err) {
-        res.status(500).send({ err: "DB 오류" });
-        console.error("err : " + err);
-      }
-      if (result === undefined) {
-        // 검색 결과가 없어도 오류를 반환
-        res.status(500).send({ err: "병원 검색 실패" });
-        connection.release();
-      }
+    pool.getConnection(function (err, connection) {
+        var sql = "SELECT * FROM HOSPITAL WHERE Hnumber=?"; // 기관의 세부 정보 반환
+        connection.query(sql, data1, function (err, result) {
+            if (err)
+            {
+                res.status(500).send({ err : "DB 오류" });
+                console.error("err : " + err);
+            }
+            if(result === undefined) // 검색 결과가 없어도 오류를 반환
+            {
+                res.status(500).send({ err : "병원 검색 실패" });
+                connection.release();
+            }
 
-      pool.getConnection(function (err, connection) {
-        var sql2 =
-          "select left(r.Rdate, 10) as date, right(r.Rdate, 8) as time, count(*) as count "; // 시간대별 예약한 인원 그룹 반환
-        sql2 += "from reservation as r, hospital as h ";
-        sql2 += "where r.Hnumber = h.Hnumber and r.Hnumber = ? ";
-        sql2 += "group by time ";
-        sql2 += "having date = ?";
-        connection.query(sql2, data2, function (err, resultg) {
-          if (err) {
-            res.status(500).send({ err: "DB 오류" });
-            console.error("err : " + err);
-          }
+            pool.getConnection(function (err, connection) {
+                var sql2 = "select left(r.Rdate, 10) as date, right(r.Rdate, 8) as time, count(*) as count "; // 시간대별 예약한 인원 그룹 반환
+                sql2 += "from reservation as r, hospital as h ";
+                sql2 += "where r.Hnumber = h.Hnumber and r.Hnumber = ? "
+                sql2 += "group by time ";
+                sql2 += "having date = ?";
+                connection.query(sql2, data2, function (err, resultg) {
+                    if (err)
+                    {
+                        res.status(500).send({ err : "DB 오류" });
+                        console.error("err : " + err);
+                    }
 
-          res.send({ hos_info: result[0], revp_bytime: resultg });
-          connection.release();
+                    res.send({ hos_info : result[0], revp_bytime : resultg });
+                    connection.release();
+                });
+            });
+
+            connection.release();
         });
-      });
-
-      connection.release();
     });
-  });
 });
 
-/* ===== 사전예약-예약 처리 ===== // 트랜잭션 필요 (추후 수정)
+
+/* ===== 사전예약-예약 처리 =====
  *
  * 새로운 예약 정보를 등록합니다
  * 예약번호(Rnumber)는 DB에서 auto increment속성을 가지므로 따로 인자를 줄 필요 없습니다 (자동으로 번호가 생성됨)
@@ -232,62 +226,53 @@ router.get("/search/:idx/:date", function (req, res, next) {
  * === server-return ===
  * ok = 예약 성공시 true, 실패시 false 반환
  *
- */
-router.post("/register", async function (req, res, next) {
-  var token = req.body.jwtToken;
-  var rev_date = req.body.rev_date;
-  var vac1 = req.body.vac1;
-  var vac1_hos = req.body.vac1_hos;
-  var vac1_date = req.body.vac1_date;
-  var vac2 = req.body.vac2;
-  var vac2_hos = req.body.vac2_hos;
-  var vac2_date = req.body.vac2_date;
+*/
+router.post('/register', async function (req, res, next) {
+    const token = req.body.jwtToken;
+    const rev_date = req.body.rev_date;
+    const vac1 = req.body.vac1;
+    const vac1_hos = req.body.vac1_hos;
+    const vac1_date = req.body.vac1_date;
+    const vac2 = req.body.vac2;
+    const vac2_hos = req.body.vac2_hos;
+    const vac2_date = req.body.vac2_date;
 
-  var token_res = await jwt.verify(token); // 토큰 해독
-  var rev_ssn = token_res.ssn; // 예약자 ssn
+    const token_res = await jwt.verify(token); // 토큰 해독
+    const rev_ssn = token_res.ssn; // 예약자 ssn
 
-  var data1 = [vac1_hos, vac1, rev_ssn, vac1_date, 1]; // 1차 예약 데이터
-  var data2 = [vac2_hos, vac2, rev_ssn, vac2_date, 2]; // 2차 예약 데이터
-  var data3 = [rev_date, rev_ssn]; // 예약날짜 갱신
+    let err_code = 0;
+    let err_msg = "";
 
-  pool.getConnection(function (err, connection) {
-    var sql1 =
-      "INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Ssn`, `Rdate`, `Order`, `IsVaccine`) values(?,?,?,?,1,0);";
-    connection.query(sql1, data1, function (err, result) {
-      if (err) {
-        res.status(500).send({ err: "DB 오류", ok: false });
-        console.error("err : " + err);
-      }
+    const connection = await pool2.getConnection(async conn => conn);
+    try {
+        await connection.beginTransaction(); // 트랜잭션 시작
 
-      pool.getConnection(function (err, connection) {
-        var sql2 =
-          "INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Ssn`, `Rdate`, `Order`, `IsVaccine`) values(?,?,?,?,2,0);";
-        connection.query(sql2, data2, function (err, result) {
-          if (err) {
-            res.status(500).send({ err: "DB 오류", ok: false });
+        const data1 = [vac1_hos, vac1, rev_ssn, vac1_date, 1]; // 1차 예약 데이터
+        const data2 = [vac2_hos, vac2, rev_ssn, vac2_date, 2]; // 2차 예약 데이터
+        const data3 = [rev_date, rev_ssn]; // 예약날짜 갱신
+
+        await connection.query("INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Ssn`, `Rdate`, `Order`, `IsVaccine`) values(?,?,?,?,1,0);", data1);
+        await connection.query("INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Ssn`, `Rdate`, `Order`, `IsVaccine`) values(?,?,?,?,2,0);", data2);
+        await connection.query("UPDATE PERSON SET rday=? WHERE Ssn=?;", data3);
+
+        res.send({ ok : true });
+        await connection.commit(); // 트랜잭션 성공
+    }
+    catch (err) {
+        if(err_code != 2)
+        {
+            err_msg = "서버에서 오류가 발생했습니다. 예약을 할 수 없습니다.";
             console.error("err : " + err);
-          }
+            throw err;
+        }
+        else err_msg = err.message;
+        res.status(500).send({ err : err_msg, ok : false });
 
-          pool.getConnection(function (err, connection) {
-            var sql3 = "UPDATE PERSON SET rday=? WHERE Ssn=?;";
-            connection.query(sql3, data3, function (err, result) {
-              if (err) {
-                res.status(500).send({ err: "DB 오류", ok: false });
-                console.error("err : " + err);
-              }
-
-              res.send({ ok: true });
-              connection.release();
-            });
-          });
-
-          connection.release();
-        });
-      });
-
-      connection.release();
-    });
-  });
+        await connection.rollback() // 트랜잭션 롤백
+    }
+    finally {
+        connection.release();
+    }
 });
 
 module.exports = router;

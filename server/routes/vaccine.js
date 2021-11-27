@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../modules/mysql');
+const pool2 = require('../modules/mysql2');
 
 /* ===== 잔여백신-예약 백신테이블 처리 =====
  *

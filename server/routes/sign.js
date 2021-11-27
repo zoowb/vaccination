@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('../modules/jwt');
 const pool = require('../modules/mysql');
+const pool2 = require('../modules/mysql2');
+
 
 /* ===== 로그인 페이지 처리 =====
  *
@@ -30,24 +32,26 @@ router.post('/login', function (req, res, next) {
                 res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
-
-            var check = true; // 로그인 조건 검사
-            if(result.length <= 0) check = false;
-
-            if(check) // 로그인 성공
+            else
             {
-                const jwtToken = await jwt.sign({id : result[0].Email, ssn : result[0].Ssn, name : result[0].Name}); // 토큰 생성
-                res.send({ "ok" : true, "jwtToken" : jwtToken.token });
-            }
-            else res.send({ "ok" : false, "jwtToken" : null, err : "일치하는 회원정보가 없습니다" });
+                var check = true; // 로그인 조건 검사
+                if(result.length <= 0) check = false;
 
+                if(check) // 로그인 성공
+                {
+                    const jwtToken = await jwt.sign({id : result[0].Email, ssn : result[0].Ssn, name : result[0].Name}); // 토큰 생성
+                    res.send({ "ok" : true, "jwtToken" : jwtToken.token });
+                }
+                else res.send({ "ok" : false, "jwtToken" : null, err : "일치하는 회원정보가 없습니다" });
+            }
+           
             connection.release();
         });
     });
 });
 
 
-/* ===== 회원가입 페이지 처리 =====
+/* ===== 회원가입 페이지 처리 ===== (수정 필요)
  *
  * 새로운 사용자 정보를 등록합니다 (+아이디, 주민번호 중복 검사)
  *
