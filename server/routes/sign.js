@@ -1,22 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('../modules/jwt');
-
-/* ===== MySQL 연동 =====
- *
- * MySQL DB와 연결합니다
- *
-*/
-const mysql = require('mysql');
-const pool = mysql.createPool({
-    connectionLimit: 5,
-    host: 'localhost',
-    user: 'root',
-    password: '1234',
-    database: 'covid19',
-    multipleStatements: true
-});
-
+const pool = require('../modules/mysql');
 
 /* ===== 로그인 페이지 처리 =====
  *
@@ -36,7 +21,7 @@ router.post('/login', function (req, res, next) {
     var email = req.body.email;
     var pass = req.body.passwd;
     var datas = [email, pass];
-
+    
     pool.getConnection(function (err, connection) {
         var sql = "SELECT * FROM PERSON WHERE Email=? and Password=?;";
         connection.query(sql, datas, async function (err, result) {
@@ -47,12 +32,11 @@ router.post('/login', function (req, res, next) {
             }
 
             var check = true; // 로그인 조건 검사
-            if(result === undefined) check = false;
-            else if(result.length <= 0) check = false;
+            if(result.length <= 0) check = false;
 
             if(check) // 로그인 성공
             {
-                const jwtToken = await jwt.sign({id : result[0].Email, ssn : result[0].Ssn}); // 토큰 생성
+                const jwtToken = await jwt.sign({id : result[0].Email, ssn : result[0].Ssn, name : result[0].Name}); // 토큰 생성
                 res.send({ "ok" : true, "jwtToken" : jwtToken.token });
             }
             else res.send({ "ok" : false, "jwtToken" : null, err : "일치하는 회원정보가 없습니다" });
@@ -90,6 +74,7 @@ router.post('/signup', function (req, res, next) {
 
     var erridd = 0;
     var errssnd = 0;
+    
     pool.getConnection(function (err, connection) {
         var sql = "select * from person where Email=?";
         connection.query(sql, [email], function (err, rows) {
@@ -99,45 +84,42 @@ router.post('/signup', function (req, res, next) {
                 console.error("err : " + err);
             }
             if(rows.length > 0) erridd = 1;
-            connection.release();
-        });
-    });
-    pool.getConnection(function (err, connection) {
-        var sql = "select * from person where Ssn=?";
-        connection.query(sql, [ssn], function (err, rows) {
-            if (err)
-            {
-                res.status(500).send({ err : "DB 오류", ok : false });
-                console.error("err : " + err);
-            }
-            if(rows.length > 0) errssnd = 1;
-            connection.release();
-        });
-    });
 
-    if(erridd == 1)
-    {
-        res.status(500).send({ err : "아이디 중복", ok : false });
-    }
-    else if(errssnd == 1)
-    {
-        res.status(500).send({ err : "주민번호 중복", ok : false });
-    }
-    else
-    {
-        pool.getConnection(function (err, connection) {
-            var sql = "INSERT INTO PERSON(Name, Ssn, Phone, Email, Password, Location) values(?,?,?,?,?,?)";
-            connection.query(sql, datas, function (err, rows) {
-                if (err)
-                {
-                    res.status(500).send({ err : "DB 오류", ok : false });
-                    console.error("err : " + err);
-                }
-                else res.send({ ok : true });
-                connection.release();
+            pool.getConnection(function (err, connection) {
+                var sql = "select * from person where Ssn=?";
+                connection.query(sql, [ssn], function (err, rows) {
+                    if (err)
+                    {
+                        res.status(500).send({ err : "DB 오류", ok : false });
+                        console.error("err : " + err);
+                    }
+                    if(rows.length > 0) errssnd = 1;
+
+                    if(erridd == 1) res.status(500).send({ err : "아이디가 중복되었습니다", ok : false });
+                    else if(errssnd == 1) res.status(500).send({ err : "주민번호 중복되었습니다", ok : false });
+                    else
+                    {
+                        pool.getConnection(function (err, connection) {
+                            var sql = "INSERT INTO PERSON(Name, Ssn, Phone, Email, Password, Location) values(?,?,?,?,?,?)";
+                            connection.query(sql, datas, function (err, rows) {
+                                if (err)
+                                {
+                                    res.status(500).send({ err : "DB 오류", ok : false });
+                                    console.error("err : " + err);
+                                }
+                                else res.send({ ok : true });
+                                connection.release();
+                            });
+                        });
+                    }
+
+                    connection.release();
+                });
             });
+
+            connection.release();
         });
-    }
+    });
 });
 
 

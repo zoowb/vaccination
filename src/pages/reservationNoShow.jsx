@@ -1,5 +1,5 @@
 import Title from "../components/reservation/title";
-import WholeScreen from "../components/wholeScreen";
+import {WholeScreenWithHeader} from "../components/wholeScreen";
 import CheckBox from "../components/reservation/checkBox";
 import HospitalList from "../components/reservation/hospitalList";
 import initTmap from "../components/tmapfornoshow";
@@ -13,7 +13,7 @@ const  ReservationNoShow = () => {
       }, []);
 
     return (
-        <WholeScreen>
+        <WholeScreenWithHeader>
             <section className="noshow">
                 <section className="leftside">
                 <div className="head">
@@ -115,7 +115,7 @@ const  ReservationNoShow = () => {
                     <div className="mapMap" id="map_div"/>
                 </div>
             </section>
-        </WholeScreen>
+        </WholeScreenWithHeader>
     )
 }
 export default ReservationNoShow;

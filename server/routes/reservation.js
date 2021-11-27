@@ -1,21 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("../modules/jwt");
-
-/* ===== MySQL 연동 =====
- *
- * MySQL DB와 연결합니다
- *
- */
-const mysql = require("mysql");
-const pool = mysql.createPool({
-  connectionLimit: 5,
-  host: "localhost",
-  user: "root",
-  password: "1234",
-  database: "covid19",
-  multipleStatements: true,
-});
+const pool = require("../modules/mysql");
+const pool2 = require("../modules/mysql2");
 
 /* ===== 사전예약-본인확인 처리 =====
  *
@@ -24,77 +11,74 @@ const pool = mysql.createPool({
  *
  * === client-input ===
  * email : 사용자 아이디 [DB person.Email]
- * passwd : 사용자 아이디 [DB person.Password]
+ * passwd : 사용자 패스워드 [DB person.Password]
  *
  * === server-return ===
  * ok : 인증 성공시 true, 실패 시 false
- *
+ * err : 에러 발생시 메시지 반환
  *
  *  월 - 1, 6
-    화 - 2, 7
-    수 - 3, 8
-    목 - 4, 9
-    금 - 5, 0
-    주말 - 모두 가능
-    ex) 990821 -> 1(월요일 신청)
- * 
-*/
-router.post("/selfcheck", function (req, res, next) {
-  var email = req.body.email;
-  var pass = req.body.passwd;
-  var datas = [email, pass];
+ *  화 - 2, 7
+ *  수 - 3, 8
+ *  목 - 4, 9
+ *  금 - 5, 0
+ *  주말 - 모두 가능
+ *  ex) 990821 -> 1(월요일 신청)
+ *
+ */
+router.post("/selfcheck", async function (req, res, next) {
+  const email = req.body.email;
+  const pass = req.body.passwd;
 
-  var ssn = "";
-  pool.getConnection(function (err, connection) {
-    var sql = "select ssn from person where Email=? and Password=?";
-    connection.query(sql, datas, function (err, result) {
-      if (err) {
-        res.status(500).send({ err: "DB 오류" });
-        console.error("err : " + err);
-      }
+  let err_code = 0;
+  let err_msg = "";
 
-      if (result > 0) ssn = result[0];
-      else
-        res
-          .status(500)
-          .send({ err: "일치하는 회원정보가 없습니다", ok: false });
+  const connection = await pool2.getConnection(async (conn) => conn);
+  try {
+    const result1 = await connection.query(
+      "select ssn from person where Email=? and Password=?",
+      [email, pass]
+    );
+    const data1 = result1[0];
 
-      connection.release();
-    });
-  });
-  if (ssn == "") return;
+    if (data1.length == 0) {
+      err_code = 2;
+      throw new Error("일치하는 회원정보가 없습니다.");
+    }
 
-  var today = new Date().getDay(); // 일월화수목금토 = 0123456
-  var authok = false; // 인증 통과 조건
-  if (today >= 1 && today <= 5) {
-    // 월-금
-    if (ssn[5] == today || ssn[5] == (today + 5) % 10) authok = true;
-  } else authok = true; // 주말
+    // 요일별 통과조건 결정 //
+    const icon = data1[0].ssn.charAt(5);
+    const today = new Date().getDay(); // 일월화수목금토 = 0123456
+    let authok = false; // 인증 통과 조건
+    if (today >= 1 && today <= 5) {
+      // 월-금
+      if (icon == String(today) || icon == String((today + 5) % 10))
+        authok = true;
+    } else authok = true; // 주말
 
-  if (!authok) {
-    res.status(500).send({
-      err: "사전 예약 대상자가 아닙니다. 잔여백신은 당일 예약이 가능합니다.",
-      ok: false,
-    });
-    return;
+    if (!authok) {
+      err_code = 2;
+      throw new Error(
+        "사전 예약 대상자가 아닙니다. 잔여백신은 당일 예약이 가능합니다."
+      );
+    }
+
+    await connection.query(
+      "set sql_safe_updates=0; UPDATE PERSON SET IsAuth=1 WHERE Email=? and Password=?",
+      [email, pass]
+    );
+  } catch (err) {
+    if (err_code < 2) {
+      err_code = 1;
+      err_msg = "서버에서 오류가 발생했습니다.";
+      console.error("err : " + err);
+      throw err;
+    } else err_msg = err.message;
+  } finally {
+    if (err_code == 0) res.send({ ok: true });
+    else res.status(500).send({ err: err_msg, ok: false });
+    connection.release();
   }
-
-  pool.getConnection(function (err, connection) {
-    var sql =
-      "set sql_safe_updates=0; UPDATE PERSON SET IsAuth=1 WHERE Email=? and Password=?";
-    connection.query(sql, datas, function (err, result) {
-      if (err) {
-        res.status(500).send({ err: "DB 오류" });
-        console.error("err : " + err);
-      }
-
-      if (result > 0) res.send({ ok: true });
-      // 인증 성공 (result : UPDATE 성공한 tuple 개수)
-      else res.send({ err: "일치하는 회원정보가 없습니다", ok: false });
-
-      connection.release();
-    });
-  });
 });
 
 /* ===== 사전예약-예약 페이지 get 표시 =====
@@ -230,7 +214,7 @@ router.get("/search/:idx/:date", function (req, res, next) {
   });
 });
 
-/* ===== 사전예약-예약 처리 =====
+/* ===== 사전예약-예약 처리 ===== // 트랜잭션 필요 (추후 수정)
  *
  * 새로운 예약 정보를 등록합니다
  * 예약번호(Rnumber)는 DB에서 auto increment속성을 가지므로 따로 인자를 줄 필요 없습니다 (자동으로 번호가 생성됨)
@@ -305,92 +289,5 @@ router.post("/register", async function (req, res, next) {
     });
   });
 });
-
-/* ===== 잔여백신-예약 백신테이블 처리 =====
- *
- * 잔여백신 페이지 접속 시, 백신 종류 리스트를 반환합니다
- *
- * === client-input ===
- * NONE
- *
- * === server-return ===
- * vac_list : 백신 종류 리스트 [DB vaccine tuple]
- *
- */
-/*router.post('/vaccine/vaclist', function (req, res, next) {
-    var sql = "SELECT * FROM vaccine;";
-    var data = [];
-    pool.getConnection(function (err, connection) {
-        connection.query(sql, data, function (err, result) {
-            if (err)
-            {
-                res.status(500).send({ err : err });
-                console.error("err : " + err);
-            }
-
-            res.send({vac_list: result}); // 검색 결과 반환
-            connection.release();
-        });
-    });
-});*/
-
-/* ===== 잔여백신-예약 전체검색 처리 ===== (결정사항 X)
- *
- * 시군구 코드를 통해 근처 병원 목록을 검색합니다
- *
- * === client-input ===
- * loc : 시군구 코드
- *
- * === server-return ===
- * hos_info : 병원 정보 리스트 [Hnumber: 병원 아이디, Hname: 병원 이름, Vaccine: DB hospital_vaccine tuple]
- *
- */
-/*router.post('/vaccine/search', function (req, res, next) {
-    var loc = req.body.data; // 시군구주소
-    var datas = [loc];
-
-    var sql = "SELECT Hnumber, Hname FROM hospital as h, sigungu as s WHERE s.Code=h.Sigungucode and s.Code=?;";
-    pool.getConnection(function (err, connection) {
-        connection.query(sql, datas, function (err, result) {
-            if (err)
-            {
-                res.status(500).send({ err : err });
-                console.error("err : " + err);
-            }
-
-            var packet = result;
-            for(var i = 0; i < packet.length; i++)
-            {
-                pool.getConnection(function (err, connection) {
-                    var sql2 = "SELECT Amount, Vnumber FROM hospital as h NATURAL JOIN hospital_vaccine WHERE h.Hnumber=?";
-                    var datas2 = [packet[0].Hnumber];
-                    connection.query(sql2, datas2, function (err, result2) {
-                        if (err)
-                        {
-                            packet[0].Vaccine = undefined;
-                            console.error("err : " + err);
-                        }
-                        else packet[0].Vaccine = result2; // add object property dynamically
-                        console.log(packet[0].Vaccine);
-
-                        connection.release();
-                    });
-                });
-            }
-            // 미완성 (비동기 문제)
-            res.send(packet); // 검색 결과 반환
-            connection.release();
-        });
-    });
-});*/
-
-/* ===== 잔여백신-백신선택및예약 처리 ===== (교차접종 판단X)
- *
- * 서버 '/register'와 동일한 동작을 수행합니다
- *
- * ??? 교차접종의 구체적인 판단 기준이 필요? ???
- *
- */
-// router.post('/vaccine/register', function (req, res, next) { } );
 
 module.exports = router;

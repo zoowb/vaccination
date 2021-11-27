@@ -57,7 +57,6 @@ const Reservation = () => {
             <div className="location">
               <SelectBox pick={pickLoc} />
               <SelectBox pick={pickLoc} />
-              <SelectBox pick={pickLoc} />
             </div>
             <div className="others">
               <div className="date">

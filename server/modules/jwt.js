@@ -12,7 +12,8 @@ module.exports = {
     sign: async (user) => { // 토큰을 생성합니다 (jwt.sign로 인해 비동기 방식으로 동작합니다)
         const payload = { // 유저 정보
             id: user.id,
-            ssn: user.ssn
+            ssn: user.ssn,
+            name: user.name
         };
         const result = { token : jwt.sign(payload, secretKey, options) } // 토큰 생성
         return result;
