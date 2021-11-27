@@ -1,0 +1,76 @@
+.lookup-search {
+  margin-top: 41px;
+}
+
+.lookup-search .firstLine,
+.lookup-search .secondLine {
+  display: flex;
+  width: 1086px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.lookup-search .secondLine {
+  width: 1310px;
+}
+
+.lookup-search .firstLine .title,
+.lookup-search .secondLine .title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 114px;
+  height: 46px;
+  border: 0;
+  border-radius: 20px;
+  background-color: #dad8e0;
+  outline: none;
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.16;
+}
+
+.lookup-search .firstLine .selectSets {
+  display: flex;
+  width: 935px;
+  justify-content: space-between;
+}
+
+.lookup-search .secondLine .searchName {
+  width: 935px;
+  height: 60px;
+  padding-left: 10px;
+  border: 0;
+  box-shadow: 0px 4px 4px 4px rgba(0, 0, 0, 0.25);
+  outline: none;
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+  text-align: left;
+}
+
+.lookup-search .secondLine .searchName::placeholder {
+  color: #dad8e0;
+}
+
+.lookup-search .secondLine .showResult {
+  width: 187px;
+  height: 60px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 20px;
+  background-color: #cd2a82;
+  outline: none;
+  color: #fff;
+  font-family: Roboto;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+  text-align: center;
+}
