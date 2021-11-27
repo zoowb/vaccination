@@ -81,20 +81,20 @@ router.post('/getinfo', async function (req, res, next) {
             res.send({ err : "DB 오류" });
             console.error("err : " + err);
         }
-
-        if (result.length > 0) { // 예약 정보 반환
-            res.send({
-                Name: result[0].Name,
-                Ssn: result[0].Ssn,
-                Phone: result[0].Phone,
-                Email: result[0].Email,
-                Password: result[0].Password,
-                Location: result[0].Location
-            });
-            console.log(result);
-        }
-        else { 
-            res.send({ err : "해당 회원정보가 존재하지 않습니다." });
+        else
+        {
+            if (result.length > 0) { // 예약 정보 반환
+                res.send({
+                    Name: result[0].Name,
+                    Ssn: result[0].Ssn,
+                    Phone: result[0].Phone,
+                    Email: result[0].Email,
+                    Password: result[0].Password,
+                    Location: result[0].Location
+                });
+                console.log(result);
+            }
+            else res.send({ err : "해당 회원정보가 존재하지 않습니다." });
         }
     });
 });
@@ -129,9 +129,11 @@ router.post('/changeinfo', function (req, res, next) {
                 res.send({ err : "DB 오류", ok : false});
                 console.error("err : " + err);
             }
-
-            if(rows.affectedRows > 0) res.send({ ok : true});
-            else res.send({ err : "회원정보가 없습니다.", ok : false});
+            else
+            {
+                if(rows.affectedRows > 0) res.send({ ok : true});
+                else res.send({ err : "회원정보가 없습니다.", ok : false});
+            }
             
             connection.release();
         });
@@ -272,9 +274,11 @@ router.post('/changerev', function (req, res, next) {
                 res.send({ err : "DB 오류"});
                 console.error("err : " + err);
             }
-
-            if(result.affectedRows > 0) res.send({ ok : true });
-            else res.send({ err : "등록된 정보가 없습니다.", ok : false});
+            else
+            {
+                if(result.affectedRows > 0) res.send({ ok : true });
+                else res.send({ err : "등록된 정보가 없습니다.", ok : false});
+            }
             connection.release();
         });
     });

@@ -1,4 +1,4 @@
-const express = require('express');
+M, const express = require('express');
 const router = express.Router();
 const pool = require('../modules/mysql');
 const pool2 = require('../modules/mysql2');
@@ -41,80 +41,26 @@ router.post("/getSigunguList", async function (req, res, next) {
 });
 
 
-/* ===== 병원조회 시군구검색 처리 =====
+/* ===== 기관조회 검색 처리 =====
  *
- * 시군구 코드를 통해 병원을 검색합니다
+ * 시군구와 이름을 통해 기관을 검색합니다
  *
  * === client-input ===
  * sigungu : 시군구 코드
+ * name : 기관 검색명
+ * isHos : 병원/약국 선택. true면 병원, false면 약국 검색
  *
  * === server-return ===
  * list: 병원 정보 리스트 [{Hnumber: 병원 아이디, Hname: 병원 이름, Hlocation: 병원 상세주소}]
  *
 */
-router.post('/searchHosByLoc', function (req, res, next) {
-    var sigungu = req.body.sigungu;
-    var sql = "SELECT Hnumber, Hname, Hlocation FROM HOSPITAL WHERE `Sigungucode`=?";
-
-    pool.getConnection(function (err, connection) {
-        connection.query(sql, [sigungu], function (err, result) {
-            if (err)
-            {
-                res.send({ err : "DB 오류"});
-                console.error("err : " + err);
-            }
-            res.send({list: result});
-            connection.release();
-        });
-    });
-});
-
-
-/* ===== 약국조회 시군구검색 처리 =====
- *
- * 시군구 코드를 통해 약국을 검색합니다
- *
- * === client-input ===
- * sigungu : 시군구 코드
- *
- * === server-return ===
- * list: 약국 정보 리스트 [{Pnumber: 약국 아이디, Pname: 약국 이름, Plocation: 약국 상세주소}]
- *
-*/
-router.post('/searchPhaByLoc', function (req, res, next) {
-    var sigungu = req.body.sigungu;
-    var sql = "SELECT Pnumber, Pname, Plocation FROM PHARMACY WHERE `Sigungucode`=?";
-
-    pool.getConnection(function (err, connection) {
-        connection.query(sql, [sigungu], function (err, result) {
-            if (err)
-            {
-                res.send({ err : "DB 오류"});
-                console.error("err : " + err);
-            }
-            res.send({list: result});
-            connection.release();
-        });
-    });
-});
-
-
-/* ===== 병원조회 시군구&이름검색 처리 =====
- *
- * 시군구와 이름을 통해 병원을 검색합니다
- *
- * === client-input ===
- * sigungu : 시군구 코드
- * name : 병원 검색명
- *
- * === server-return ===
- * list: 병원 정보 리스트 [{Hnumber: 병원 아이디, Hname: 병원 이름, Hlocation: 병원 상세주소}]
- *
-*/
-router.post('/searchHosByName', function (req, res, next) {
+router.post('/search', function (req, res, next) {
     var sigungu = req.body.sigungu;
     var name = req.body.name;
-    var sql = "SELECT Hnumber, Hname, Hlocation FROM HOSPITAL WHERE `Sigungucode`=? and Hname LIKE ?";
+
+    var sql;
+    if(isHos) sql = "SELECT Hnumber, Hname, Hlocation FROM HOSPITAL WHERE `Sigungucode`=? and Hname LIKE ?;";
+    else sql = "SELECT Pnumber, Pname, Plocation FROM PHARMACY WHERE `Sigungucode`=? and Pname LIKE ?;";
 
     pool.getConnection(function (err, connection) {
         connection.query(sql, [sigungu, '%' + name + '%'], function (err, result) {
@@ -123,38 +69,7 @@ router.post('/searchHosByName', function (req, res, next) {
                 res.send({ err : "DB 오류"});
                 console.error("err : " + err);
             }
-            res.send({list: result});
-            connection.release();
-        });
-    });
-});
-
-
-/* ===== 약국조회 시군구&이름검색 처리 =====
- *
- * 시군구와 이름을 통해 약국을 검색합니다
- *
- * === client-input ===
- * sigungu : 시군구 코드
- * name : 약국 검색명
- *
- * === server-return ===
- * list: 약국 정보 리스트 [{Pnumber: 약국 아이디, Pname: 약국 이름, Plocation: 약국 상세주소}]
- *
-*/
-router.post('/searchPhaByName', function (req, res, next) {
-    var sigungu = req.body.sigungu;
-    var name = req.body.name;
-    var sql = "SELECT Pnumber, Pname, Plocation FROM PHARMACY WHERE `Sigungucode`=? and Pname LIKE ?";
-
-    pool.getConnection(function (err, connection) {
-        connection.query(sql, [sigungu, '%' + name + '%'], function (err, result) {
-            if (err)
-            {
-                res.send({ err : "DB 오류"});
-                console.error("err : " + err);
-            }
-            res.send({list: result});
+            else res.send({list: result});
             connection.release();
         });
     });
@@ -193,8 +108,7 @@ router.post('/more', function (req, res, next) {
                 res.send({ err : "DB 오류"});
                 console.error("err : " + err);
             }
-            
-            res.send({info: result[0]});
+            else res.send({info: result[0]});
             connection.release();
         });
     });
