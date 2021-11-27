@@ -13,6 +13,7 @@ import {
   pwValidator,
 } from "../components/modules/validation";
 import "./signup.css";
+import DaumPost from "../components/modules/addr";
 const SignUp = () => {
   const [name, setName] = useState("");
   const [ssn, setSSN] = useState("");
@@ -21,9 +22,34 @@ const SignUp = () => {
   const [pw, setPW] = useState("");
   // const [confirm, setConfirm] = useState(""); //비밀번호 확인 논의 필요
   const [addr, setAddr] = useState("");
+  const [sido, setSido] = useState("");
+  const [sigungu, setSigungu] = useState("");
   const [error, setError] = useState(false);
   const [errorContent, setErrorContent] = useState("");
-  const [dup, setDup] = useState("");
+
+  const [isOpenPost, setIsOpenPost] = useState(false);
+  const onChangeOpenPost = () => {
+    setIsOpenPost(!isOpenPost);
+
+    if (isOpenPost) {
+      const addrBack = document.getElementById("addrBack");
+      addrBack.style.display = "block";
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      const addrBack = document.getElementById("addrBack");
+      return e.target === addrBack ? (addrBack.style.display = "none") : false;
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("addr: ", addr);
+    console.log("sido: ", sido);
+    console.log("sigungu: ", sigungu);
+  }, [addr, sido, sigungu]);
+
   const onClick = () => {
     axios
       .post("/sign/signup", {
@@ -69,10 +95,23 @@ const SignUp = () => {
 
   return (
     <section className="signup">
+      {isOpenPost ? (
+        <section className="background" id="addrBack">
+          <div className="postDiv">
+            <DaumPost
+              setAddr={setAddr}
+              setSido={setSido}
+              setSigungu={setSigungu}
+            />
+          </div>
+        </section>
+      ) : (
+        <></>
+      )}
       <WholeScreen>
         <Link to={"/"}>
           <div className="logo" />
-        </Link>
+        </Link>{" "}
         <WhiteScreen>
           <div className="authImg" />
           <div className="content">
@@ -112,13 +151,15 @@ const SignUp = () => {
               value={pw}
               setValue={setPW}
             />
-            <InputBox
-              type={"text"}
-              placeholder={"주소"}
-              page={"회원가입"}
-              value={addr}
-              setValue={setAddr}
-            />
+            <button className="addr" onClick={onChangeOpenPost}>
+              {addr ? (
+                addr
+              ) : (
+                <span className="addr-placeholder">
+                  주소를 입력하려면 클릭하세요
+                </span>
+              )}
+            </button>
             {error ? <span className="error">{errorContent}</span> : <></>}
             <BlueBtn text={"회원가입"} onClick={onClick}></BlueBtn>
             <LinkBtnSet
