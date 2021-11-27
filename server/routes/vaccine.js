@@ -3,6 +3,7 @@ const router = express.Router();
 const pool = require('../modules/mysql');
 const pool2 = require('../modules/mysql2');
 
+
 /* ===== 잔여백신-예약 백신테이블 처리 =====
  *
  * 잔여백신 페이지 접속 시, 백신 종류 리스트를 반환합니다
@@ -14,7 +15,7 @@ const pool2 = require('../modules/mysql2');
  * vac_list : 백신 종류 리스트 [DB vaccine tuple]
  * 
 */
-/*router.post('/vaclist', function (req, res, next) {
+router.post('/vaclist', function (req, res, next) {
     var sql = "SELECT * FROM vaccine;";
     var data = [];
     pool.getConnection(function (err, connection) {
@@ -29,7 +30,7 @@ const pool2 = require('../modules/mysql2');
             connection.release();
         });
     });
-});*/
+});
 
 
 /* ===== 잔여백신-예약 전체검색 처리 ===== (결정사항 X)

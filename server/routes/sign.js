@@ -153,9 +153,11 @@ router.post('/findID', function (req, res, next) {
                 res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
-
-            if (result.length > 0) res.send({ id : result[0].Email });
-            else res.send({ err : "일치하는 회원정보가 없습니다", id : null });
+            else
+            {
+                if (result.length > 0) res.send({ id : result[0].Email });
+                else res.send({ err : "일치하는 회원정보가 없습니다", id : null });
+            }
 
             connection.release();
         });
@@ -188,10 +190,12 @@ router.post('/findPW', function (req, res, next) {
                 res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
-
-            if (result.length > 0) res.send({ passwd : result[0].Password });
-            else res.send({ err : "일치하는 회원정보가 없습니다", passwd : null });
-
+            else
+            {
+                if (result.length > 0) res.send({ passwd : result[0].Password });
+                else res.send({ err : "일치하는 회원정보가 없습니다", passwd : null });
+            }
+            
             connection.release();
         });
     });

@@ -141,8 +141,7 @@ router.post('/search', function (req, res, next) {
                 res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
             }
-
-            res.send({hos_info: result}); // 검색 결과 반환
+            else res.send({hos_info: result}); // 검색 결과 반환
             connection.release();
         });
     });
@@ -177,6 +176,7 @@ router.get('/search/:idx/:date', function (req, res, next) {
             {
                 res.status(500).send({ err : "DB 오류" });
                 console.error("err : " + err);
+                connection.release();
             }
             if(result === undefined) // 검색 결과가 없어도 오류를 반환
             {
@@ -196,8 +196,7 @@ router.get('/search/:idx/:date', function (req, res, next) {
                         res.status(500).send({ err : "DB 오류" });
                         console.error("err : " + err);
                     }
-
-                    res.send({ hos_info : result[0], revp_bytime : resultg });
+                    else res.send({ hos_info : result[0], revp_bytime : resultg });
                     connection.release();
                 });
             });
