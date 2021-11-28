@@ -33,451 +33,48 @@
 
 .lookupSection .medicalInquiry {
   display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.lookupSection .medicalInquiry .totalNum {
+  font-family: Roboto;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.15;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.lookupSection .medicalInquiry .searchContents {
+  display: flex;
   justify-content: space-between;
   width: 100%;
 }
 
-/* .lookup {
+.lookupSection .beforeSearch {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-}
- */
-/*
-.lookuplocationBox {
-  width: 230px;
-  height: 46.13px;
-  background-color: white;
-  border: 1px solid #9a9a9a;
-  box-sizing: border-box;
-  font-family: Roboto;
-  font-weight: 400px;
-  font-style: normal;
-  font-size: 22px;
-  margin-right: 28px;
-  border: none;
+  width: 1320px;
+  height: 658px;
+  background-color: #fff;
 }
 
-.lookuplocationBox .locationText {
+.lookupSection .beforeSearch .text,
+.lookupSection .beforePick .text {
+  font-size: 36px;
   color: #000;
 }
 
-.lookupsearchset {
+.lookupSection .beforePick {
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  width: 1300px;
-  text-align: left;
-  margin-bottom: 41px;
-}
-
-.lookupsearchset .searchbar {
-  width: 606px;
-  height: 46.13px;
-  background: #ffffff;
-  border: 1px solid #aaaaaa;
-  box-sizing: border-box;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  color: #9a9a9a;
-  border: none;
-}
-
-.lookupsearchset .searchbtn {
-  width: 144.15px;
-  height: 46.13px;
-  background: #5064c5;
-  border-radius: 20px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 28px;
-  color: #ffffff;
-  margin-left: 45px;
-  margin-right: 60px;
-  border: none;
-}
-
-.lookupsearchset .radioset {
-  display: flex;
-  align-items: center;
-}
-
-.lookupsearchset .radioset .hSelect {
-  display: flex;
-  align-items: center;
-  width: 127px;
-}
-
-.lookupsearchset .radioset .hSelect .searchradio {
-  width: 20px;
-  height: 20px;
-  margin-right: 15px;
-}
-
-.lookupsearchset .radioset .hSelect .radiotext {
-  display: flex;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 28px;
-  color: black;
-}
-
-.lookuphospitalist {
-  width: 451px;
-  height: 104.75px;
-  cursor: pointer;
-  background-color: white;
-  border: 1px solid rgba(196, 196, 196, 0.5);
-  box-sizing: border-box;
-}
-
-.lookuphospitalist .haddress {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 21px;
-  color: #667089;
-  text-align: left;
-}
-
-.lookuphospitalist .hname {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 28px;
-  color: #000000;
-  text-align: left;
-}
-
-.lookupwhitebox {
   width: 838px;
-  height: 473.76px;
-  background-color: white;
-  overflow-y: scroll;
-  align-items: center;
-  padding-top: 30px;
-  padding-bottom: 50px;
+  height: 624px;
+  background-color: #fff;
 }
-
-.lookupwhitebox::-webkit-scrollbar {
-  width: 10px;
-  border-radius: 30px;
-}
-
-.lookupwhitebox::-webkit-scrollbar-thumb {
-  background-color: #c4c4c4;
-  border-radius: 30px;
-}
-
-.lookupwhitebox::-webkit-scrollbar-track {
-  background-color: #f4f4f4;
-  border-radius: 30px;
-}
-
-.lookupwhitebox .firstline {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-left: 39px;
-  margin-top: 14px;
-  margin-bottom: 34px;
-}
-
-.lookupwhitebox .firstline .detailname {
-  width: 573px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 36px;
-  text-align: left;
-  line-height: 42px;
-  display: flex;
-  color: #000000;
-  margin-right: 50px;
-}
-
-.lookupwhitebox .firstline .redbutton {
-  width: 151.13px;
-  height: 45.66px;
-  background: #cd2a82;
-  border-radius: 20px;
-  border: none;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 28px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #ffffff;
-  justify-content: center;
-}
-
-.lookupwhitebox .secondline {
-  display: flex;
-  margin-left: 39px;
-  margin-bottom: 26.64px;
-}
-
-.lookupwhitebox .secondline .detailaddress {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 23px;
-  display: flex;
-  align-items: center;
-  color: #667089;
-}
-
-.lookupwhitebox .secondline .detailimage {
-  width: 33.55px;
-  height: 30.44px;
-  margin-left: 46px;
-}
-
-.lookupwhitebox .secondline .detailvacnum {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 23px;
-  display: flex;
-  align-items: center;
-  color: #000000;
-}
-
-.lookupwhitebox .tabletitle {
-  width: 133.57px;
-  height: 110px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 23px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #000000;
-  background-color: #dad8e0;
-  border: 1px solid #9a9a9a;
-  box-sizing: border-box;
-  justify-content: center;
-}
-
-.lookupwhitebox .tablecontents {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 23px;
-  display: flex;
-  align-items: center;
-  color: #000000;
-  margin-left: 6px;
-}
-
-.lookupwhitebox .tablecontentsbox {
-  display: flex;
-  width: 606px;
-  height: 110px;
-  background: #ffffff;
-  border: 1px solid #9a9a9a;
-  box-sizing: border-box;
-  align-items: center;
-}
-
-.lookupwhitebox .timetext {
-  display: flex;
-}
-
-.lookupwhitebox .normal {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 23px;
-  display: flex;
-  align-items: center;
-  color: #667089;
-  margin-left: 6px;
-}
-
-.lookupwhitebox .sat {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 23px;
-  display: flex;
-  align-items: center;
-  color: #5064c5;
-  margin-left: 6px;
-}
-
-.lookupwhitebox .sun {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 23px;
-  display: flex;
-  align-items: center;
-  color: #cd2a82;
-  margin-left: 6px;
-}
-
-.lookupwhitebox .holyday {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 23px;
-  display: flex;
-  align-items: center;
-  color: #cd2a82;
-  margin-left: 6px;
-}
-
-.lookupwhitebox .tableline {
-  display: flex;
-  margin-left: 39px;
-}
-
-.lookuptopside {
-  justify-content: left;
-}
-
-.lookuptopside .biglayout {
-  display: flex;
-  align-items: center;
-  margin-bottom: 35.56px;
-}
-
-.lookuptopside .biglayout .titlelu {
-  display: flex;
-  width: 114px;
-  height: 46.13px;
-  background-color: #dad8e0;
-  border-radius: 20px;
-  font-family: Roboto;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 24px;
-  justify-content: center;
-  align-items: center;
-  margin-right: 60.31px;
-}
-
-.lookuptopside .biglayout .checkset {
-  display: flex;
-  align-items: center;
-  width: 220px;
-  height: 26.91px;
-  margin-left: 2px;
-}
-
-.lookuptopside .biglayout .checkset .checkbox {
-  width: 25px;
-  height: 25px;
-  margin-right: 11px;
-  background-color: white;
-}
-
-.lookuptopside .biglayout .checkset .checkboxtext {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  color: #000000;
-}
-
-.lookuptopside .biglayout .btnset .bluebtn {
-  width: 144.15px;
-  height: 46.13px;
-  cursor: pointer;
-  background: #5064c5;
-  border-radius: 20px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  color: white;
-  margin-right: 20px;
-  border: none;
-}
-
-.lookuptopside .biglayout .btnset .redbtn {
-  width: 144.15px;
-  height: 46.13px;
-  cursor: pointer;
-  background: #cd2a82;
-  border-radius: 20px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  color: white;
-  border: none;
-}
-
-.lookuptopside .biglayout .btnset {
-  display: flex;
-  margin-left: 79.5px;
-}
-
-.lookuphr {
-  background-color: #9a9a9a;
-  width: 100%;
-  height: 0px;
-  margin-top: 41px;
-  margin-bottom: 41px;
-}
-
-.lookupbottomside .hlist {
-  width: 461px;
-  height: 473.76px;
-  overflow-y: scroll;
-  margin-right: 33px;
-}
-
-.lookupbottomside .hlist::-webkit-scrollbar {
-  width: 10px;
-  border-radius: 30px;
-}
-
-.lookupbottomside .hlist::-webkit-scrollbar-thumb {
-  background-color: #c4c4c4;
-  border-radius: 30px;
-}
-
-.lookupbottomside .hlist::-webkit-scrollbar-track {
-  background-color: #f4f4f4;
-  border-radius: 30px;
-}
-
-.lookupbottomside {
-  display: flex;
-}
-
-.lookupsearchnum {
-  width: 1294px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 23px;
-  display: flex;
-  align-items: center;
-  text-align: left;
-  color: #667089;
-  margin-bottom: 15px;
-} */
