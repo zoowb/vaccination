@@ -20,6 +20,7 @@
   font-weight: 700;
   line-height: 1.16;
   letter-spacing: 0em;
+  text-align: left;
 }
 
 .hospitalBigBox .address {
@@ -30,6 +31,7 @@
   font-weight: 700;
   line-height: 1.16;
   letter-spacing: 0em;
+  text-align: left;
 }
 
 .hospitalInfoTable {

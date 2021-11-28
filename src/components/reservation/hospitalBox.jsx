@@ -2,9 +2,9 @@ import "./hospitalBox.css";
 import { useEffect } from "react";
 import initTmap from "../tmap";
 
-const HospitalBigBox = ({ name, address }) => {
+const HospitalBigBox = ({ name, address, code, setMedicalPick}) => {
   return (
-    <button type="button" className="hospitalBigBox">
+    <button type="button" className="hospitalBigBox" onClick={() => setMedicalPick(code)}>
       <h1 className="name">{name}</h1>
       <strong className="address">{address}</strong>
     </button>
@@ -20,16 +20,18 @@ const SelectInfoBtn = ({ title, content }) => {
   );
 };
 
-const HospitalDetail = ({ name, pickTime, selectedTime }) => {
+const HospitalDetail = ({ medicalInfo, x, y, pickTime, selectedTime }) => {
   //시간=>axios로 데이터 받아와서 map으로 처리!
   useEffect(() => {
-    initTmap(126.7248987, 37.4848309);
+    console.log("before");
+    initTmap(x, y);
+    console.log(x);
   }, []);
 
   return (
     <section className="hospitalDetailSection">
       <div className="selectionInfo">
-        <h1 className="name">{name}</h1>
+        <h1 className="name">{medicalInfo.Hname}</h1>
         <div className="btns">
           <SelectInfoBtn title={"시간 선택"} content={selectedTime} />
           <SelectInfoBtn title={"예약 현황"} content={"6/20명"} />
@@ -67,26 +69,26 @@ const HospitalDetail = ({ name, pickTime, selectedTime }) => {
       </div>
       <div className="hospitalInfo">
         <strong className="title">병원 정보</strong>
-        <HospitalInfo />
+        <HospitalInfo phone={medicalInfo.Hphone} />
       </div>
       <div className="hospitalLoc">
         <strong className="title">병원 위치</strong>
         <div id="map_div" />
         <div className="detailAddr">
-          상세주소: 인천광역시 부평구 부평동 동수로 56
+          상세주소: {medicalInfo.Hlocation}
         </div>
       </div>
     </section>
   );
 };
 
-const HospitalInfo = () => {
+const HospitalInfo = ({phone}) => {
   return (
     <table className="hospitalInfoTable">
       <tbody>
         <tr>
           <td>전화번호</td>
-          <td>02-1234-5678</td>
+          <td>{phone}</td>
         </tr>
         <tr>
           <td>진료시간</td>
