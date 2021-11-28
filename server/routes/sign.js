@@ -11,12 +11,12 @@ const pool2 = require('../modules/mysql2');
  * 정보 일치시, 로그인을 승인하고 토큰을 반환합니다
  *
  * === client-input ===
- * email = 사용자 아이디 [DB person.email]
- * passwd = 사용자 비밀번호 [DB person.password]
+ * email = 사용자 아이디
+ * passwd = 사용자 비밀번호
  *
  * === server-return ===
  * ok = 회원가입 성공 여부. 성공 시 true, 실패 시 false
- * jwtToken = jwt토큰 문자열 (로그인 실패시 토큰이 생성되지 않습니다. null을 전송합니다)
+ * jwtToken = jwt토큰 문자열
  *
 */
 router.post('/login', function (req, res, next) {
@@ -42,7 +42,7 @@ router.post('/login', function (req, res, next) {
                     const jwtToken = await jwt.sign({id : result[0].Email, ssn : result[0].Ssn, name : result[0].Name}); // 토큰 생성
                     res.send({ "ok" : true, "jwtToken" : jwtToken.token });
                 }
-                else res.send({ "ok" : false, "jwtToken" : null, err : "일치하는 회원정보가 없습니다" });
+                else res.send({ "ok" : false, err : "일치하는 회원정보가 없습니다" });
             }
            
             connection.release();
@@ -51,79 +51,94 @@ router.post('/login', function (req, res, next) {
 });
 
 
-/* ===== 회원가입 페이지 처리 ===== (수정 필요)
+/* ===== 회원가입 페이지 처리 =====
  *
- * 새로운 사용자 정보를 등록합니다 (+아이디, 주민번호 중복 검사)
+ * 새로운 사용자 정보를 등록합니다. 추가로 나이를 계산합니다 (세는나이)
+ * (아이디와 주민번호가 중복되면 가입 불가)
  *
  * === client-input ===
- * name = 사용자 이름 [DB person.name]
- * ssn = 사용자 주민번호 [DB person.ssn]
- * tel = 사용자 전화번호 [DB person.phone]
- * email = 사용자 아이디 [DB person.email]
- * passwd = 사용자 비밀번호 [DB person.password]
- * location = 사용자 거주지 주소 [DB person.location]
+ * name = 이름
+ * ssn = 주민번호
+ * tel = 전화번호
+ * email = 아이디
+ * passwd = 비밀번호
+ * location = 상세주소
+ * sido = 시도명 (코드 X) (ex. 서울, 경기..)
+ * sigungu = 시군구명 (코드 X)
+ * x = 주소 x좌표
+ * y = 주소 y좌표
  *
  * === server-return ===
  * ok = 회원가입 성공 여부. 성공 시 true 반환
  *
+ * ??? 시군구 제공방법? -> DB에 있는 시군구명과 일치해야 함.. ???
+ *
 */
-router.post('/signup', function (req, res, next) {
+router.post('/signup', async function (req, res, next) {
     var name = req.body.name;
     var ssn = req.body.ssn;
     var phone = req.body.tel;
     var email = req.body.email;
     var pass = req.body.passwd;
     var location = req.body.location;
-    var datas = [name, ssn, phone, email, pass, location];
-
-    var erridd = 0;
-    var errssnd = 0;
+    var sido = req.body.sido;
+    var sigungu = req.body.sigungu;
+    var x = req.body.x;
+    var y = req.body.y;
     
-    pool.getConnection(function (err, connection) {
-        var sql = "select * from person where Email=?";
-        connection.query(sql, [email], function (err, rows) {
-            if (err)
-            {
-                res.status(500).send({ err : "DB 오류", ok : false });
-                console.error("err : " + err);
-            }
-            if(rows.length > 0) erridd = 1;
+    let err_code = 0;
+    let err_msg = "";
 
-            pool.getConnection(function (err, connection) {
-                var sql = "select * from person where Ssn=?";
-                connection.query(sql, [ssn], function (err, rows) {
-                    if (err)
-                    {
-                        res.status(500).send({ err : "DB 오류", ok : false });
-                        console.error("err : " + err);
-                    }
-                    if(rows.length > 0) errssnd = 1;
+    const connection = await pool2.getConnection(async conn => conn);
+    try {
+        const result1 = await connection.query("select * from person where Email=?", [email]);
+        const data1 = result1[0];
+        if(data1.length > 0)
+        {
+            err_code = 2;
+            throw new Error("아이디가 중복되었습니다.");
+        }
 
-                    if(erridd == 1) res.status(500).send({ err : "아이디가 중복되었습니다", ok : false });
-                    else if(errssnd == 1) res.status(500).send({ err : "주민번호 중복되었습니다", ok : false });
-                    else
-                    {
-                        pool.getConnection(function (err, connection) {
-                            var sql = "INSERT INTO PERSON(Name, Ssn, Phone, Email, Password, Location) values(?,?,?,?,?,?)";
-                            connection.query(sql, datas, function (err, rows) {
-                                if (err)
-                                {
-                                    res.status(500).send({ err : "DB 오류", ok : false });
-                                    console.error("err : " + err);
-                                }
-                                else res.send({ ok : true });
-                                connection.release();
-                            });
-                        });
-                    }
+        const result2 = await connection.query("select * from person where Ssn=?", [ssn]);
+        const data2 = result2[0];
+        if(data2.length > 0)
+        {
+            err_code = 2;
+            throw new Error("주민번호가 중복되었습니다.");
+        }
 
-                    connection.release();
-                });
-            });
+        const sql3 = "select G.`sido`, G.`Code` from `sigungu` as G " + 
+            "where G.`sido`=(select D.`Code` from `sido` as D where D.`Sido` like ?) and G.`SiGunGu` like ?;"
+        const result3 = await connection.query(sql3, ['%'+sido+'%', '%'+sigungu+'%']);
+        const data3 = result3[0];
+        if(data3.length == 0)
+        {
+            err_code = 2;
+            throw new Error("지역코드 로드 실패");
+        }
 
-            connection.release();
-        });
-    });
+        const isAfter2000 = Number(ssn.substring(7, 8));
+        const year = (new Date).getFullYear();
+        const ycon = isAfter2000 <= 2 ? 1900 : 2000;
+        const age = year - (Number(ssn.substring(0, 2)) + ycon) + 1;
+
+        const dataset = [name, ssn, phone, email, pass, location, data3[0].sido, data3[0].Code, x, y, age, 0]
+        await connection.query("INSERT INTO PERSON(Name, Ssn, Phone, Email, Password, Location, Sido, Sigungu, x, y, age, isAuth) values(?,?,?,?,?,?,?,?,?,?,?,?)", dataset);
+        res.send({ok: true});
+    }
+    catch (err) {
+        if(err_code != 2)
+        {
+            err_msg = "서버에서 오류가 발생했습니다.";
+            console.error("err : " + err);
+            throw err;
+        }
+        else err_msg = err.message;
+        res.status(500).send({ err : err_msg, ok: false });
+    }
+    finally {
+        connection.release();
+    }
 });
 
 
@@ -133,8 +148,8 @@ router.post('/signup', function (req, res, next) {
  * 사용자를 찾지 못하면 null을 반환합니다
  *
  * === client-input ===
- * name = 사용자 이름 [DB person.name]
- * ssn = 사용자 주민번호 [DB person.ssn]
+ * name = 사용자 이름
+ * ssn = 사용자 주민번호
  *
  * === server-return ===
  * id = 사용자 아이디(이메일). 검색 실패시 null 반환
@@ -170,8 +185,8 @@ router.post('/findID', function (req, res, next) {
  * 사용자 정보(이름, 아이디)를 비교하고 일치하면 패스워드를 반환합니다
  *
  * === client-input ===
- * name = 사용자 이름 [DB person.name]
- * email = 사용자 아이디 [DB person.email]
+ * name = 사용자 이름
+ * email = 사용자 아이디
  *
  * === server-return ===
  * passwd = 사용자 비밀번호. 검색 실패시 null 반환
