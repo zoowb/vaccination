@@ -1,24 +1,90 @@
 import "./reservation.css";
 import Title from "../components/reservation/title";
 import { SelectBox, DateSelectBox } from "../components/reservation/selectBox";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   HospitalBigBox,
   HospitalDetail,
 } from "../components/reservation/hospitalBox";
 import { WholeScreenWithHeader } from "../components/wholeScreen";
+import axios from "axios";
+
+const ReservationSelect = ({
+  sido,
+  sidoPick,
+  sigungu,
+  setSido,
+  setSidoPick,
+  setSigungu,
+  setSigunguPick,
+}) => {
+  const getSido = () => {
+    axios
+      .get("/reservation/getSidoList")
+      .then((response) => {
+        setSido(response.data.sido);
+        setSidoPick("110000");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const getSigungu = () => {
+    console.log(sido);
+    axios
+      .post("/reservation/getSigunguList", { sido: sidoPick })
+      .then((response) => {
+        setSigungu(response.data.SiGunGu);
+        setSigunguPick(response.data.SiGunGu[0].Code);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  useEffect(() => {
+    getSido();
+  }, []);
+
+  useEffect(() => {
+    getSigungu();
+  }, [sidoPick]);
+
+  const pickSido = () => {
+    let select = document.getElementById("sido");
+    let value = select?.options[select.selectedIndex].value;
+    setSidoPick(value);
+  };
+
+  const pickSigungu = () => {
+    let select = document.getElementById("sigungu");
+    let value = select?.options[select.selectedIndex].value;
+    setSigunguPick(value);
+  };
+
+  return (
+      <div className="location">
+        <SelectBox list={sido} pick={pickSido} check={1} />
+        <SelectBox list={sigungu} pick={pickSigungu} check={2} />
+      </div>
+  );
+};
+
 
 const Reservation = () => {
   const [response, setResponse] = useState("");
   const [info, setInfo] = useState("");
   const [individual, setIndividual] = useState(false);
   const [selectedTime, setSelectedTime] = useState("없음");
-
-  const pickLoc = () => {
-    let select = document.getElementById("loc");
-    let value = select.options[select.selectedIndex].value;
-    console.log(value);
-  };
+  const [sido, setSido] = useState([]);
+  const [sidoPick, setSidoPick] = useState("110000");
+  const [sigungu, setSigungu] = useState([]);
+  const [sigunguPick, setSigunguPick] = useState("110001");
+  const [resultList, setResultList] = useState([]);
+  const [medicalInfo, setMedicalInfo] = useState("");
+  const [medicalPick, setMedicalPick] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
 
   const pickTime = () => {
     let select = document.querySelector('input[name="time"]:checked');
@@ -28,20 +94,39 @@ const Reservation = () => {
   };
 
   const Search = () => {
-    // const param = {};
-    // axios.post("/search", { params: param }).then((response) => {
-    //   console.log(response);
-    //   setResponse(response);
-    // });
+    axios
+      .post("/reservation/search", {
+        data: sigunguPick,
+      })
+      .then((response) => {
+        setResultList(response.data.hos_info);
+        setMedicalPick("");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
-  const IndividualView = () => {
-    // axios.get(`/search/${hospitalID}`).then((response) => {
-    //   console.log(response);
-    //   setIndividual(false);
-    //   setInfo(response);
-    // });
+  const DetailSearch = () => {
+    axios.get(`/reservation/search/${medicalPick}/${startDate.toISOString().substr(0,10)}`)
+    .then((response)=>
+      {setMedicalInfo(response.data.hos_info);
+      console.log(response.data);})
+    .catch((e)=> { console.log(e)});
   };
+
+  const ReservationSuccess = () => {
+    axios.post("/reservation/register", {
+      rev_date: `${startDate.toISOString().substr(0,10)} ${selectedTime}:00`
+    })
+  }
+
+  useEffect(() => {
+    if(medicalPick != ""){
+    DetailSearch();
+    }
+  }, [medicalPick]);
+
   //병원 이름 클릭하면 id 넘겨줘서 hospitalDetail에서 표현하기
   return (
     <WholeScreenWithHeader>
@@ -52,15 +137,22 @@ const Reservation = () => {
         />
         <section className="whiteSection">
           <strong className="title">집 근처의 의료 기관을 조회해보세요.</strong>
-
           <section className="searchSection">
-            <div className="location">
-              <SelectBox pick={pickLoc} />
-              <SelectBox pick={pickLoc} />
-            </div>
-            <div className="others">
+            <ReservationSelect
+              sido={sido}
+              sidoPick={sidoPick}
+              sigungu={sigungu}
+              setSido={setSido}
+              setSidoPick={setSidoPick}
+              setSigungu={setSigungu}
+              setSigunguPick={setSigunguPick}
+            />
+           <div className="others">
               <div className="date">
-                <DateSelectBox />
+                <DateSelectBox
+                startDate={startDate}
+                setStartDate={setStartDate}
+              />
               </div>
               <button
                 type="button"
@@ -71,50 +163,32 @@ const Reservation = () => {
               </button>
             </div>
           </section>
-
           <section className="hospitalSection">
             <div className="preview">
-              <HospitalBigBox
-                name={"참좋은 병원"}
-                address={"남양주 다산순환로 111"}
-              />
-              <HospitalBigBox
-                name={"참좋은 병원"}
-                address={"남양주 다산순환로 111"}
-              />
-              <HospitalBigBox
-                name={"참좋은 병원"}
-                address={"남양주 다산순환로 111"}
-              />
-              <HospitalBigBox
-                name={"참좋은 병원"}
-                address={"남양주 다산순환로 111"}
-              />
-              <HospitalBigBox
-                name={"참좋은 병원"}
-                address={"남양주 다산순환로 111"}
-              />
-              <HospitalBigBox
-                name={"참좋은 병원"}
-                address={"남양주 다산순환로 111"}
-              />
-              <HospitalBigBox
-                name={"참좋은 병원"}
-                address={"남양주 다산순환로 111"}
-              />
-              <HospitalBigBox
-                name={"참좋은 병원"}
-                address={"남양주 다산순환로 111"}
-              />
+              {resultList? resultList.map((data, i) => {
+                return(<HospitalBigBox
+                  name={data.Hname}
+                  address={data.Hlocation}
+                  code={data.Hnumber}
+                  setMedicalPick={setMedicalPick}
+                  key={i}
+                />)
+              }):<></>}
             </div>
-            <div className="detail">
+            {medicalPick != ""?(
+              <div className="detail">
               <HospitalDetail
-                name={"참좋은 병원"}
+                medicalInfo={medicalInfo}
+                x={medicalInfo.x}
+                y={medicalInfo.y}
                 pickTime={pickTime}
                 selectedTime={selectedTime}
               />
             </div>
+            ):""}
+            
           </section>
+          
         </section>
         <button type="button" className="reservationBtn">
           <span className="btnText">예약하기</span>

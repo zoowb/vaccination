@@ -5,32 +5,32 @@ import "./selectBox.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
 import ko from "date-fns/locale/ko";
 registerLocale("ko", ko);
-const SelectBox = ({ pick }) => {
+
+const SelectBox = ({ list, pick, check }) => {
   return (
     <section className="selectBoxSection">
       <select
         className="selectBox"
-        placholeder={"선택"}
-        name={"si"}
-        id="loc"
-        onChange={() => pick()}
+        id={check == 1 ? "sido" : "sigungu"}
+        onChange={pick}
       >
-        <option className="text" value="서울">
-          서울
-        </option>
-        <option className="text" value="부산">
-          부산
-        </option>
-        <option className="text" value="대구">
-          대구
-        </option>
+        {list?.map((data, i) =>
+          check == 1 ? (
+            <option key={data.Code} value={data.Code}>
+              {data.Sido}
+            </option>
+          ) : (
+            <option key={data.Code} value={data.Code}>
+              {data.SiGunGu}
+            </option>
+          )
+        )}
       </select>
     </section>
   );
 };
 
-const DateSelectBox = () => {
-  const [startDate, setStartDate] = useState(new Date());
+const DateSelectBox = ({startDate, setStartDate}) => {
 
   useEffect(() => {
     console.log(
