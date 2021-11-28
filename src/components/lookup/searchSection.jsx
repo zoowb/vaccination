@@ -3,16 +3,19 @@ import SelectBox from "./selectBox";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const SearchSection = () => {
-  const [sido, setSido] = useState([]);
-  const [sidoPick, setSidoPick] = useState("110000");
-  const [sigungu, setSigungu] = useState([]);
-  const [sigunguPick, setSigunguPick] = useState("110001");
-  const [hospitalList, setHospitalList] = useState("");
-  const [hospitalPick, setHospitalPick] = useState("");
-  const [medicalType, setMedicalType] = useState("의원");
-  const medical = ["의원", "약국"];
-
+const SearchSection = ({
+  sido,
+  sidoPick,
+  sigungu,
+  setSido,
+  setSidoPick,
+  setSigungu,
+  setSigunguPick,
+  setMedicalTypePick,
+  medical,
+  setName,
+  searchMedical,
+}) => {
   const getSido = () => {
     axios
       .get("/reservation/getSidoList")
@@ -61,9 +64,7 @@ const SearchSection = () => {
   const pickMedical = () => {
     let select = document.getElementById("medical");
     let value = select?.options[select.selectedIndex].value;
-
-    console.log(value);
-    setMedicalType(value);
+    setMedicalTypePick(value);
   };
 
   return (
@@ -82,8 +83,11 @@ const SearchSection = () => {
           type="text"
           className="searchName"
           placeholder={"기관명 입력 (미입력 시 전체 결과 검색)"}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
         />
-        <button type="button" className="showResult">
+        <button type="button" className="showResult" onClick={searchMedical}>
           결과보기
         </button>
       </div>

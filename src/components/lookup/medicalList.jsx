@@ -1,17 +1,15 @@
 import "./medicalList.css";
 import { useState } from "react";
-const MedicalList = ({ address, hname, hcode }) => {
-  const [hospitalPick, setHospitalPick] = useState("");
+const MedicalList = ({ setMedicalPick, address, name, code }) => {
   return (
     <button
       type="button"
       className="lookup-medicalList"
-      id="hos"
-      value={hcode}
-      onClick={() => setHospitalPick(hcode)}
+      value={code}
+      onClick={() => setMedicalPick(code)}
     >
       <div className="address">{address}</div>
-      <div className="name">{hname}</div>
+      <div className="name">{name}</div>
     </button>
   );
 };

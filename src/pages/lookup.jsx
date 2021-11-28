@@ -11,73 +11,136 @@ const Lookup = () => {
   const [sidoPick, setSidoPick] = useState("110000");
   const [sigungu, setSigungu] = useState([]);
   const [sigunguPick, setSigunguPick] = useState("110001");
-  const [hospitalList, setHospitalList] = useState("");
-  const [hospitalPick, setHospitalPick] = useState("");
-  // const getSido = () => {
-  //   axios
-  //     .get("/reservation/getSidoList")
-  //     .then((response) => {
-  //       setSido(response.data.sido);
-  //       setSidoPick("110000");
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  // };
+  const [medicalTypePick, setMedicalTypePick] = useState("의원");
+  const [name, setName] = useState("");
+  const medical = ["의원", "약국"];
+  const [medicalType, setMedicalType] = useState(true);
 
-  // const getSigungu = () => {
-  //   console.log(sido);
-  //   axios
-  //     .post("/reservation/getSigunguList", { sido: sidoPick })
-  //     .then((response) => {
-  //       setSigungu(response.data.SiGunGu);
-  //       setSigunguPick(response.data.SiGunGu[0].Code);
-  //     })
-  //     .catch((e) => {
-  //       console.log(e);
-  //     });
-  // };
+  const [resultList, setResultList] = useState("");
+  const [medicalPick, setMedicalPick] = useState("");
+  const [medicalInfo, setMedicalInfo] = useState("");
 
-  // useEffect(() => {
-  //   getSigungu();
-  // }, [sidoPick]);
-
-  // useEffect(() => {
-  //   console.log("sidoPick: ", sido);
-  // }, [sido]);
-
-  const searchHospital = () => {
+  const searchMedical = () => {
     axios
-      .post("/search/searchHosByLoc", { sigungu: sigunguPick })
+      .post("/search/search", {
+        sigungu: sigunguPick,
+        name: name,
+        isHos: medicalTypePick == "의원" ? true : false,
+      })
       .then((response) => {
-        setHospitalList(response.data.list);
-        console.log("hospital: ", response.data.list);
+        setResultList(response.data.list);
+        setMedicalPick("");
+        if (medicalTypePick == "의원") {
+          setMedicalType(true);
+        } else {
+          setMedicalType(false);
+        }
+        console.log(response);
       })
       .catch((e) => {
         console.log(e);
       });
   };
 
-  // useEffect(() => {
-  //   getSido();
-  // }, []);
+  const getDetail = () => {
+    axios
+      .post("/search/more", { idx: medicalPick, isHos: medicalType })
+      .then((response) => {
+        setMedicalInfo(response.data.info);
+        console.log(response);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
-  // useEffect(() => {
-  //   console.log(hospitalPick);
-  // }, [hospitalPick]);
+  useEffect(() => {
+    getDetail();
+  }, [medicalPick]);
 
   return (
     <WholeScreenWithHeader>
       <section className="lookupSection">
         <Title title={"기관 조회"} subtitle={"의원과 약국을 조회해보세요!"} />
-        <SearchSection />
-        <div className="medicalInquiry">
-          <section className="listSection">
-            <MedicalList address={"서울"} hname={"병원"} hcode={1111} />
-            <MedicalList address={"서울"} hname={"병원"} hcode={1111} />
+        <SearchSection
+          sido={sido}
+          sidoPick={sidoPick}
+          sigungu={sigungu}
+          setSido={setSido}
+          setSidoPick={setSidoPick}
+          setSigungu={setSigungu}
+          setSigunguPick={setSigunguPick}
+          setMedicalTypePick={setMedicalTypePick}
+          medical={medical}
+          setName={setName}
+          searchMedical={searchMedical}
+        />
+        {resultList ? (
+          resultList?.length > 0 ? (
+            <div className="medicalInquiry">
+              <span className="totalNum">{`검색결과 총 ${resultList?.length}개`}</span>
+              <div className="searchContents">
+                <section className="listSection">
+                  {resultList.map((data, i) => {
+                    return medicalType == true ? (
+                      <MedicalList
+                        address={data.Hlocation}
+                        name={data.Hname}
+                        code={data.Hnumber}
+                        setMedicalPick={setMedicalPick}
+                        key={i}
+                      />
+                    ) : (
+                      <MedicalList
+                        address={data.Plocation}
+                        name={data.Pname}
+                        code={data.Pnumber}
+                        setMedicalPick={setMedicalPick}
+                        key={i}
+                      />
+                    );
+                  })}
+                </section>
+                {medicalPick != "" ? (
+                  medicalType == true ? (
+                    <MedicalDetail
+                      name={medicalInfo?.Hname}
+                      addr={medicalInfo?.Hlocation}
+                      phone={medicalInfo?.Hphone}
+                      Other={medicalInfo?.Other}
+                    />
+                  ) : (
+                    <MedicalDetail
+                      name={medicalInfo?.Pname}
+                      addr={medicalInfo?.Plocation}
+                      phone={medicalInfo?.Pphone}
+                      Other={medicalInfo?.Other}
+                    />
+                  )
+                ) : (
+                  <section className="beforePick">
+                    <h1 className="text">
+                      기관 상세 조회를 하시려면, <br />
+                      먼저 기관을 선택해주세요.
+                    </h1>
+                  </section>
+                )}
+              </div>
+            </div>
+          ) : (
+            <section className="beforeSearch">
+              <h1 className="text">
+                검색결과가 없습니다.
+              </h1>
+            </section>
+          )
+        ) : (
+          <section className="beforeSearch">
+            <h1 className="text">
+              기관조회를 하시려면, 먼저 검색을 진행해주세요.
+            </h1>
           </section>
-          <MedicalDetail />
-        </div>
+        )}
       </section>
     </WholeScreenWithHeader>
   );
