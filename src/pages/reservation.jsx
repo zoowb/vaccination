@@ -64,13 +64,12 @@ const ReservationSelect = ({
   };
 
   return (
-      <div className="location">
-        <SelectBox list={sido} pick={pickSido} check={1} />
-        <SelectBox list={sigungu} pick={pickSigungu} check={2} />
-      </div>
+    <div className="location">
+      <SelectBox list={sido} pick={pickSido} check={1} />
+      <SelectBox list={sigungu} pick={pickSigungu} check={2} />
+    </div>
   );
 };
-
 
 const Reservation = () => {
   const [response, setResponse] = useState("");
@@ -85,6 +84,7 @@ const Reservation = () => {
   const [medicalInfo, setMedicalInfo] = useState("");
   const [medicalPick, setMedicalPick] = useState("");
   const [startDate, setStartDate] = useState(new Date());
+  const [cnt, setCnt] = useState(0);
 
   const pickTime = () => {
     let select = document.querySelector('input[name="time"]:checked');
@@ -94,6 +94,7 @@ const Reservation = () => {
   };
 
   const Search = () => {
+    setCnt(0);
     axios
       .post("/reservation/search", {
         data: sigunguPick,
@@ -108,22 +109,34 @@ const Reservation = () => {
   };
 
   const DetailSearch = () => {
-    axios.get(`/reservation/search/${medicalPick}/${startDate.toISOString().substr(0,10)}`)
-    .then((response)=>
-      {setMedicalInfo(response.data.hos_info);
-      console.log(response.data);})
-    .catch((e)=> { console.log(e)});
+    axios
+      .get(
+        `/reservation/search/${medicalPick}/${startDate
+          .toISOString()
+          .substr(0, 10)}`
+      )
+      .then((response) => {
+        setMedicalInfo(response.data.hos_info);
+        console.log(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
+
+  useEffect(()=>{
+    console.log("cnt: ",cnt);
+  },[cnt])
 
   const ReservationSuccess = () => {
     axios.post("/reservation/register", {
-      rev_date: `${startDate.toISOString().substr(0,10)} ${selectedTime}:00`
-    })
-  }
+      rev_date: `${startDate.toISOString().substr(0, 10)} ${selectedTime}:00`,
+    });
+  };
 
   useEffect(() => {
-    if(medicalPick != ""){
-    DetailSearch();
+    if (medicalPick != "") {
+      DetailSearch();
     }
   }, [medicalPick]);
 
@@ -147,12 +160,12 @@ const Reservation = () => {
               setSigungu={setSigungu}
               setSigunguPick={setSigunguPick}
             />
-           <div className="others">
+            <div className="others">
               <div className="date">
                 <DateSelectBox
-                startDate={startDate}
-                setStartDate={setStartDate}
-              />
+                  startDate={startDate}
+                  setStartDate={setStartDate}
+                />
               </div>
               <button
                 type="button"
@@ -165,30 +178,37 @@ const Reservation = () => {
           </section>
           <section className="hospitalSection">
             <div className="preview">
-              {resultList? resultList.map((data, i) => {
-                return(<HospitalBigBox
-                  name={data.Hname}
-                  address={data.Hlocation}
-                  code={data.Hnumber}
-                  setMedicalPick={setMedicalPick}
-                  key={i}
-                />)
-              }):<></>}
+              {resultList ? (
+                resultList.map((data, i) => {
+                  return (
+                    <HospitalBigBox
+                      name={data.Hname}
+                      address={data.Hlocation}
+                      code={data.Hnumber}
+                      setMedicalPick={setMedicalPick}
+                      setCnt={setCnt}
+                      cnt={cnt}
+                      key={i}
+                    />
+                  );
+                })
+              ) : (
+                <></>
+              )}
             </div>
-            {medicalPick != ""?(
+            {medicalPick != "" ? (
               <div className="detail">
-              <HospitalDetail
-                medicalInfo={medicalInfo}
-                x={medicalInfo.x}
-                y={medicalInfo.y}
-                pickTime={pickTime}
-                selectedTime={selectedTime}
-              />
-            </div>
-            ):""}
-            
+                <HospitalDetail
+                  medicalInfo={medicalInfo}
+                  pickTime={pickTime}
+                  selectedTime={selectedTime}
+                  cnt={cnt}
+                />
+              </div>
+            ) : (
+              ""
+            )}
           </section>
-          
         </section>
         <button type="button" className="reservationBtn">
           <span className="btnText">예약하기</span>
