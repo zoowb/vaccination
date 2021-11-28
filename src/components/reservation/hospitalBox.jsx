@@ -1,10 +1,24 @@
 import "./hospitalBox.css";
 import { useEffect } from "react";
 import initTmap from "../tmap";
-
-const HospitalBigBox = ({ name, address, code, setMedicalPick}) => {
+import { moveTmap } from "../tmap";
+const HospitalBigBox = ({
+  name,
+  address,
+  code,
+  setMedicalPick,
+  setCnt,
+  cnt,
+}) => {
   return (
-    <button type="button" className="hospitalBigBox" onClick={() => setMedicalPick(code)}>
+    <button
+      type="button"
+      className="hospitalBigBox"
+      onClick={() => {
+        setMedicalPick(code);
+        setCnt(cnt + 1);
+      }}
+    >
       <h1 className="name">{name}</h1>
       <strong className="address">{address}</strong>
     </button>
@@ -20,13 +34,16 @@ const SelectInfoBtn = ({ title, content }) => {
   );
 };
 
-const HospitalDetail = ({ medicalInfo, x, y, pickTime, selectedTime }) => {
-  //시간=>axios로 데이터 받아와서 map으로 처리!
+const HospitalDetail = ({ medicalInfo, pickTime, selectedTime, cnt }) => {
   useEffect(() => {
-    console.log("before");
-    initTmap(x, y);
-    console.log(x);
-  }, []);
+    if (medicalInfo.x != undefined) {
+      if (cnt == 1) {
+        initTmap(medicalInfo.x, medicalInfo.y, 1);
+      } else {
+        moveTmap(medicalInfo.x, medicalInfo.y, 2);
+      }
+    }
+  }, [medicalInfo.x]);
 
   return (
     <section className="hospitalDetailSection">
@@ -74,15 +91,13 @@ const HospitalDetail = ({ medicalInfo, x, y, pickTime, selectedTime }) => {
       <div className="hospitalLoc">
         <strong className="title">병원 위치</strong>
         <div id="map_div" />
-        <div className="detailAddr">
-          상세주소: {medicalInfo.Hlocation}
-        </div>
+        <div className="detailAddr">상세주소: {medicalInfo.Hlocation}</div>
       </div>
     </section>
   );
 };
 
-const HospitalInfo = ({phone}) => {
+const HospitalInfo = ({ phone }) => {
   return (
     <table className="hospitalInfoTable">
       <tbody>
