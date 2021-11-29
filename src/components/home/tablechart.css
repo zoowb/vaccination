@@ -1,11 +1,21 @@
 .visualline 
 {
-    width: 550px;
-    height: 61px;
-    border: 1px solid #9A9A9A;
 }
 
-.visualline .location{
+.visualline .oneline
+{
+    display: flex;
+    align-items: center;
+    width: 550px;
+    height: 61px;
+    background-color: white;
+    border-bottom: 2px solid #000000;
+}
+
+.visualline .oneline .location{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 77px;
     height: 61px;
     font-family: Roboto;
@@ -15,9 +25,13 @@
     line-height: 23px;
     text-align: center;
     color: #000000;
+    border-right: 2px solid #000000;
 }
 
-.visualline .first{
+.visualline .oneline .first{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 244px;
     height: 61px;
     font-family: Roboto;
@@ -27,9 +41,13 @@
     line-height: 28px;
     text-align: center;
     color: #000000;
+    border-right: 2px solid #000000;
 }
 
-.visualline .done{
+.visualline .oneline .done{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 244px;
     height: 61px;
     font-family: Roboto;

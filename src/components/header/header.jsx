@@ -3,13 +3,19 @@ import AuthBtnSet from "./authBtn";
 import MenuBtnSet from "./menuBtn";
 import { Link } from "react-router-dom";
 import "./header.css";
+import { useEffect } from "react";
 
 const Header = () => {
-  const token = localStorage?.getItem("accessToken");
+  var token = localStorage?.getItem("accessToken");
+
+  useEffect(()=>{
+    token = localStorage?.getItem("accessToken");
+  }, [token])
+
   return (
     <header className="header">
       <div className="contents">
-        <Link to={"/home"}>
+        <Link to={"/"}>
           <img className="img" src={Logo} alt="logo" />
         </Link>
         {token ? (
