@@ -78,6 +78,7 @@ const ReservationNoShow = () => {
               name1={"화이자"}
               name2={"모더나"}
               name3={"아스트라제네카"}
+              name4={"얀센"}
             />
           </div>
           <div className="hospitalListBox">
