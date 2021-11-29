@@ -3,14 +3,26 @@ import Title from "../components/reservation/title";
 import { WholeScreenWithHeader } from "../components/wholeScreen";
 import InputBox from "../components/auth/inputBox";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const ReservationCheck = () => {
   const [id, setID] = useState("");
   const [pw, setPW] = useState("");
+  const [err, setErr] = useState("");
+  const navigate = useNavigate();
+
   const onClick = () => {
-    axios.post("/sign/check", { id: id, pw: pw }).then((response) => {
-      console.log(response);
-    });
+    axios.post("/reservation/selfcheck", { email: id, passwd: pw })
+      .then((response) => {
+        if(response.data.ok){
+          console.log(response.data.ok);
+          navigate("/reservation");
+        }
+      })
+      .catch((e)=>{
+        console.log(e);
+        navigate("/reservationUnable");
+      });
   };
   return (
     <WholeScreenWithHeader>
