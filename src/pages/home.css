@@ -67,7 +67,7 @@
     justify-content: center;
     align-items: center;
     width: 207px;
-    height: 57px;
+    height: 44px;
     background: #5064C5;
     border-radius: 20px;
     font-family: Roboto;
@@ -202,18 +202,96 @@
     margin: auto;
 }
 
-.tablechart{
+.homeall .unselect{
     display: flex;
     align-items: center;
+    justify-content: center;
+    width: 293px;
+    height: 44px;
+    background: #ffffff;
+    border-radius: 20px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    text-align: center;
+    color: #000000;
+    border: none;
+    margin: auto;
+}
+
+.tablechart{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     width: 612px;
     height: 615px;
     background: #FFFFFF;
     border-radius: 20px;
     overflow-y: scroll;
     -ms-overflow-style: none;
+    padding-top: 20px;
 }
 
 .tablechart::-webkit-scrollbar{
     display: none;
     width: 0 !important;
+}
+
+.tablechart .oneline
+{
+    display: flex;
+    align-items: center;
+    width: 550px;
+    height: 61px;
+    background-color: white;
+    border-bottom: 2px solid #000000;
+}
+
+.tablechart .location{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 77px;
+    height: 61px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 23px;
+    line-height: 23px;
+    text-align: center;
+    color: #000000;
+    border-right: 2px solid #000000;
+}
+
+.tablechart .first{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 244px;
+    height: 61px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 23px;
+    line-height: 28px;
+    text-align: center;
+    color: #000000;
+    border-right: 2px solid #000000;
+}
+
+.tablechart .done{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 244px;
+    height: 61px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 23px;
+    line-height: 28px;
+    text-align: center;
+    color: #000000;
 }

@@ -40,7 +40,7 @@ const App = () => {
           <Route path="/mypageStart" element={<MyPageStart />} />
           <Route path="/mypageInfoEdit" element={<MyPageInfoEdit />} />
           <Route path="/mypageResInquiry" element={<MyPageResInquiry />} />
-          <Route path="/home" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/lookup" element={<Lookup />} />
           <Route path="/findIDResult" element={<FindIDResult />} />
           <Route path="/findPWResult" element={<FindPWResult />} />
