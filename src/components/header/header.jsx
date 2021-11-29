@@ -22,13 +22,13 @@ const Header = () => {
           <>
             <MenuBtnSet
               text1={"접종예약"}
-              url1={"/reservationCheck"}
+              url1={"/reservationMain"}
               text2={"기관조회"}
               url2={"/lookup"}
             />
             <AuthBtnSet
               text1={"마이페이지"}
-              url1={"/mypage"}
+              url1={"/mypageStart"}
               text2={"로그아웃"}
               url2={"/"}
             />

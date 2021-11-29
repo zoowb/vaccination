@@ -18,11 +18,6 @@ const ResMain = () => {
             content={"우리 집 근처의 잔여백신을 조회해보세요!"}
             url={"/reservationNoShow"}
           />
-          <CategoryBox
-            bTitle={"접종 예약 변경"}
-            content={"예약하신 백신 접종을 변경하실 수 있습니다!"}
-            url={"/reservationChange"}
-          />
         </section>
       </section>
     </WholeScreenWithHeader>

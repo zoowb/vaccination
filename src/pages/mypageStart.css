@@ -21,3 +21,37 @@
   align-items: center;
   margin-bottom: 55px;
 }
+
+.mypageWhole .inputs .mypageInputBorder {
+  width: 450px;
+  height: 60px;
+  padding: 10px;
+  /* margin-bottom: 30px; */
+  border: 0;
+  border-bottom: 5px solid #667089;
+  outline: none;
+  font-size: 30px;
+}
+
+.mypageWhole .inputs .mypageInputBorder:hover {
+  border-bottom: 5px solid #5064c5;
+}
+
+.mypageWhole .inputs .mypageInputBorder::placeholder {
+  font-family: Noto Sans KR;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 26px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #dad8e0;
+}
+
+.mypageWhole .error {
+  font-size: 16px;
+  color: #e0412f;
+  text-align: center;
+  white-space: pre-wrap;
+  margin-bottom: 30px;
+}

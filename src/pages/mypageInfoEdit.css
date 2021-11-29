@@ -2,3 +2,59 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.mypageInfoEdit .background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.35);
+}
+
+.mypageInfoEdit .postDiv {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  font-size: 100px;
+}
+
+.mypageInfoEdit .mypageBoxSet .boxTitle {
+  width: 200px;
+  height: 32px;
+  color: #667089;
+  font-family: Roboto;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+}
+
+.mypageInfoEdit .mypageButtonBox {
+  width: 453px;
+  height: 100px;
+  padding: 13px 40px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 20px;
+  background-color: #f2f2f4;
+  outline: none;
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.16;
+  text-align: left;
+}
+
+.mypageInfoEdit .error {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #e0412f;
+  text-align: center;
+  white-space: pre-wrap;
+}

@@ -11,6 +11,7 @@ import ReservationComplete from "./pages/reservationComplete";
 import Reservation from "./pages/reservation";
 import ReservationNoShow from "./pages/reservationNoShow";
 import MyPageStart from "./pages/mypageStart";
+import MyPageInfo from "./pages/mypageInfo";
 import MyPageInfoEdit from "./pages/mypageInfoEdit";
 import MyPageResInquiry from "./pages/mypageResInquiry";
 import Home from "./pages/home";
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/reservation" element={<Reservation />} />
           <Route path="/reservationNoShow" element={<ReservationNoShow />} />
           <Route path="/mypageStart" element={<MyPageStart />} />
+          <Route path="/mypageInfo" element={<MyPageInfo />} />
           <Route path="/mypageInfoEdit" element={<MyPageInfoEdit />} />
           <Route path="/mypageResInquiry" element={<MyPageResInquiry />} />
           <Route path="/" element={<Home />} />
