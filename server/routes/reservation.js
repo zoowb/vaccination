@@ -240,7 +240,6 @@ router.post('/register', async function (req, res, next) {
     const token = req.body.jwtToken;
     const rev_date = req.body.rev_date;
     const rev_hos = req.body.rev_hos;
-    const rev_date = req.body.rev_date;
 
     const token_res = await jwt.verify(token); // 토큰 해독
     const rev_ssn = token_res.ssn; // 예약자 ssn
