@@ -16,7 +16,7 @@ const Header = () => {
           <>
             <MenuBtnSet
               text1={"접종예약"}
-              url1={"/reservation"}
+              url1={"/reservationCheck"}
               text2={"기관조회"}
               url2={"/lookup"}
             />

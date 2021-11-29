@@ -26,7 +26,8 @@ const  ReservationNoShow = () => {
                     <CheckBox 
                         name1 = {"화이자"}
                         name2 = {"모더나"}
-                        name3 = {"아스트라제네카"}/>
+                        name3 = {"아스트라제네카"}
+                        name4 = {"얀센"}/>
                 </div>
                 <div className="hospitalListBox">
                     <HospitalList
@@ -37,6 +38,8 @@ const  ReservationNoShow = () => {
                         vnum2={12}
                         vname3={"아스트라제네카"}
                         vnum3={10}
+                        vname4={"얀센"}
+                        vnum4={10}
                         time={"운영시간: 10:00~18:00"}
                     />
                     <HospitalList

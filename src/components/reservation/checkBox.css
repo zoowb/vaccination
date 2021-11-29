@@ -1,10 +1,15 @@
 .checkset{
     display: flex;
-    width: 502px;
+    width: 610px;
     height: 34px;
-    margin-left: 15px;
     align-items: center;
     justify-content: center;
+}
+
+.checkset .checksetflex
+{
+    display: flex;
+    align-items: center;
 }
 
 .checkset .checkbox{
@@ -21,4 +26,5 @@
     font-weight: 700;
     margin-right: 24px;
     color: #8C93A6;
+    text-align: left;
 }
