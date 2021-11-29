@@ -1,14 +1,12 @@
-.noshow .leftside
-{
-    width: 720px;
-    height: 1034px;
-    align-items: flex-end;
+.noshow .leftside {
+  width: 720px;
+  height: 1034px;
+  align-items: flex-end;
 }
 
-.noshow .head
-{
-    width: 720px;
-    height: 188px;
+.noshow .head {
+  width: 720px;
+  height: 188px;
 }
 
 .noshow .checkbig{
@@ -25,33 +23,30 @@
     z-index: 1500;
 }
 
-.noshow
-{
-    display: flex;
-    align-items: flex-end;
+.noshow {
+  display: flex;
+  align-items: flex-end;
 }
 
-.noshow .hospitalListBox
-{
-    width: 720px;
-    height: 761px;
-    overflow-y: scroll;
-    -ms-overflow-style: none;
+.noshow .hospitalListBox {
+  width: 720px;
+  height: 761px;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
 }
 
-.noshow .hospitalListBox::-webkit-scrollbar{
-    display: none;
-    width: 0 !important;
+.noshow .hospitalListBox::-webkit-scrollbar {
+  display: none;
+  width: 0 !important;
 }
 
-.noshow .mapBox
-{
-    width: 720px;
-    height: 1034px;
-    background-color:bisque;
+.noshow .mapBox {
+  width: 720px;
+  height: 1034px;
+  background-color: bisque;
 }
 
-.noshow .mpaMap{
-    width: 720px;
-    height: 100%;
+.noshow .mapMap {
+  width: 720px;
+  height: 100%;
 }

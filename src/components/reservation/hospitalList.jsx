@@ -1,8 +1,23 @@
 import React, { useState } from "react";
 import CheckBox from "./checkBox";
-import "./hospitalList.css"
+import "./hospitalList.css";
 
-
+const HospitalList = ({
+  name,
+  vname1,
+  vnum1,
+  vname2,
+  vnum2,
+  vname3,
+  vnum3,
+  vname4,
+  vnum4,
+  time,
+}) => {
+  const [modalOn, setModalOn] = useState(false);
+  const onOpenModal = () => {
+    setModalOn(!modalOn);
+  };
 
 const HospitalList = ( {name, vname1, vnum1, vname2, vnum2, vname3, vnum3, vname4, vnum4, time} ) => {
     
@@ -42,8 +57,14 @@ const HospitalList = ( {name, vname1, vnum1, vname2, vnum2, vname3, vnum3, vname
                         </button>
                 </div>
             </div>
-        )
-    }
+          </div>
+          <button className="closeBtn" onClick={onOpenModal}>
+            <div className="btnText">선택완료 </div>
+          </button>
+        </div>
+      </div>
+    );
+  };
 
     return(
         <section className={"outlistbox"}>

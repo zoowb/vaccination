@@ -13,8 +13,12 @@ const MyPageInputBox = ({ type, value, setValue }) => {
   );
 };
 
-const MyPageShowBox = ({ value }) => {
-  return <div className="mypageShowBox">{value}</div>;
+const MyPageShowBox = ({ value, title }) => {
+  return (
+    <div className={title == "주소" ? "mypageShowBigBox" : "mypageShowBox"}>
+      {value}
+    </div>
+  );
 };
 
 const MyPageBoxSet = ({ title, type, value, num, setValue }) => {
@@ -24,7 +28,7 @@ const MyPageBoxSet = ({ title, type, value, num, setValue }) => {
       {num == 1 ? (
         <MyPageInputBox type={type} value={value} setValue={setValue} />
       ) : (
-        <MyPageShowBox value={value} />
+        <MyPageShowBox value={value} title={title} />
       )}
     </section>
   );
