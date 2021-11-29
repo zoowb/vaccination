@@ -27,29 +27,7 @@ const SignUp = () => {
   const [error, setError] = useState(false);
   const [errorContent, setErrorContent] = useState("");
 
-  const [isOpenPost, setIsOpenPost] = useState(false);
-  const onChangeOpenPost = () => {
-    setIsOpenPost(!isOpenPost);
-
-    if (isOpenPost) {
-      const addrBack = document.getElementById("addrBack");
-      addrBack.style.display = "block";
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("click", (e) => {
-      const addrBack = document.getElementById("addrBack");
-      return e.target === addrBack ? (addrBack.style.display = "none") : false;
-    });
-  }, []);
-
-  useEffect(() => {
-    console.log("addr: ", addr);
-    console.log("sido: ", sido);
-    console.log("sigungu: ", sigungu);
-  }, [addr, sido, sigungu]);
-
+  const [open, setOpen] = useState(false);
   const onClick = () => {
     axios
       .post("/sign/signup", {
@@ -72,7 +50,6 @@ const SignUp = () => {
 
   useEffect(() => {
     console.log(error);
-
     if (!telValidator(tel) && tel != "") {
       setError(true);
       setErrorContent("전화번호 형식이 잘못되었습니다.");
@@ -93,10 +70,24 @@ const SignUp = () => {
     }
   }, [tel, ssn, email, pw]);
 
+  useEffect(() => {
+    if (addr != "") {
+      onChangeOpenPost();
+    }
+  }, [addr]);
+
+  const onChangeOpenPost = () => {
+    setOpen(!open);
+  };
+
   return (
     <section className="signup">
-      {isOpenPost ? (
-        <section className="background" id="addrBack">
+      {open ? (
+        <section
+          className="background"
+          id="addrBack"
+          onClick={onChangeOpenPost}
+        >
           <div className="postDiv">
             <DaumPost
               setAddr={setAddr}
