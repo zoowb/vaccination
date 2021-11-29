@@ -1,9 +1,11 @@
 import "./reservationUnable.css";
 import Title from "../components/reservation/title";
 import { WholeScreenWithHeader } from "../components/wholeScreen";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
+import { Navigate } from "react-router";
 const ReservationUnable = () => {
+  const navigate = useNavigate();
   return (
     <WholeScreenWithHeader>
       <section className="reservationUnable">
@@ -18,7 +20,7 @@ const ReservationUnable = () => {
           </span>
         </section>
 
-        <button type="button" className="residual">
+        <button type="button" className="residual" onClick={() => navigate("/reservationNoshow")}>
           <span className="text">잔여백신 예약하러 가기</span>
         </button>
       </section>
