@@ -42,7 +42,7 @@ router.post('/login', function (req, res, next) {
                     const jwtToken = await jwt.sign({id : result[0].Email, ssn : result[0].Ssn, name : result[0].Name}); // 토큰 생성
                     res.send({ "ok" : true, "jwtToken" : jwtToken.token });
                 }
-                else res.send({ "ok" : false, err : "일치하는 회원정보가 없습니다" });
+                else res.status(500).send({ "ok" : false, err : "일치하는 회원정보가 없습니다" });
             }
            
             connection.release();
@@ -63,15 +63,13 @@ router.post('/login', function (req, res, next) {
  * email = 아이디
  * passwd = 비밀번호
  * location = 상세주소
- * sido = 시도명 (코드 X) (ex. 서울, 경기..)
+ * sido = 시도명 (코드 X)
  * sigungu = 시군구명 (코드 X)
  * x = 주소 x좌표
  * y = 주소 y좌표
  *
  * === server-return ===
  * ok = 회원가입 성공 여부. 성공 시 true 반환
- *
- * ??? 시군구 제공방법? -> DB에 있는 시군구명과 일치해야 함.. ???
  *
 */
 router.post('/signup', async function (req, res, next) {
@@ -171,7 +169,7 @@ router.post('/findID', function (req, res, next) {
             else
             {
                 if (result.length > 0) res.send({ id : result[0].Email });
-                else res.send({ err : "일치하는 회원정보가 없습니다", id : null });
+                else res.status(500).send({ err : "일치하는 회원정보가 없습니다", id : null });
             }
 
             connection.release();
@@ -208,7 +206,7 @@ router.post('/findPW', function (req, res, next) {
             else
             {
                 if (result.length > 0) res.send({ passwd : result[0].Password });
-                else res.send({ err : "일치하는 회원정보가 없습니다", passwd : null });
+                else res.status(500).send({ err : "일치하는 회원정보가 없습니다", passwd : null });
             }
             
             connection.release();
