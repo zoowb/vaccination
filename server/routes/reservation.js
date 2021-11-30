@@ -142,7 +142,7 @@ router.post('/search', async function (req, res, next) {
 
     var sql = "select distinct H.Hnumber, Hname, Hlocation from hospital as H, hospital_vaccine as HV, " + 
         "vaccine as V where H.Hnumber=HV.Hnumber and HV.Vnumber=V.Vnumber and H.Sigungucode=? and " + 
-        "HV.`Expiration` > ? and HV.`Amount` > 0 and V.`AgeCont` < (select age from person where Ssn=?);";
+        "HV.`Expiration` > ? and HV.`Amount` > 0;" // and V.`AgeCont` < (select age from person where Ssn=?);";
 
     pool.getConnection(function (err, connection) {
         connection.query(sql, [data, rev_date, ssn], function (err, result) {
@@ -197,7 +197,7 @@ router.get('/search/:idx/:date', function (req, res, next) {
             pool.getConnection(function (err, connection) {
                 var sql2 = "select left(r.Rdate, 10) as date, right(r.Rdate, 8) as time, count(*) as count "; // 시간대별 예약한 인원 그룹 반환
                 sql2 += "from reservation as r, hospital as h ";
-                sql2 += "where r.Hnumber = h.Hnumber and r.Hnumber = ? "
+                sql2 += "where r.Hnumber = h.Hnumber and r.Hnumber = ? ";
                 sql2 += "group by time ";
                 sql2 += "having date = ?";
                 connection.query(sql2, data2, function (err, resultg) {

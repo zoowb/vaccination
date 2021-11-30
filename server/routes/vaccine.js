@@ -41,7 +41,7 @@ router.post('/index', async function (req, res, next) {
         const result1 = await connection.query(sql1, [ssn, ssn]);
         let packet = result1[0];
 
-        const today = '2021-01-01'; /////////////new Date();
+        const today = new Date();
         for(var i = 0; i < packet.length; i++) // 각 병원의 잔여백신 리스트 구하기
         {
             const sql2 = "SELECT V.Vnumber, Vname, Amount FROM hospital_vaccine natural join vaccine as V WHERE `Hnumber`=? and `Expiration` > ? order by V.Vnumber;"
