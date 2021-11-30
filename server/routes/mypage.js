@@ -92,7 +92,6 @@ router.post('/getinfo', async function (req, res, next) {
                     Password: result[0].Password,
                     Location: result[0].Location
                 });
-                console.log(result);
             }
             else res.send({ err : "해당 회원정보가 존재하지 않습니다." });
         }
@@ -109,8 +108,8 @@ router.post('/getinfo', async function (req, res, next) {
  * tel : 전화번호
  * passwd : 비밀번호
  * location : 주소
- * sido = 시도명 (코드 X)
- * sigungu = 시군구명 (코드 X)
+ * sido = 시도명 (코드 X) (ex. "경기")
+ * sigungu = 시군구명 (코드 X) (ex. "일산서구")
  * x = 주소 x좌표
  * y = 주소 y좌표
  *
@@ -131,7 +130,7 @@ router.post('/changeinfo', async function (req, res, next) {
 
     let err_code = 0;
     let err_msg = "";
-
+    
     const connection = await pool2.getConnection(async conn => conn);
     try {
         const sql1 = "select G.`sido`, G.`Code` from `sigungu` as G " + 
@@ -147,7 +146,7 @@ router.post('/changeinfo', async function (req, res, next) {
         const dataset = [phone, pass, location, data1[0].sido, data1[0].Code, x, y, ssn];
         const result2 = await connection.query("UPDATE PERSON SET Phone=?, Password=?, Location=?, Sido=?, Sigungu=?, x=?, y=? WHERE Ssn=?;", dataset);
         const data2 = result2[0];
-        
+
         if(data2.affectedRows == 0)
         {
             err_code = 2;
