@@ -95,8 +95,10 @@ const Reservation = () => {
 
   const Search = () => {
     setCnt(0);
+    const token = localStorage.getItem("accessToken");
     axios
       .post("/reservation/search", {
+        jwtToken: token,
         data: sigunguPick,
       })
       .then((response) => {
@@ -124,9 +126,9 @@ const Reservation = () => {
       });
   };
 
-  useEffect(()=>{
-    console.log("cnt: ",cnt);
-  },[cnt])
+  useEffect(() => {
+    console.log("cnt: ", cnt);
+  }, [cnt]);
 
   const ReservationSuccess = () => {
     axios.post("/reservation/register", {
