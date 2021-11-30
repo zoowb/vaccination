@@ -98,7 +98,7 @@ router.post('/search', function (req, res, next) {
     IsOpenHoliday: 공휴일 운영시간 (시간타입X, 문자열), Lunch_Week: 점심시간 (시간타입X, 문자열)}]
  *
 */
-router.post('/more', function (req, res, next) {
+router.post('/more', async function (req, res, next) {
     var idx = req.body.idx;
     var isHos = req.body.isHos; // 의원/약국 선택
 
