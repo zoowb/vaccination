@@ -142,7 +142,7 @@ router.post('/search', async function (req, res, next) {
 
     var sql = "select distinct H.Hnumber, Hname, Hlocation from hospital as H, hospital_vaccine as HV, " + 
         "vaccine as V where H.Hnumber=HV.Hnumber and HV.Vnumber=V.Vnumber and H.Sigungucode=? and " + 
-        "HV.`Expiration` > ? and HV.`Amount` > 0;" // and V.`AgeCont` < (select age from person where Ssn=?);";
+        "HV.`Expiration` > ? and HV.`Amount` > 0 and V.`AgeCont` < (select age from person where Ssn=?);";
 
     pool.getConnection(function (err, connection) {
         connection.query(sql, [data, rev_date, ssn], function (err, result) {
@@ -254,7 +254,7 @@ router.post('/register', async function (req, res, next) {
 
         const sql1 = "select HV.Vnumber, Vname, Amount from hospital_vaccine as HV, " + 
             "vaccine as V where HV.Vnumber=V.Vnumber and HV.Hnumber=? and " + 
-            "HV.`Expiration` > ? and HV.`Amount` > 0"; // and V.`AgeCont` < (select age from person where Ssn=?);";
+            "HV.`Expiration` > ? and HV.`Amount` > 0 and V.`AgeCont` < (select age from person where Ssn=?);";
         const result1 = await connection.query(sql1, [rev_hos, rev_date, rev_ssn]);
         const data1 = result1[0];
         const rev_vac = data1[0];
@@ -269,7 +269,7 @@ router.post('/register', async function (req, res, next) {
         const rev_date2 = new Date(rev_date);
         rev_date2.setDate(rev_date2.getDate() + 28);
         const data2 = [rev_hos, rev_vacid, rev_ssn, rev_date, rev_date2];
-        await connection.query("INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Ssn`, `Rdate1`, `Rdate2`, `Order`, `IsVaccine`) values(?,?,?,?,?,1,0);", data2);
+        await connection.query("INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Ssn`, `Rdate1`, `Rdate2`, `IsVaccine`) values(?,?,?,?,?,0);", data2);
 
         // const data3 = [rev_date, rev_ssn]; // 예약날짜 갱신
         // await connection.query("UPDATE PERSON SET Rdate=? WHERE Ssn=?;", data3);
