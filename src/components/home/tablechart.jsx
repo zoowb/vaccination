@@ -8,7 +8,7 @@ const TableChart = ({ check, result }) => {
         return (
           <div className={"oneline"}>
             <div className={"location"}>
-              {check == true ? data.sido_name : data.ages}
+              {check == true ? data.sido_name : `${data.ages}대`}
             </div>
             <div className={"first"}>{data.count}명</div>
             <div className={"done"}>{data.count2}명</div>

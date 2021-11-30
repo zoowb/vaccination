@@ -72,6 +72,9 @@ const Home = () => {
           firstloc[i].count2 = 0;
         }
       }
+      if (!firstloc[i].count2) {
+        firstloc[i].count2 = 0;
+      }
     }
     return <TableChart check={true} result={firstloc} />;
   };
@@ -85,6 +88,9 @@ const Home = () => {
         } else {
           firstage[i].count2 = 0;
         }
+      }
+      if (!firstage[i].count2) {
+        firstage[i].count2 = 0;
       }
     }
     return <TableChart check={false} result={firstage} />;
