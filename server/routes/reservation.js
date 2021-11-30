@@ -120,12 +120,13 @@ router.post("/getSigunguList", async function (req, res, next) {
 /* ===== 사전예약-예약 전체검색 처리 =====
  *
  * 시군구 코드를 통해 예약이 가능한 병원 목록을 검색합니다
- * (조건 1: 현재날짜 기준, 유통기한이 남은 잔여백신 > 0)
+ * (조건 1: 예약날짜 기준, 유통기한이 남은 잔여백신 > 0)
  * (조건 2: 조건 1을 만족하는 백신이 접종자 신체조건을 만족함)
  *
  * === client-input ===
  * jwtToken = 사용자 정보 jwt토큰 (로그인에서 생성된 토큰)
  * data : 시군구 코드 [DB sigungu.code]
+ * rev_date : 예약 날짜 문자열 (ex. "2021-10-31")
  *
  * === server-return ===
  * hos_info : 병원 정보 리스트 [{Hnumber: 병원 아이디, Hname: 병원 이름, Hlocation: 병원 상세주소}]
@@ -133,20 +134,18 @@ router.post("/getSigunguList", async function (req, res, next) {
 */
 router.post('/search', async function (req, res, next) {
     const token = req.body.jwtToken;
-    var data = req.body.data; // 시군구주소
+    const data = req.body.data; // 시군구주소
+    const rev_date = req.body.rev_date;
 
     const token_res = await jwt.verify(token); // 토큰 해독
     const ssn = token_res.ssn; // 예약자 ssn
-    const today = new Date();
-
-    console.log([data, today, ssn]);
 
     var sql = "select distinct H.Hnumber, Hname, Hlocation from hospital as H, hospital_vaccine as HV, " + 
         "vaccine as V where H.Hnumber=HV.Hnumber and HV.Vnumber=V.Vnumber and H.Sigungucode=? and " + 
-        "HV.`Expiration` > ? and HV.`Amount` > 0 and V.`AgeCont` < (select age from person where Ssn=?);";
+        "HV.`Expiration` > ? and HV.`Amount` > 0;" // and V.`AgeCont` < (select age from person where Ssn=?);";
 
     pool.getConnection(function (err, connection) {
-        connection.query(sql, [data, today, ssn], function (err, result) {
+        connection.query(sql, [data, rev_date, ssn], function (err, result) {
             if (err)
             {
                 res.status(500).send({ err : "DB 오류" });
@@ -198,7 +197,7 @@ router.get('/search/:idx/:date', function (req, res, next) {
             pool.getConnection(function (err, connection) {
                 var sql2 = "select left(r.Rdate, 10) as date, right(r.Rdate, 8) as time, count(*) as count "; // 시간대별 예약한 인원 그룹 반환
                 sql2 += "from reservation as r, hospital as h ";
-                sql2 += "where r.Hnumber = h.Hnumber and r.Hnumber = ? "
+                sql2 += "where r.Hnumber = h.Hnumber and r.Hnumber = ? ";
                 sql2 += "group by time ";
                 sql2 += "having date = ?";
                 connection.query(sql2, data2, function (err, resultg) {
@@ -229,7 +228,6 @@ router.get('/search/:idx/:date', function (req, res, next) {
  *
  * === client-input ===
  * jwtToken = 사용자 정보 jwt토큰 (로그인에서 생성된 토큰)
- * rev_startdate = 예약 날짜&시간 (ex. '2021-10-30 09:30:00')
  * rev_hos = 예약 병원 아이디
  * rev_date = 1차예약 날짜
  *
@@ -240,12 +238,12 @@ router.get('/search/:idx/:date', function (req, res, next) {
 */
 router.post('/register', async function (req, res, next) {
     const token = req.body.jwtToken;
-    const rev_startdate = req.body.rev_startdate;
     const rev_hos = req.body.rev_hos;
     const rev_date = req.body.rev_date;
 
     const token_res = await jwt.verify(token); // 토큰 해독
     const rev_ssn = token_res.ssn; // 예약자 ssn
+    const rev_startdate = new Date();
 
     let err_code = 0;
     let err_msg = "";
@@ -256,7 +254,7 @@ router.post('/register', async function (req, res, next) {
 
         const sql1 = "select HV.Vnumber, Vname, Amount from hospital_vaccine as HV, " + 
             "vaccine as V where HV.Vnumber=V.Vnumber and HV.Hnumber=? and " + 
-            "HV.`Expiration` > ? and HV.`Amount` > 0 and V.`AgeCont` < (select age from person where Ssn=?);";
+            "HV.`Expiration` > ? and HV.`Amount` > 0"; // and V.`AgeCont` < (select age from person where Ssn=?);";
         const result1 = await connection.query(sql1, [rev_hos, rev_date, rev_ssn]);
         const data1 = result1[0];
         const rev_vac = data1[0];
