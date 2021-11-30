@@ -24,8 +24,9 @@ router.post('/index', async function (req, res, next) {
     const token = req.body.jwtToken;
     const flist = req.body.flist;
 
-    const token_res = await jwt.verify(token); // 토큰 해독
-    const ssn = token_res.ssn; // 예약자 ssn
+    // const token_res = await jwt.verify(token); // 토큰 해독
+    // const ssn = token_res.ssn; // 예약자 ssn
+    const ssn = "461010-0000007";
 
     let err_code = 0;
     let err_msg = "";
@@ -34,18 +35,35 @@ router.post('/index', async function (req, res, next) {
     try {
         const sql1 = "select distinct Hnumber, Hname " + 
             "from reservation natural join hospital as h, person as p " + 
-            "where p.Ssn=? and sqrt(pow(p.x-h.x,2)+pow(p.y-h.y,2)) < 0.03;" // 300m 차이 -> 0.03
+            "where p.Ssn=? and sqrt(pow(p.x-h.x,2)+pow(p.y-h.y,2)) < 2;" // 300m 차이 -> 0.03
         const result1 = await connection.query(sql1, [ssn]);
         let packet = result1[0];
 
         const today = new Date();
         for(var i = 0; i < packet.length; i++) // 각 병원의 잔여백신 리스트 구하기
         {
-            const sql2 = "SELECT V.Vnumber, Vname, Amount FROM hospital_vaccine natural join vaccine as V WHERE `Hnumber`=? and `Expiration` < ?;"
+            const sql2 = "SELECT V.Vnumber, Vname, Amount FROM hospital_vaccine natural join vaccine as V WHERE `Hnumber`=? and `Expiration` > ? order by V.Vnumber;"
             const result2 = await connection.query(sql2, [packet[i].Hnumber, today]);
             const data2 = result2[0];
             packet[i].Vaccine = data2;
         }
+
+        // console.log(packet);
+
+        /*const li = [0, 1, 1, 1];
+        function isApple(element)  {
+            if(((li[0] && element.Vnumber == 10) ||
+               (li[1] && element.Vnumber == 20) ||
+               (li[2] && element.Vnumber == 30) ||
+               (li[3] && element.Vnumber == 40)) && element.Amount > 0)  {
+                return true;
+            }
+        }
+        for(var i = 0; i < packet.length; i++) // 화이자를 가진 병원만 출력
+        {
+            if(packet[i].Vaccine.some(isApple))
+                console.log(packet[i]);
+        }*/
 
         res.send({ hosList: packet });
     }
