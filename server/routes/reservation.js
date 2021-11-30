@@ -158,7 +158,7 @@ router.post('/search', async function (req, res, next) {
 });
 
 
-/* ===== 사전예약-예약 세부검색 get 처리 =====  (일부 완성 - 아직 time 정보 반환 X)
+/* ===== 사전예약-예약 세부검색 get 처리 =====
  *
  * 기관을 클릭하면 해당 기관의 세부 정보를 반환합니다
  * 추가로 시간대별 예약한 인원을 같이 반환합니다 (DB에 저장된 예약 시간은 모두 이산적이라고 가정합니다)
@@ -169,51 +169,59 @@ router.post('/search', async function (req, res, next) {
  *
  * === server-return ===
  * hos_info : 병원 정보 [{Hnumber: 병원 이름, Hlocation: 병원 상세주소, Hname: 병원 이름, Hclass: 병원 종류, 
-        Other: 기타사항, Hphone: 병원 전화번호, x: 병원 x좌표, y: 병원 y좌표, Sigungucode: 시군구 코드, Sidocode: 시도 코드 }]  // 아직 병원 time 정보는 반환하지 않습니다
+        Other: 기타사항, Hphone: 병원 전화번호, x: 병원 x좌표, y: 병원 y좌표, Sigungucode: 시군구 코드, Sidocode: 시도 코드 }]
  * revp_bytime : 예약인원 객체 배열 [{date: 예약 날짜, time: 예약 시간, count: 해당 시간대 예약 인원수}]
+ * hos_timeinfo : 병원 시간 정보 [{Number: 병원 아이디, Start_Mon: 월요일 운영시작 시간, Close_Mon: 월요일 운영종료 시간,
+    Start_Tue, Close_Tue, Start_Wed, Close_Wed, Start_Thu, Close_Thu, Start_Fri, Close_Fri, Start_Sat, Close_Sat, Start_Sun, Close_Sun: 화-일 운영시작/종료 시간
+    IsOpenHoliday: 공휴일 운영시간 (시간타입X, 문자열), Lunch_Week: 점심시간 (시간타입X, 문자열)}]
  *
 */
-router.get('/search/:idx/:date', function (req, res, next) {
+router.get('/search/:idx/:date', async function (req, res, next) {
     var idx = req.params.idx;
     var date = req.params.date;
-    var data1 = [idx];
-    var data2 = [idx, date];
 
-    pool.getConnection(function (err, connection) {
-        var sql = "SELECT * FROM HOSPITAL WHERE Hnumber=?"; // 기관의 세부 정보 반환
-        connection.query(sql, data1, function (err, result) {
-            if (err)
-            {
-                res.status(500).send({ err : "DB 오류" });
-                console.error("err : " + err);
-                connection.release();
-            }
-            if(result === undefined) // 검색 결과가 없어도 오류를 반환
-            {
-                res.status(500).send({ err : "병원 검색 실패" });
-                connection.release();
-            }
+    let err_code = 0;
+    let err_msg = "";
 
-            pool.getConnection(function (err, connection) {
-                var sql2 = "select left(r.Rdate, 10) as date, right(r.Rdate, 8) as time, count(*) as count "; // 시간대별 예약한 인원 그룹 반환
-                sql2 += "from reservation as r, hospital as h ";
-                sql2 += "where r.Hnumber = h.Hnumber and r.Hnumber = ? ";
-                sql2 += "group by time ";
-                sql2 += "having date = ?";
-                connection.query(sql2, data2, function (err, resultg) {
-                    if (err)
-                    {
-                        res.status(500).send({ err : "DB 오류" });
-                        console.error("err : " + err);
-                    }
-                    else res.send({ hos_info : result[0], revp_bytime : resultg });
-                    connection.release();
-                });
-            });
+    const connection = await pool2.getConnection(async conn => conn);
+    try {
+        const sql1 = "SELECT * FROM HOSPITAL WHERE Hnumber=?"; // 기관의 세부 정보 반환
+        const result1 = await connection.query(sql1, [idx]);
+        const data1 = result1[0];
 
+        if(data1.length == 0) // 검색 결과가 없어도 오류를 반환
+        {
+            res.status(500).send({ err : "병원 검색 실패" });
             connection.release();
-        });
-    });
+        }
+
+        const sql2 = "select left(rl.Rdate, 10) as date, right(rl.Rdate, 8) as time, count(*) as count " +
+            "from reservation_list as rl, hospital as h " +
+            "where rl.Hnumber = h.Hnumber and rl.Hnumber = ? " +
+            "group by date, time " +
+            "having date = ?;";
+        const result2 = await connection.query(sql2, [idx, date]);
+        const data2 = result2[0];
+
+        const sql3 = "select * from hospital_time where `Number`=?;";
+        const result3 = await connection.query(sql3, [idx]);
+        const data3 = result3[0];
+
+        res.send({ hos_info : result[0], revp_bytime : data2, hos_timeinfo: data3 });
+    }
+    catch (err) {
+        if(err_code != 2)
+        {
+            err_msg = "서버 오류";
+            console.error("err : " + err);
+            throw err;
+        }
+        else err_msg = err.message;
+        res.status(500).send({ err : err_msg, ok : false });
+    }
+    finally {
+        connection.release();
+    }
 });
 
 

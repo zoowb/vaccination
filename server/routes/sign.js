@@ -23,7 +23,7 @@ router.post('/login', function (req, res, next) {
     var email = req.body.email;
     var pass = req.body.passwd;
     var datas = [email, pass];
-    
+
     pool.getConnection(function (err, connection) {
         var sql = "SELECT * FROM PERSON WHERE Email=? and Password=?;";
         connection.query(sql, datas, async function (err, result) {
