@@ -41,26 +41,33 @@ router.post('/index', async function (req, res, next) {
         const result3 = await connection.query("select count(Ssn) as `count` from person natural join reservation where IsVaccine=2;");
         const person_vac2 = result3[0];
 
-        const sqlmonth = "select YEAR(Rdate) as `year`, Month(Rdate) as `month`, count(Ssn) as `count` " + 
+        const sqlmonth1 = "select YEAR(Rdate1) as `year`, Month(Rdate1) as `month`, count(Ssn) as `count` " + 
             "from person natural join reservation where IsVaccine=? group by `year`, `month` order by `year`, `month`;"
-        const result4 = await connection.query(sqlmonth, [1]);
+        const sqlmonth2 = "select YEAR(Rdate2) as `year`, Month(Rdate2) as `month`, count(Ssn) as `count` " + 
+            "from person natural join reservation where IsVaccine=? group by `year`, `month` order by `year`, `month`;"
+        const result4 = await connection.query(sqlmonth1, [1]);
         const byMonth_vac1 = result4[0];
-        const result5 = await connection.query(sqlmonth, [2]);
+        const result5 = await connection.query(sqlmonth2, [2]);
         const byMonth_vac2 = result5[0];
 
-        const sqlweek = "select DATE_FORMAT(DATE_SUB(`Rdate`, INTERVAL (DAYOFWEEK(`Rdate`)-2) DAY), '%Y/%m/%d') as `start`, " + 
-            "DATE_FORMAT(DATE_SUB(`Rdate`, INTERVAL (DAYOFWEEK(`Rdate`)-8) DAY), '%Y/%m/%d') as `end`, count(Ssn) as count " + 
+        const sqlweek1 = "select DATE_FORMAT(DATE_SUB(`Rdate1`, INTERVAL (DAYOFWEEK(`Rdate1`)-2) DAY), '%Y/%m/%d') as `start`, " + 
+            "DATE_FORMAT(DATE_SUB(`Rdate1`, INTERVAL (DAYOFWEEK(`Rdate1`)-8) DAY), '%Y/%m/%d') as `end`, count(Ssn) as count " + 
             "from person natural join reservation where IsVaccine=? group by `start` order by `start`;"
-        const result6 = await connection.query(sqlweek, [1]);
+        const sqlweek2 = "select DATE_FORMAT(DATE_SUB(`Rdate2`, INTERVAL (DAYOFWEEK(`Rdate2`)-2) DAY), '%Y/%m/%d') as `start`, " + 
+            "DATE_FORMAT(DATE_SUB(`Rdate2`, INTERVAL (DAYOFWEEK(`Rdate2`)-8) DAY), '%Y/%m/%d') as `end`, count(Ssn) as count " + 
+            "from person natural join reservation where IsVaccine=? group by `start` order by `start`;"
+        const result6 = await connection.query(sqlweek1, [1]);
         const byWeek_vac1 = result6[0];
-        const result7 = await connection.query(sqlweek, [2]);
+        const result7 = await connection.query(sqlweek2, [2]);
         const byWeek_vac2 = result7[0];
 
-        const sqlday = "select YEAR(Rdate) as `year`, Month(Rdate) as `month`, Day(Rdate) as `day`, count(Ssn) as `count` " + 
+        const sqlday1 = "select YEAR(Rdate1) as `year`, Month(Rdate1) as `month`, Day(Rdate1) as `day`, count(Ssn) as `count` " + 
             "from person natural join reservation where IsVaccine=? group by `year`, `month`, `day` order by `year`, `month`, `day`;"
-        const result8 = await connection.query(sqlday, [1]);
+        const sqlday2 = "select YEAR(Rdate2) as `year`, Month(Rdate2) as `month`, Day(Rdate2) as `day`, count(Ssn) as `count` " + 
+            "from person natural join reservation where IsVaccine=? group by `year`, `month`, `day` order by `year`, `month`, `day`;"
+        const result8 = await connection.query(sqlday1, [1]);
         const byDay_vac1 = result8[0];
-        const result9 = await connection.query(sqlday, [2]);
+        const result9 = await connection.query(sqlday2, [2]);
         const byDay_vac2 = result9[0];
 
         const sqlLoc = "select `Code` as `sido_code`, S.`Sido` as `sido_name`, count(P.`Ssn`) as `count` from person as P, reservation as R, sido as S " + 

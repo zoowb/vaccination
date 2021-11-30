@@ -125,7 +125,7 @@ router.post("/getSigunguList", async function (req, res, next) {
  *
  * === client-input ===
  * jwtToken = 사용자 정보 jwt토큰 (로그인에서 생성된 토큰)
- * data : 시군구 코드 [DB sigungu.code]
+ * data : 시군구 코드
  * rev_date : 예약 날짜 문자열 (ex. "2021-10-31")
  *
  * === server-return ===
@@ -207,7 +207,7 @@ router.get('/search/:idx/:date', async function (req, res, next) {
         const result3 = await connection.query(sql3, [idx]);
         const data3 = result3[0];
 
-        res.send({ hos_info : result[0], revp_bytime : data2, hos_timeinfo: data3 });
+        res.send({ hos_info : result1[0], revp_bytime : data2, hos_timeinfo: data3 });
     }
     catch (err) {
         if(err_code != 2)
@@ -237,7 +237,7 @@ router.get('/search/:idx/:date', async function (req, res, next) {
  * === client-input ===
  * jwtToken = 사용자 정보 jwt토큰 (로그인에서 생성된 토큰)
  * rev_hos = 예약 병원 아이디
- * rev_date = 1차예약 날짜
+ * rev_date = 1차예약 날짜 (문자열 포함 X)
  *
  * === server-return ===
  * rev_vacname = 예약 백신명 (아이디 X)

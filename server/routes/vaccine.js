@@ -37,8 +37,8 @@ router.post('/index', async function (req, res, next) {
         const result0 = await connection.query(sql0, [ssn]);
         const data0 = result0[0];
 
-        const sql1 = "select distinct h.Hnumber, Hname from hospital as h where sqrt(pow(?-h.x,2)+pow(?-h.y,2)) < 2;"; // 300m 차이 -> 0.03
-        const result1 = await connection.query(sql1, [data0.x, data0.y]); // 거리 내 있는 병원 구하기
+        const sql1 = "select distinct h.Hnumber, Hname from hospital as h where sqrt(pow(?-h.x,2)+pow(?-h.y,2)) < 0.03;"; // 300m 차이 -> 0.03
+        const result1 = await connection.query(sql1, [data0[0].x, data0[0].y]); // 거리 내 있는 병원 구하기
         let data1 = result1[0];
 
         const today = new Date();

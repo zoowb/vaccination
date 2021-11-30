@@ -63,8 +63,8 @@ router.post('/login', function (req, res, next) {
  * email = 아이디
  * passwd = 비밀번호
  * location = 상세주소
- * sido = 시도명 (코드 X)
- * sigungu = 시군구명 (코드 X)
+ * sido = 시도명 (코드 X) (ex. "경기")
+ * sigungu = 시군구명 (코드 X) (ex. "일산서구")
  * x = 주소 x좌표
  * y = 주소 y좌표
  *
