@@ -36,42 +36,49 @@ router.post('/index', async function (req, res, next) {
     try {
         const result1 = await connection.query("select count(Ssn) as `count` from person;");
         const person_all = result1[0];
-        const result2 = await connection.query("select count(Ssn) as `count` from person natural join reservation where `Order`=1 and IsVaccine=1;");
+        const result2 = await connection.query("select count(Ssn) as `count` from person natural join reservation where IsVaccine=1;");
         const person_vac1 = result2[0];
-        const result3 = await connection.query("select count(Ssn) as `count` from person natural join reservation where `Order`=2 and IsVaccine=1;");
+        const result3 = await connection.query("select count(Ssn) as `count` from person natural join reservation where IsVaccine=2;");
         const person_vac2 = result3[0];
 
-        const sqlmonth = "select YEAR(Rdate) as `year`, Month(Rdate) as `month`, count(Ssn) as `count` " + 
-            "from person natural join reservation where `Order`=? and IsVaccine=1 group by `year`, `month` order by `year`, `month`;"
-        const result4 = await connection.query(sqlmonth, [1]);
+        const sqlmonth1 = "select YEAR(Rdate1) as `year`, Month(Rdate1) as `month`, count(Ssn) as `count` " + 
+            "from person natural join reservation where IsVaccine=? group by `year`, `month` order by `year`, `month`;"
+        const sqlmonth2 = "select YEAR(Rdate2) as `year`, Month(Rdate2) as `month`, count(Ssn) as `count` " + 
+            "from person natural join reservation where IsVaccine=? group by `year`, `month` order by `year`, `month`;"
+        const result4 = await connection.query(sqlmonth1, [1]);
         const byMonth_vac1 = result4[0];
-        const result5 = await connection.query(sqlmonth, [2]);
+        const result5 = await connection.query(sqlmonth2, [2]);
         const byMonth_vac2 = result5[0];
 
-        const sqlweek = "select DATE_FORMAT(DATE_SUB(`Rdate`, INTERVAL (DAYOFWEEK(`Rdate`)-2) DAY), '%Y/%m/%d') as `start`, " + 
-            "DATE_FORMAT(DATE_SUB(`Rdate`, INTERVAL (DAYOFWEEK(`Rdate`)-8) DAY), '%Y/%m/%d') as `end`, count(Ssn) as count " + 
-            "from person natural join reservation where `Order`=? and IsVaccine=1 group by `start` order by `start`;"
-        const result6 = await connection.query(sqlweek, [1]);
+        const sqlweek1 = "select DATE_FORMAT(DATE_SUB(`Rdate1`, INTERVAL (DAYOFWEEK(`Rdate1`)-2) DAY), '%Y/%m/%d') as `start`, " + 
+            "DATE_FORMAT(DATE_SUB(`Rdate1`, INTERVAL (DAYOFWEEK(`Rdate1`)-8) DAY), '%Y/%m/%d') as `end`, count(Ssn) as count " + 
+            "from person natural join reservation where IsVaccine=? group by `start` order by `start`;"
+        const sqlweek2 = "select DATE_FORMAT(DATE_SUB(`Rdate2`, INTERVAL (DAYOFWEEK(`Rdate2`)-2) DAY), '%Y/%m/%d') as `start`, " + 
+            "DATE_FORMAT(DATE_SUB(`Rdate2`, INTERVAL (DAYOFWEEK(`Rdate2`)-8) DAY), '%Y/%m/%d') as `end`, count(Ssn) as count " + 
+            "from person natural join reservation where IsVaccine=? group by `start` order by `start`;"
+        const result6 = await connection.query(sqlweek1, [1]);
         const byWeek_vac1 = result6[0];
-        const result7 = await connection.query(sqlweek, [2]);
+        const result7 = await connection.query(sqlweek2, [2]);
         const byWeek_vac2 = result7[0];
 
-        const sqlday = "select YEAR(Rdate) as `year`, Month(Rdate) as `month`, Day(Rdate) as `day`, count(Ssn) as `count` " + 
-            "from person natural join reservation where `Order`=? and IsVaccine=1 group by `year`, `month`, `day` order by `year`, `month`, `day`;"
-        const result8 = await connection.query(sqlday, [1]);
+        const sqlday1 = "select YEAR(Rdate1) as `year`, Month(Rdate1) as `month`, Day(Rdate1) as `day`, count(Ssn) as `count` " + 
+            "from person natural join reservation where IsVaccine=? group by `year`, `month`, `day` order by `year`, `month`, `day`;"
+        const sqlday2 = "select YEAR(Rdate2) as `year`, Month(Rdate2) as `month`, Day(Rdate2) as `day`, count(Ssn) as `count` " + 
+            "from person natural join reservation where IsVaccine=? group by `year`, `month`, `day` order by `year`, `month`, `day`;"
+        const result8 = await connection.query(sqlday1, [1]);
         const byDay_vac1 = result8[0];
-        const result9 = await connection.query(sqlday, [2]);
+        const result9 = await connection.query(sqlday2, [2]);
         const byDay_vac2 = result9[0];
 
         const sqlLoc = "select `Code` as `sido_code`, S.`Sido` as `sido_name`, count(P.`Ssn`) as `count` from person as P, reservation as R, sido as S " + 
-            "where P.`Ssn`=R.`Ssn` and P.`Sido`=S.`Code` and `Order`=? and `IsVaccine`=1 group by `Code` order by `Code`;"
+            "where P.`Ssn`=R.`Ssn` and P.`Sido`=S.`Code` and `IsVaccine`=? group by `Code` order by `Code`;"
         const result10 = await connection.query(sqlLoc, [1]);
         const byLoc_vac1 = result10[0];
         const result11 = await connection.query(sqlLoc, [2]);
         const byLoc_vac2 = result11[0];
 
         const sqlAge = "select floor(Age / 10)*10 as `ages`, count(Ssn) as `count` from person natural join reservation " + 
-            "where `Order`=? and IsVaccine=1 group by `ages` order by `ages`;"
+            "where IsVaccine=? group by `ages` order by `ages`;"
         const result12 = await connection.query(sqlAge, [1]);
         const byAge_vac1 = result12[0];
         const result13 = await connection.query(sqlAge, [2]);
@@ -121,10 +128,8 @@ router.post('/index', async function (req, res, next) {
  * rev_name = 예약자명
  * rev_vacname = 예약 백신 이름
  * rev_hosname = 예약 병원 이름
- * rev_date = 예약 날짜&시간
- * rev_order = 예약차수
- *
- * ??? 이름없이 예약번호만으로 예약 검색 가능 -> 폼에서 입력받지 않아도 됨? ???
+ * rev_date1 = 예약 날짜&시간
+ * rev_date2 = 예약 날짜&시간
  *
 */
 router.post('/quicklook', async function (req, res, next) {
@@ -135,7 +140,7 @@ router.post('/quicklook', async function (req, res, next) {
 
     const connection = await pool2.getConnection(async conn => conn);
     try {
-        const result1 = await connection.query("SELECT Rnumber, Name, Vnumber, Hnumber, Rdate, `Order` FROM PERSON natural join RESERVATION WHERE `Rnumber`=?;", [idx]);
+        const result1 = await connection.query("SELECT Rnumber, Name, Vnumber, Hnumber, Rdate1, Rdate2 FROM PERSON natural join RESERVATION WHERE `Rnumber`=?;", [idx]);
         const data1 = result1[0];
 
         if(data1.length == 0)
@@ -166,8 +171,8 @@ router.post('/quicklook', async function (req, res, next) {
             rev_name: data1[0].Name,
             rev_vacname: data3[0].Vname,
             rev_hosname: data2[0].Hname,
-            rev_date: data1[0].Rdate,
-            rev_order: data1[0].Order
+            rev_date1: data1[0].Rdate1,
+            rev_date2: data1[0].Rdate2
         }
         res.send(packet);
     }
