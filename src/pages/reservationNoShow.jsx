@@ -5,45 +5,42 @@ import HospitalList from "../components/reservation/hospitalList";
 import initTmap from "../components/tmapfornoshow";
 import "./reservationNoShow.css";
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import axios from "axios";
+import GeoCoder from "../components/modules/geocoder";
 
 const ReservationNoShow = () => {
-  const [ssn, setSsn] = useState("");
+  const [hosList, setHosList] = useState([]);
   let loc = {};
   let arr = [];
   let x = 0,
     y = 0;
+  const [flist, setFlist] = useState([1, 1, 0, 0]);
+  // let flist = [1, 1, 0, 0];
+  const token = localStorage.getItem("accessToken");
 
   const getNoShow = () => {
+    console.log("getnoshow 시작");
     const token = localStorage.getItem("accessToken");
     axios
-      .post("/mypage/getinfo", { jwtToken: token })
+      .post("/vaccine/index", { jwtToken: token, flist: flist })
       .then((response) => {
-        console.log(response);
-        setSsn(response.data.Ssn);
-        x = response.data.x;
-        y = response.data.y;
+        setHosList(response.data.hosList);
         loc = {};
         loc.name = "현재 위치";
-        loc.x = x;
-        loc.y = y;
+        loc.x = x = response.data.pos[0].x;
+        loc.y = y = response.data.pos[0].y;
         arr.push(loc);
-      })
-      .catch((e) => console.log(e));
-    axios
-      .post("/vaccine/index", { ssn: ssn, jwtToken: token })
-      .then((response) => {
-        console.log("vaccine==", response);
+        console.log(response);
         let length = response.data.hosList.length;
         response.data.hosList.map((data, i) => {
           axios
             .post("/search/more", { idx: data.Hnumber, isHos: true })
             .then((response) => {
               loc = {};
-              loc.name = response.data.info.Hname;
-              loc.x = response.data.info.x;
-              loc.y = response.data.info.y;
+              loc.name = response.data.info[0].Hname;
+              loc.x = response.data.info[0].x;
+              loc.y = response.data.info[0].y;
+              console.log(response);
               arr.push(loc);
               if (i == length - 1) {
                 initTmap(x, y, arr);
@@ -51,6 +48,12 @@ const ReservationNoShow = () => {
             })
             .catch((e) => console.log(e));
         });
+        if (response.data.hosList.length == 0) {
+          initTmap(x, y, arr);
+          console.log("따로");
+        } else {
+          console.log("따로x - hoslist: ", response.data.hosList);
+        }
       })
       .catch((e) => console.log(e));
   };
@@ -59,9 +62,10 @@ const ReservationNoShow = () => {
     getNoShow();
   }, []);
 
-  useEffect(() => {
-    console.log(loc);
-  }, [loc]);
+  // useEffect(() => {
+  //   console.log(flist);
+  //   getNoShow();
+  // }, [flist]);
 
   return (
     <WholeScreenWithHeader>
@@ -87,86 +91,17 @@ const ReservationNoShow = () => {
             </button>
           </div>
           <div className="hospitalListBox">
-            <HospitalList
-              name={"참좋은 병원"}
-              vname1={"화이자"}
-              vnum1={12}
-              vname2={"모더나"}
-              vnum2={12}
-              vname3={"아스트라제네카"}
-              vnum3={10}
-              time={"운영시간: 10:00~18:00"}
-            />
-            <HospitalList
-              name={"참좋은 병원"}
-              vname1={"화이자"}
-              vnum1={12}
-              vname2={"모더나"}
-              vnum2={12}
-              vname3={"아스트라제네카"}
-              vnum3={10}
-              time={"운영시간: 10:00~18:00"}
-            />
-            <HospitalList
-              name={"참좋은 병원"}
-              vname1={"화이자"}
-              vnum1={12}
-              vname2={"모더나"}
-              vnum2={12}
-              vname3={"아스트라제네카"}
-              vnum3={10}
-              time={"운영시간: 10:00~18:00"}
-            />
-            <HospitalList
-              name={"참좋은 병원"}
-              vname1={"화이자"}
-              vnum1={12}
-              vname2={"모더나"}
-              vnum2={12}
-              vname3={"아스트라제네카"}
-              vnum3={10}
-              time={"운영시간: 10:00~18:00"}
-            />
-            <HospitalList
-              name={"참좋은 병원"}
-              vname1={"화이자"}
-              vnum1={12}
-              vname2={"모더나"}
-              vnum2={12}
-              vname3={"아스트라제네카"}
-              vnum3={10}
-              time={"운영시간: 10:00~18:00"}
-            />
-            <HospitalList
-              name={"참좋은 병원"}
-              vname1={"화이자"}
-              vnum1={12}
-              vname2={"모더나"}
-              vnum2={12}
-              vname3={"아스트라제네카"}
-              vnum3={10}
-              time={"운영시간: 10:00~18:00"}
-            />
-            <HospitalList
-              name={"참좋은 병원"}
-              vname1={"화이자"}
-              vnum1={12}
-              vname2={"모더나"}
-              vnum2={12}
-              vname3={"아스트라제네카"}
-              vnum3={10}
-              time={"운영시간: 10:00~18:00"}
-            />
-            <HospitalList
-              name={"참좋은 병원"}
-              vname1={"화이자"}
-              vnum1={12}
-              vname2={"모더나"}
-              vnum2={12}
-              vname3={"아스트라제네카"}
-              vnum3={10}
-              time={"운영시간: 10:00~18:00"}
-            />
+            {hosList.map((data, i) => {
+              console.log(data);
+              return (
+                <HospitalList
+                  name={data.Hname}
+                  vaccine={data.Vaccine}
+                  time={"운영시간: 10:00~18:00"}
+                  key={i}
+                />
+              );
+            })}
           </div>
         </section>
         <div className="mapBox">

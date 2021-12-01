@@ -20,12 +20,10 @@ const FindID = () => {
       .post("/sign/findID", { name: name, ssn: ssn })
       .then((response) => {
         navigate("/findIDResult", { state: { id: response.data.id } });
-        //아이디 페이지로 이동
-        console.log(response);
       })
       .catch((error) => {
         setError(true);
-        // setErrorContent(error);
+        setErrorContent(error.response.data.err);
         console.log(error);
       });
   };

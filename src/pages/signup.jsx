@@ -14,20 +14,25 @@ import {
 } from "../components/modules/validation";
 import "./signup.css";
 import DaumPost from "../components/modules/addr";
+import GeoCoder from "../components/modules/geocoder";
+import { useNavigate } from "react-router-dom";
+
 const SignUp = () => {
   const [name, setName] = useState("");
   const [ssn, setSSN] = useState("");
   const [tel, setTel] = useState("");
   const [email, setEmail] = useState("");
   const [pw, setPW] = useState("");
-  // const [confirm, setConfirm] = useState(""); //비밀번호 확인 논의 필요
   const [addr, setAddr] = useState("");
   const [sido, setSido] = useState("");
   const [sigungu, setSigungu] = useState("");
   const [error, setError] = useState(false);
   const [errorContent, setErrorContent] = useState("");
-
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
   const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
   const onClick = () => {
     axios
       .post("/sign/signup", {
@@ -37,42 +42,55 @@ const SignUp = () => {
         email: email,
         passwd: pw,
         location: addr,
+        sido: sido,
+        sigungu: sigungu,
+        x: x,
+        y: y,
       })
       .then((response) => {
-        console.log(response);
+        navigate("/");
       })
       .catch(function (error) {
         setError(true);
         setErrorContent(error.response.data.err);
-        // console.log("client: ", error.response.data.err);
       });
   };
 
   useEffect(() => {
     console.log(error);
-    if (!telValidator(tel) && tel != "") {
+    if (!ssnValidator(ssn)) {
       setError(true);
-      setErrorContent("전화번호 형식이 잘못되었습니다.");
-    } else if (!ssnValidator(ssn) && ssn != "") {
+      setErrorContent("주민번호를 올바르게 입력해주세요.");
+    } else if (!telValidator(tel)) {
       setError(true);
-      setErrorContent("주민번호 형식이 잘못되었습니다.");
-    } else if (!emailValidator(email) && email != "") {
+      setErrorContent("전화번호를 올바르게 입력해주세요.");
+    } else if (!emailValidator(email)) {
       setError(true);
-      setErrorContent("이메일 형식이 잘못되었습니다.");
-    } else if (!pwValidator(pw) && pw != "") {
+      setErrorContent("이메일 형식을 확인해주세요.");
+    } else if (!pwValidator(pw)) {
       setError(true);
       setErrorContent(
         "비밀번호는 문자와 숫자를 모두 포함해\n 6~10자로 입력해주세요."
       );
+    } else if (
+      name == "" ||
+      ssn == "" ||
+      tel == "" ||
+      email == "" ||
+      pw == "" ||
+      addr == ""
+    ) {
+      setError(true);
+      setErrorContent("빈칸을 모두 채워주세요.");
     } else {
-      console.log(error);
       setError(false);
     }
-  }, [tel, ssn, email, pw]);
+  }, [tel, ssn, email, pw, name, addr]);
 
   useEffect(() => {
     if (addr != "") {
       onChangeOpenPost();
+      GeoCoder(addr, setX, setY);
     }
   }, [addr]);
 
@@ -152,7 +170,7 @@ const SignUp = () => {
               )}
             </button>
             {error ? <span className="error">{errorContent}</span> : <></>}
-            <BlueBtn text={"회원가입"} onClick={onClick}></BlueBtn>
+            <BlueBtn text={"회원가입"} onClick={onClick} disable={error} />
             <LinkBtnSet
               text1={"로그인"}
               url1={"/login"}
