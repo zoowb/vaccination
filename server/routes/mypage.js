@@ -10,7 +10,7 @@ const pool2 = require('../modules/mysql2');
  * 아이디와 패스워드를 확인합니다 (로그인과 동일)
  *
  * === client-input ===
- * email : 사용자 아이디 
+ * jwtToken : 로그인 토큰
  * passwd : 사용자 패스워드
  *
  * === server-return ===
@@ -19,15 +19,19 @@ const pool2 = require('../modules/mysql2');
  *
 */
 router.post('/check', async function (req, res, next) {
+    const token = req.body.jwtToken;
     const email = req.body.email;
     const pass = req.body.passwd;
+
+    const token_res = await jwt.verify(token); // 토큰 해독
+    const ssn = token_res.ssn; // ssn
 
     let err_code = 0;
     let err_msg = "";
 
     const connection = await pool2.getConnection(async conn => conn);
     try {
-        const result1 = await connection.query("SELECT * FROM PERSON WHERE Email=? and Password=?;", [email, pass]);
+        const result1 = await connection.query("SELECT * FROM PERSON WHERE Ssn=? and Password=?;", [ssn, pass]);
         const data1 = result1[0];
         
         if(data1.length == 0)
