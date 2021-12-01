@@ -73,13 +73,18 @@ const ReservationNoShow = () => {
               subtitle={"집 근처의 잔여백신을 조회해보세요!"}
             />
           </div>
-          <div className="checkbig">
-            <CheckBox
-              name1={"화이자"}
-              name2={"모더나"}
-              name3={"아스트라제네카"}
-              name4={"얀센"}
-            />
+          <div className="noshowdisplay">
+            <div className="checkbig">
+              <CheckBox
+                name1={"화이자"}
+                name2={"모더나"}
+                name3={"아스트라제네카"}
+                name4={"얀센"}
+              />
+            </div>
+            <button className="checksearchbtn">
+              검색
+            </button>
           </div>
           <div className="hospitalListBox">
             <HospitalList
