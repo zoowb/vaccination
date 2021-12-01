@@ -25,7 +25,7 @@ const FindPW = () => {
       })
       .catch(function (error) {
         setError(true);
-        setErrorContent(error);
+        setErrorContent(error.response.data.err);
         console.log(error);
       });
   };

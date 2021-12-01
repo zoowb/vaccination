@@ -8,6 +8,7 @@ import {
 } from "../components/reservation/hospitalBox";
 import { WholeScreenWithHeader } from "../components/wholeScreen";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ReservationSelect = ({
   sido,
@@ -72,9 +73,6 @@ const ReservationSelect = ({
 };
 
 const Reservation = () => {
-  const [response, setResponse] = useState("");
-  const [info, setInfo] = useState("");
-  const [individual, setIndividual] = useState(false);
   const [selectedTime, setSelectedTime] = useState("없음");
   const [sido, setSido] = useState([]);
   const [sidoPick, setSidoPick] = useState("110000");
@@ -85,6 +83,9 @@ const Reservation = () => {
   const [medicalPick, setMedicalPick] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [cnt, setCnt] = useState(0);
+  const [disable, setDisable] = useState(true);
+  const token = localStorage.getItem("accessToken");
+  const navigate = useNavigate();
 
   const pickTime = () => {
     let select = document.querySelector('input[name="time"]:checked');
@@ -97,7 +98,9 @@ const Reservation = () => {
     setCnt(0);
     axios
       .post("/reservation/search", {
+        jwtToken: token,
         data: sigunguPick,
+        rev_date: startDate.toISOString().substr(0, 10),
       })
       .then((response) => {
         setResultList(response.data.hos_info);
@@ -113,10 +116,11 @@ const Reservation = () => {
       .get(
         `/reservation/search/${medicalPick}/${startDate
           .toISOString()
-          .substr(0, 10)}`
+          .substr(0, 10)}`,
+        { idx: medicalPick, date: startDate.toISOString().substr(0, 10) }
       )
       .then((response) => {
-        setMedicalInfo(response.data.hos_info);
+        setMedicalInfo(response.data.hos_info[0]);
         console.log(response.data);
       })
       .catch((e) => {
@@ -124,19 +128,29 @@ const Reservation = () => {
       });
   };
 
-  useEffect(()=>{
-    console.log("cnt: ",cnt);
-  },[cnt])
-
-  const ReservationSuccess = () => {
-    axios.post("/reservation/register", {
-      rev_date: `${startDate.toISOString().substr(0, 10)} ${selectedTime}:00`,
-    });
+  const MakeReservation = () => {
+    axios
+      .post("/reservation/register", {
+        jwtToken: token,
+        rev_hos: medicalPick,
+        rev_date: `${startDate}`,
+      })
+      .then((response) => {
+        navigate("/reservationComplete");
+        console.log(response);
+      })
+      .catch((e) => {
+        console.log(e);
+        navigate("/");
+      });
   };
 
   useEffect(() => {
     if (medicalPick != "") {
       DetailSearch();
+      setDisable(false);
+    } else {
+      setDisable(true);
     }
   }, [medicalPick]);
 
@@ -210,7 +224,12 @@ const Reservation = () => {
             )}
           </section>
         </section>
-        <button type="button" className="reservationBtn">
+        <button
+          type="button"
+          className={disable ? "reservationBtnDisable" : "reservationBtn"}
+          onClick={MakeReservation}
+          disabled={disable}
+        >
           <span className="btnText">예약하기</span>
         </button>
       </section>
