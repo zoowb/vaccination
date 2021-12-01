@@ -36,52 +36,56 @@ router.post('/index', async function (req, res, next) {
     try {
         const result1 = await connection.query("select count(Ssn) as `count` from person;");
         const person_all = result1[0];
-        const result2 = await connection.query("select count(Ssn) as `count` from person natural join reservation where IsVaccine=1;");
+        const result2 = await connection.query("select count(Ssn) as `count` from person natural join reservation where IsVaccine in(1, 2);");
         const person_vac1 = result2[0];
         const result3 = await connection.query("select count(Ssn) as `count` from person natural join reservation where IsVaccine=2;");
         const person_vac2 = result3[0];
 
         const sqlmonth1 = "select YEAR(Rdate1) as `year`, Month(Rdate1) as `month`, count(Ssn) as `count` " + 
-            "from person natural join reservation where IsVaccine=? group by `year`, `month` order by `year`, `month`;"
+            "from person natural join reservation where IsVaccine in(1, 2) group by `year`, `month` order by `year`, `month`;"
         const sqlmonth2 = "select YEAR(Rdate2) as `year`, Month(Rdate2) as `month`, count(Ssn) as `count` " + 
-            "from person natural join reservation where IsVaccine=? group by `year`, `month` order by `year`, `month`;"
-        const result4 = await connection.query(sqlmonth1, [1]);
+            "from person natural join reservation where IsVaccine=2 group by `year`, `month` order by `year`, `month`;"
+        const result4 = await connection.query(sqlmonth1);
         const byMonth_vac1 = result4[0];
-        const result5 = await connection.query(sqlmonth2, [2]);
+        const result5 = await connection.query(sqlmonth2);
         const byMonth_vac2 = result5[0];
 
         const sqlweek1 = "select DATE_FORMAT(DATE_SUB(`Rdate1`, INTERVAL (DAYOFWEEK(`Rdate1`)-2) DAY), '%Y/%m/%d') as `start`, " + 
             "DATE_FORMAT(DATE_SUB(`Rdate1`, INTERVAL (DAYOFWEEK(`Rdate1`)-8) DAY), '%Y/%m/%d') as `end`, count(Ssn) as count " + 
-            "from person natural join reservation where IsVaccine=? group by `start` order by `start`;"
+            "from person natural join reservation where IsVaccine in(1, 2) group by `start` order by `start`;"
         const sqlweek2 = "select DATE_FORMAT(DATE_SUB(`Rdate2`, INTERVAL (DAYOFWEEK(`Rdate2`)-2) DAY), '%Y/%m/%d') as `start`, " + 
             "DATE_FORMAT(DATE_SUB(`Rdate2`, INTERVAL (DAYOFWEEK(`Rdate2`)-8) DAY), '%Y/%m/%d') as `end`, count(Ssn) as count " + 
-            "from person natural join reservation where IsVaccine=? group by `start` order by `start`;"
-        const result6 = await connection.query(sqlweek1, [1]);
+            "from person natural join reservation where IsVaccine=2 group by `start` order by `start`;"
+        const result6 = await connection.query(sqlweek1);
         const byWeek_vac1 = result6[0];
-        const result7 = await connection.query(sqlweek2, [2]);
+        const result7 = await connection.query(sqlweek2);
         const byWeek_vac2 = result7[0];
 
         const sqlday1 = "select YEAR(Rdate1) as `year`, Month(Rdate1) as `month`, Day(Rdate1) as `day`, count(Ssn) as `count` " + 
-            "from person natural join reservation where IsVaccine=? group by `year`, `month`, `day` order by `year`, `month`, `day`;"
+            "from person natural join reservation where IsVaccine in(1, 2) group by `year`, `month`, `day` order by `year`, `month`, `day`;"
         const sqlday2 = "select YEAR(Rdate2) as `year`, Month(Rdate2) as `month`, Day(Rdate2) as `day`, count(Ssn) as `count` " + 
-            "from person natural join reservation where IsVaccine=? group by `year`, `month`, `day` order by `year`, `month`, `day`;"
-        const result8 = await connection.query(sqlday1, [1]);
+            "from person natural join reservation where IsVaccine=2 group by `year`, `month`, `day` order by `year`, `month`, `day`;"
+        const result8 = await connection.query(sqlday1);
         const byDay_vac1 = result8[0];
-        const result9 = await connection.query(sqlday2, [2]);
+        const result9 = await connection.query(sqlday2);
         const byDay_vac2 = result9[0];
 
-        const sqlLoc = "select `Code` as `sido_code`, S.`Sido` as `sido_name`, count(P.`Ssn`) as `count` from person as P, reservation as R, sido as S " + 
-            "where P.`Ssn`=R.`Ssn` and P.`Sido`=S.`Code` and `IsVaccine`=? group by `Code` order by `Code`;"
-        const result10 = await connection.query(sqlLoc, [1]);
+        const sqlLoc1 = "select `Code` as `sido_code`, S.`Sido` as `sido_name`, count(P.`Ssn`) as `count` from person as P, reservation as R, sido as S " + 
+            "where P.`Ssn`=R.`Ssn` and P.`Sido`=S.`Code` and `IsVaccine` in(1, 2) group by `Code` order by `Code`;"
+        const sqlLoc2 = "select `Code` as `sido_code`, S.`Sido` as `sido_name`, count(P.`Ssn`) as `count` from person as P, reservation as R, sido as S " + 
+            "where P.`Ssn`=R.`Ssn` and P.`Sido`=S.`Code` and `IsVaccine`=2 group by `Code` order by `Code`;"
+        const result10 = await connection.query(sqlLoc1);
         const byLoc_vac1 = result10[0];
-        const result11 = await connection.query(sqlLoc, [2]);
+        const result11 = await connection.query(sqlLoc2);
         const byLoc_vac2 = result11[0];
 
-        const sqlAge = "select floor(Age / 10)*10 as `ages`, count(Ssn) as `count` from person natural join reservation " + 
-            "where IsVaccine=? group by `ages` order by `ages`;"
-        const result12 = await connection.query(sqlAge, [1]);
+        const sqlAge1 = "select floor(Age / 10)*10 as `ages`, count(Ssn) as `count` from person natural join reservation " + 
+            "where IsVaccine in(1, 2) group by `ages` order by `ages`;"
+        const sqlAge2 = "select floor(Age / 10)*10 as `ages`, count(Ssn) as `count` from person natural join reservation " + 
+            "where IsVaccine=2 group by `ages` order by `ages`;"
+        const result12 = await connection.query(sqlAge1);
         const byAge_vac1 = result12[0];
-        const result13 = await connection.query(sqlAge, [2]);
+        const result13 = await connection.query(sqlAge2);
         const byAge_vac2 = result13[0];
 
         const packet = {

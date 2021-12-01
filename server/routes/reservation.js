@@ -165,7 +165,7 @@ router.post('/search', async function (req, res, next) {
  *
  * === client-input ===
  * idx : 병원 아이디 [DB hospital.hnumber]
- * date : 예약 날짜 문자열 (ex. "2021-10-31")
+ * date : 예약 날짜 (문자열) (ex. "2021-10-31")
  *
  * === server-return ===
  * hos_info : 병원 정보 [{Hnumber: 병원 이름, Hlocation: 병원 상세주소, Hname: 병원 이름, Hclass: 병원 종류, 
@@ -207,7 +207,7 @@ router.get('/search/:idx/:date', async function (req, res, next) {
         const result3 = await connection.query(sql3, [idx]);
         const data3 = result3[0];
 
-        res.send({ hos_info : result1[0], revp_bytime : data2, hos_timeinfo: data3 });
+        res.send({ hos_info : data1[0], revp_bytime : data2, hos_timeinfo: data3[0] });
     }
     catch (err) {
         if(err_code != 2)
@@ -237,11 +237,11 @@ router.get('/search/:idx/:date', async function (req, res, next) {
  * === client-input ===
  * jwtToken = 사용자 정보 jwt토큰 (로그인에서 생성된 토큰)
  * rev_hos = 예약 병원 아이디
- * rev_date = 1차예약 날짜 (문자열 포함 X)
+ * rev_date = 1차예약 날짜&시간 (문자열) (ex. '2021-12-01 15:00:00')
  *
  * === server-return ===
  * rev_vacname = 예약 백신명 (아이디 X)
- * rev_date2 = 2차예약 날짜 (Date 객체)
+ * rev_date2 = 2차예약 날짜&시간 (Date 객체)
  *
 */
 router.post('/register', async function (req, res, next) {
@@ -252,10 +252,9 @@ router.post('/register', async function (req, res, next) {
     const token_res = await jwt.verify(token); // 토큰 해독
     const rev_ssn = token_res.ssn; // 예약자 ssn
     const rev_startdate = new Date();
-
+    
     let err_code = 0;
     let err_msg = "";
-
     const connection = await pool2.getConnection(async conn => conn);
     try {
         await connection.beginTransaction(); // 트랜잭션 시작
