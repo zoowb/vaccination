@@ -21,6 +21,7 @@ const dataLists = [
 // };
 
 const CheckBox = ({ name1, name2, name3, name4, flist, setFlist }) => {
+  //[0,0,0,0]
   // const [f1, setF1] = useState(flist[0]);
   // const [f2, setF2] = useState(flist[1]);
   // const [f3, setF3] = useState(flist[2]);

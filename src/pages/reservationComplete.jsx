@@ -3,24 +3,43 @@ import "./reservationComplete.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import transVaccine, { transTime } from "../components/modules/translation";
 const ReservationComplete = () => {
   const [response, setResponse] = useState("");
+  let ssn = "";
+
   const getReservation = () => {
-    axios.get("/reservationInfo").then((response) => {
-      console.log(response);
-    });
+    const token = localStorage.getItem("accessToken");
+    axios
+      .post("/mypage/getinfo", { jwtToken: token })
+      .then((response) => {
+        ssn = response.data.Ssn;
+      })
+      .catch((e) => console.log(e));
+    axios
+      .post("/mypage/getrev", { jwtToken: token })
+      .then((res) => {
+        setResponse(res);
+        console.log(res.data.date2);
+        // console.log(new Date(response.data.date2));
+      })
+      .catch((e) => console.log(e));
   };
 
   useEffect(() => {
-    //    getReservation();
+    getReservation();
   }, []);
+
+  const transDate = (date) => {
+    return `${date?.substr(0, 10)}, ${date?.substr(11, 5)}`;
+  };
 
   return (
     <WholeScreenWithHeader>
       <section className="reservationComplete">
         <section className="whiteSection">
           <span className="nameSection">
-            <strong className="name">김지수</strong>
+            <strong className="name">{response.data?.name}</strong>
             <span className="text">&nbsp;님의 예약이 완료되었습니다.</span>
           </span>
           <section className="infoSection">
@@ -31,35 +50,31 @@ const ReservationComplete = () => {
               <tbody>
                 <tr>
                   <td>예약번호</td>
-                  <td>0239103012</td>
-                </tr>
-                <tr>
-                  <td>예약일시</td>
-                  <td>2021-10-08</td>
+                  <td>{response.data?.idx}</td>
                 </tr>
                 <tr>
                   <td>1차 백신</td>
-                  <td>화이자</td>
+                  <td>{transVaccine(response.data?.vacname)}</td>
                 </tr>
                 <tr>
                   <td>1차 병원</td>
-                  <td>참좋은 병원</td>
+                  <td>{response.data?.hosname}</td>
                 </tr>
                 <tr>
                   <td>1차 접종 일시</td>
-                  <td>2021-10-14, 14:00</td>
+                  <td>{transDate(response.data?.date1)}</td>
                 </tr>
                 <tr>
                   <td>2차 백신</td>
-                  <td>화이자</td>
+                  <td>{transVaccine(response.data?.vacname)}</td>
                 </tr>
                 <tr>
                   <td>2차 병원</td>
-                  <td>참좋은 병원</td>
+                  <td>{response.data?.hosname}</td>
                 </tr>
                 <tr>
                   <td>2차 접종 일시</td>
-                  <td>2021-11-11, 14:00</td>
+                  <td>{transDate(response.data?.date2)}</td>
                 </tr>
               </tbody>
             </table>

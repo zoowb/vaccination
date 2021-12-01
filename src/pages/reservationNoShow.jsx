@@ -6,7 +6,6 @@ import initTmap from "../components/tmapfornoshow";
 import "./reservationNoShow.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import GeoCoder from "../components/modules/geocoder";
 
 const ReservationNoShow = () => {
   const [hosList, setHosList] = useState([]);
@@ -14,7 +13,7 @@ const ReservationNoShow = () => {
   let arr = [];
   let x = 0,
     y = 0;
-  const [flist, setFlist] = useState([1, 1, 0, 0]);
+  const [flist, setFlist] = useState([1, 0, 0, 0]);
   // let flist = [1, 1, 0, 0];
   const token = localStorage.getItem("accessToken");
 
@@ -40,7 +39,6 @@ const ReservationNoShow = () => {
               loc.name = response.data.info[0].Hname;
               loc.x = response.data.info[0].x;
               loc.y = response.data.info[0].y;
-              console.log(response);
               arr.push(loc);
               if (i == length - 1) {
                 initTmap(x, y, arr);
@@ -89,7 +87,6 @@ const ReservationNoShow = () => {
           </div>
           <div className="hospitalListBox">
             {hosList.map((data, i) => {
-              console.log(data);
               return (
                 <HospitalList
                   name={data.Hname}

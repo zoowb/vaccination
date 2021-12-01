@@ -36,19 +36,19 @@ const SelectInfoBtn = ({ title, content }) => {
 
 const HospitalDetail = ({ medicalInfo, pickTime, selectedTime, cnt }) => {
   useEffect(() => {
-    if (medicalInfo.x != undefined) {
+    if (medicalInfo.hos_info?.x != undefined) {
       if (cnt == 1) {
-        initTmap(medicalInfo.x, medicalInfo.y, 1);
+        initTmap(medicalInfo.hos_info?.x, medicalInfo.hos_info?.y, 1);
       } else {
-        moveTmap(medicalInfo.x, medicalInfo.y, 2);
+        moveTmap(medicalInfo.hos_info?.x, medicalInfo.hos_info?.y, 2);
       }
     }
-  }, [medicalInfo.x]);
+  }, [medicalInfo.hos_info?.x]);
 
   return (
     <section className="hospitalDetailSection">
       <div className="selectionInfo">
-        <h1 className="name">{medicalInfo.Hname}</h1>
+        <h1 className="name">{medicalInfo.hos_info?.Hname}</h1>
         <div className="btns">
           <SelectInfoBtn title={"시간 선택"} content={selectedTime} />
           <SelectInfoBtn title={"예약 현황"} content={"6/20명"} />
@@ -86,18 +86,28 @@ const HospitalDetail = ({ medicalInfo, pickTime, selectedTime, cnt }) => {
       </div>
       <div className="hospitalInfo">
         <strong className="title">병원 정보</strong>
-        <HospitalInfo phone={medicalInfo.Hphone} />
+        <HospitalInfo
+          phone={medicalInfo.hos_info?.Hphone}
+          time={medicalInfo.hos_timeinfo}
+        />
       </div>
       <div className="hospitalLoc">
         <strong className="title">병원 위치</strong>
         <div id="map_div" />
-        <div className="detailAddr">상세주소: {medicalInfo.Hlocation}</div>
+        <div className="detailAddr">
+          상세주소: {medicalInfo.hos_info?.Hlocation}
+        </div>
       </div>
     </section>
   );
 };
 
-const HospitalInfo = ({ phone }) => {
+const HospitalInfo = ({ phone, time }) => {
+  const makeTime = (time) => {
+    let newTime = time?.slice(0, 2) + ":" + time?.slice(2, 4);
+    return newTime;
+  };
+
   return (
     <table className="hospitalInfoTable">
       <tbody>
@@ -108,17 +118,23 @@ const HospitalInfo = ({ phone }) => {
         <tr>
           <td>진료시간</td>
           <td>
-            월요일: 09:00~18:00
+            월요일: {makeTime(time?.Start_Mon)}~{makeTime(time?.Close_Mon)}
             <br />
-            화요일: 10:00~20:00
+            화요일: {makeTime(time?.Start_Tue)}~{makeTime(time?.Close_Tue)}
             <br />
-            수요일: 09:00~17:00
+            수요일: {makeTime(time?.Start_Wed)}~{makeTime(time?.Close_Wed)}
             <br />
-            목요일: 10:00~20:00
+            목요일: {makeTime(time?.Start_Thu)}~{makeTime(time?.Close_Thu)}
             <br />
-            금요일: 09:00~18:00
+            금요일: {makeTime(time?.Start_Fri)}~{makeTime(time?.Close_Fri)}
             <br />
-            토요일: 09:00~14:00
+            토요일: {makeTime(time?.Start_Sat)}~{makeTime(time?.Close_Sat)}
+            <br />
+            일요일: {makeTime(time?.Start_Sun)}~{makeTime(time?.Close_Sun)}
+            <br />
+            점심시간: {time?.Lunch_Week}
+            <br />
+            공휴일: {time?.IsOpenHoliday}
           </td>
         </tr>
       </tbody>
