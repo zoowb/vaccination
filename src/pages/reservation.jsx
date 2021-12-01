@@ -83,6 +83,7 @@ const Reservation = () => {
   const [medicalPick, setMedicalPick] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [cnt, setCnt] = useState(0);
+  const [cnt2, setCnt2] = useState(0);
   const [disable, setDisable] = useState(true);
   const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
@@ -95,6 +96,7 @@ const Reservation = () => {
   };
 
   const Search = () => {
+    // setCnt(cnt2);
     setCnt(0);
     axios
       .post("/reservation/search", {
@@ -105,6 +107,7 @@ const Reservation = () => {
       .then((response) => {
         setResultList(response.data.hos_info);
         setMedicalPick("");
+        setSelectedTime("없음");
       })
       .catch((e) => {
         console.log(e);
@@ -148,13 +151,14 @@ const Reservation = () => {
   useEffect(() => {
     if (medicalPick != "") {
       DetailSearch();
-      setDisable(false);
-    } else {
-      setDisable(true);
     }
   }, [medicalPick]);
 
-  //병원 이름 클릭하면 id 넘겨줘서 hospitalDetail에서 표현하기
+  useEffect(() => {
+    console.log("cnt===", cnt);
+    setCnt2(cnt);
+  }, [cnt]);
+
   return (
     <WholeScreenWithHeader>
       <section className="reservation">
@@ -226,9 +230,11 @@ const Reservation = () => {
         </section>
         <button
           type="button"
-          className={disable ? "reservationBtnDisable" : "reservationBtn"}
+          className={
+            selectedTime == "없음" ? "reservationBtnDisable" : "reservationBtn"
+          }
           onClick={MakeReservation}
-          disabled={disable}
+          disabled={selectedTime == "없음" ? disable : ""}
         >
           <span className="btnText">예약하기</span>
         </button>

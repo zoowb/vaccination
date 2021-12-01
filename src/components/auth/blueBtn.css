@@ -1,5 +1,7 @@
 .auth-blueBtn,
-.auth-blueBtn2 {
+.auth-blueBtn2,
+.Dauth-blueBtn,
+.Dauth-blueBtn2 {
   width: 350px;
   height: 70px;
   margin-top: 60px;
@@ -11,7 +13,14 @@
   outline: none;
 }
 
-.auth-blueBtn2 {
+.Dauth-blueBtn,
+.Dauth-blueBtn2 {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.auth-blueBtn2,
+.Dauth-blueBtn2 {
   margin-top: 20px;
 }
 
