@@ -170,7 +170,7 @@ router.post('/search', async function (req, res, next) {
  * === server-return ===
  * hos_info : 병원 정보 [{Hnumber: 병원 이름, Hlocation: 병원 상세주소, Hname: 병원 이름, Hclass: 병원 종류, 
         Other: 기타사항, Hphone: 병원 전화번호, x: 병원 x좌표, y: 병원 y좌표, Sigungucode: 시군구 코드, Sidocode: 시도 코드 }]
- * revp_bytime : 예약인원 객체 배열 [{date: 예약 날짜, time: 예약 시간, count: 해당 시간대 예약 인원수}]
+ * revp_bytime : 예약인원 객체 배열 [{time: 예약 시간 (문자열 -> new Date()로 변환 가능) count: 해당 시간대 예약 인원수}]
  * hos_timeinfo : 병원 시간 정보 [{Number: 병원 아이디, Start_Mon: 월요일 운영시작 시간, Close_Mon: 월요일 운영종료 시간,
     Start_Tue, Close_Tue, Start_Wed, Close_Wed, Start_Thu, Close_Thu, Start_Fri, Close_Fri, Start_Sat, Close_Sat, Start_Sun, Close_Sun: 화-일 운영시작/종료 시간
     IsOpenHoliday: 공휴일 운영시간 (시간타입X, 문자열), Lunch_Week: 점심시간 (시간타입X, 문자열)}]
@@ -199,7 +199,7 @@ router.get('/search/:idx/:date', async function (req, res, next) {
             "from reservation_list as rl, hospital as h " +
             "where rl.Hnumber = h.Hnumber and rl.Hnumber = ? " +
             "group by date, time " +
-            "having date = ?;";
+            "having date = ? order by date, time;";
         const result2 = await connection.query(sql2, [idx, date]);
         const data2 = result2[0];
 
@@ -207,7 +207,48 @@ router.get('/search/:idx/:date', async function (req, res, next) {
         const result3 = await connection.query(sql3, [idx]);
         const data3 = result3[0];
 
-        res.send({ hos_info : data1[0], revp_bytime : data2, hos_timeinfo: data3[0] });
+        // 데이터 가공
+        const date_ind = new Date(date + " 10:00");
+        const date_last = new Date(date + " 17:31");
+        const revp_bytime = []; // [{date: 예약 날짜, time: 예약 시간, count: 해당 시간대 예약 인원수}], 시간순으로 오름차순 정렬됨
+        let ri = 0;
+
+        class RT { 
+            constructor (time, count) { 
+                this.time = time;
+                this.count = count;
+            } 
+        }
+        
+        do // date_ind보다 작은 예약 시간대는 패스
+        {
+            if(ri >= data2.length) break;
+
+            const cur = new Date(data2[ri].date + " " + data2[ri].time);
+            if(cur.getTime() < date_ind.getTime()) ri++;
+            else break;
+        } while(1)
+
+        while(date_ind <= date_last)
+        {
+            const hours = date_ind.getHours();
+            const min = date_ind.getMinutes();
+            let cc = 0;
+
+            if(ri < data2.length)
+            {
+                const cur = new Date(data2[ri].date + " " + data2[ri].time);
+                if(hours == cur.getHours() && min == cur.getMinutes())
+                {
+                    cc = data2[ri].count;
+                    ri++;
+                }
+            }
+            revp_bytime.push(new RT(new Date(date_ind.getTime()).toString(), cc));
+            date_ind.setMinutes(date_ind.getMinutes() + 30);
+        }
+
+        res.send({ hos_info : data1[0], revp_bytime : revp_bytime, hos_timeinfo: data3[0] });
     }
     catch (err) {
         if(err_code != 2)
@@ -241,7 +282,8 @@ router.get('/search/:idx/:date', async function (req, res, next) {
  *
  * === server-return ===
  * rev_vacname = 예약 백신명 (아이디 X)
- * rev_date2 = 2차예약 날짜&시간 (Date 객체)
+ * rev_date1 = 1차예약 날짜&시간 (문자열, new Date(rev_date1)로 원래 시간 데이터로 변환 가능)
+ * rev_date2 = 2차예약 날짜&시간
  *
 */
 router.post('/register', async function (req, res, next) {
@@ -286,7 +328,7 @@ router.post('/register', async function (req, res, next) {
         else
             await connection.query("delete from hospital_vaccine WHERE Hnumber=? and Vnumber=?", [rev_hos, rev_vacid]);
 
-        res.send({ rev_vacname : rev_vac.Vname, rev_date2 : rev_date2 });
+        res.send({ rev_vacname : rev_vac.Vname, rev_date2 : rev_date2, rev_date1 : new Date(rev_date) });
         await connection.commit(); // 트랜잭션 성공
     }
     catch (err) {
