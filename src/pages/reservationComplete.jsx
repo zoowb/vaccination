@@ -3,7 +3,7 @@ import "./reservationComplete.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import transVaccine, { transTime } from "../components/modules/translation";
+import transVaccine, { transDate } from "../components/modules/translation";
 const ReservationComplete = () => {
   const [response, setResponse] = useState("");
   let ssn = "";
@@ -21,7 +21,6 @@ const ReservationComplete = () => {
       .then((res) => {
         setResponse(res);
         console.log(res.data.date2);
-        // console.log(new Date(response.data.date2));
       })
       .catch((e) => console.log(e));
   };
@@ -29,10 +28,6 @@ const ReservationComplete = () => {
   useEffect(() => {
     getReservation();
   }, []);
-
-  const transDate = (date) => {
-    return `${date?.substr(0, 10)}, ${date?.substr(11, 5)}`;
-  };
 
   return (
     <WholeScreenWithHeader>
