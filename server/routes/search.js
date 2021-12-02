@@ -1,9 +1,8 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const pool = require('../modules/mysql');
-const pool2 = require('../modules/mysql2');
-const locationList = require('../modules/locationList');
-
+const pool = require("../modules/mysql");
+const pool2 = require("../modules/mysql2");
+const locationList = require("../modules/locationList");
 
 /* ===== 시도 리스트 데이터 가져오기 =====
  *
@@ -15,13 +14,12 @@ const locationList = require('../modules/locationList');
  * === server-return ===
  * sido : 시도 코드 리스트 [{Code: 시도 코드, sido: 시도명}]
  *
-*/
-router.get('/getSidoList', async function (req, res, next) {
-    const result = await locationList.GetSido();
-    if(result !== undefined) res.send({ sido : result });
-    else res.status(500).send({ err : "DB 오류" });
+ */
+router.get("/getSidoList", async function (req, res, next) {
+  const result = await locationList.GetSido();
+  if (result !== undefined) res.send({ sido: result });
+  else res.status(500).send({ err: "DB 오류" });
 });
-
 
 /* ===== 시군구 리스트 데이터 가져오기 =====
  *
@@ -33,13 +31,12 @@ router.get('/getSidoList', async function (req, res, next) {
  * === server-return ===
  * SiGunGu : 시군구 코드 리스트 [{Code: 시군구 코드, SiGunGu: 시군구명}]
  *
-*/
+ */
 router.post("/getSigunguList", async function (req, res, next) {
-    const result = await locationList.GetSigunguBySido(req.body.sido);
-    if(result !== undefined) res.send({ SiGunGu : result });
-    else res.status(500).send({ err : "DB 오류" });
+  const result = await locationList.GetSigunguBySido(req.body.sido);
+  if (result !== undefined) res.send({ SiGunGu: result });
+  else res.status(500).send({ err: "DB 오류" });
 });
-
 
 /* ===== 기관조회 검색 처리 =====
  *
@@ -53,29 +50,30 @@ router.post("/getSigunguList", async function (req, res, next) {
  * === server-return ===
  * list: 병원 정보 리스트 [{Hnumber: 병원 아이디, Hname: 병원 이름, Hlocation: 병원 상세주소}]
  *
-*/
-router.post('/search', function (req, res, next) {
-    var sigungu = req.body.sigungu;
-    var name = req.body.name;
-    var isHos = req.body.isHos; // 의원/약국 선택
+ */
+router.post("/search", function (req, res, next) {
+  var sigungu = req.body.sigungu;
+  var name = req.body.name;
+  var isHos = req.body.isHos; // 의원/약국 선택
 
-    var sql;
-    if(isHos) sql = "SELECT Hnumber, Hname, Hlocation FROM HOSPITAL WHERE `Sigungucode`=? and Hname LIKE ?;";
-    else sql = "SELECT Pnumber, Pname, Plocation FROM PHARMACY WHERE `Sigungucode`=? and Pname LIKE ?;";
+  var sql;
+  if (isHos)
+    sql =
+      "SELECT Hnumber, Hname, Hlocation FROM HOSPITAL WHERE `Sigungucode`=? and Hname LIKE ?;";
+  else
+    sql =
+      "SELECT Pnumber, Pname, Plocation FROM PHARMACY WHERE `Sigungucode`=? and Pname LIKE ?;";
 
-    pool.getConnection(function (err, connection) {
-        connection.query(sql, [sigungu, '%' + name + '%'], function (err, result) {
-            if (err)
-            {
-                res.send({ err : "DB 오류"});
-                console.error("err : " + err);
-            }
-            else res.send({list: result});
-            connection.release();
-        });
+  pool.getConnection(function (err, connection) {
+    connection.query(sql, [sigungu, "%" + name + "%"], function (err, result) {
+      if (err) {
+        res.send({ err: "DB 오류" });
+        console.error("err : " + err);
+      } else res.send({ list: result });
+      connection.release();
     });
+  });
 });
-
 
 /* ===== 기관조회 세부정보 처리 =====
  *
@@ -98,60 +96,55 @@ router.post('/search', function (req, res, next) {
     IsOpenHoliday: 공휴일 운영시간 (시간타입X, 문자열), Lunch_Week: 점심시간 (시간타입X, 문자열)}]
  *
 */
-router.post('/more', async function (req, res, next) {
-    var idx = req.body.idx;
-    var isHos = req.body.isHos; // 의원/약국 선택
+router.post("/more", async function (req, res, next) {
+  var idx = req.body.idx;
+  var isHos = req.body.isHos; // 의원/약국 선택
 
-    let err_code = 0;
-    let err_msg = "";
+  let err_code = 0;
+  let err_msg = "";
 
-    const connection = await pool2.getConnection(async conn => conn);
-    try {
-        var sql1;
-        if(isHos) sql1 = "SELECT * FROM HOSPITAL WHERE Hnumber=?";
-        else sql1 = "SELECT * FROM PHARMACY WHERE Pnumber=?";
-        const result1 = await connection.query(sql1, [idx]);
-        const data1 = result1[0];
+  const connection = await pool2.getConnection(async (conn) => conn);
+  try {
+    var sql1;
+    if (isHos) sql1 = "SELECT * FROM HOSPITAL WHERE Hnumber=?";
+    else sql1 = "SELECT * FROM PHARMACY WHERE Pnumber=?";
+    const result1 = await connection.query(sql1, [idx]);
+    const data1 = result1[0];
 
-        var sql2;
-        if(isHos)
-        {
-            sql2 = "select h.Hnumber, ifnull(ht.Start_Mon, 900) as Start_Mon, ifnull(ht.Close_Mon, 1800) as Close_Mon, " + 
-                "ifnull(ht.Start_Tue, 900) as Start_Tue, ifnull(ht.Close_Tue, 1800) as Close_Tue, ifnull(ht.Start_Wed, 900) as Start_Wed, " + 
-                "ifnull(ht.Close_Wed, 1800) as Close_Wed, ifnull(ht.Start_Thu, 900) as Start_Thu, ifnull(ht.Close_Thu, 1800) as Close_Thu, " +
-                "ifnull(ht.Start_Fri, 900) as Start_Fri, ifnull(ht.Close_Fri, 1800) as Close_Fri, ifnull(ht.Start_Sat, 900) as Start_Sat, " +
-                "ifnull(ht.Close_Sat, 1300) as Close_Sat, ifnull(ht.Start_Sun, 1300) as Start_Sun, ifnull(ht.Close_Sun, 1300) as Close_Sun, " + 
-                "ifnull(ht.IsOpenHoliday, '휴진') as IsOpenHoliday, " +
-                "ifnull(ht.Lunch_Week, '12:00에서 13:00까지') as Lunch_Week from hospital as h left join hospital_time as ht on h.Hnumber = ht.Number"
-        }
-        else 
-        {
-            sql2 = "select h.Pnumber, ifnull(ht.Start_Mon, 900) as Start_Mon, ifnull(ht.Close_Mon, 1800) as Close_Mon, " + 
-                "ifnull(ht.Start_Tue, 900) as Start_Tue, ifnull(ht.Close_Tue, 1800) as Close_Tue, ifnull(ht.Start_Wed, 900) as Start_Wed, " + 
-                "ifnull(ht.Close_Wed, 1800) as Close_Wed, ifnull(ht.Start_Thu, 900) as Start_Thu, ifnull(ht.Close_Thu, 1800) as Close_Thu, " +
-                "ifnull(ht.Start_Fri, 900) as Start_Fri, ifnull(ht.Close_Fri, 1800) as Close_Fri, ifnull(ht.Start_Sat, 900) as Start_Sat, " +
-                "ifnull(ht.Close_Sat, 1300) as Close_Sat, ifnull(ht.Start_Sun, 1300) as Start_Sun, ifnull(ht.Close_Sun, 1300) as Close_Sun, " + 
-                "ifnull(ht.IsOpenHoliday, '휴진') as IsOpenHoliday, " +
-                "ifnull(ht.Lunch_Week, '12:00에서 13:00까지') as Lunch_Week from hospital as h left join pharmacy_time as ht on h.Pnumber = ht.Number"
-        }
-        const result2 = await connection.query(sql2, [idx]);
-        const data2 = result2[0];
-
-        res.send({ info : data1, timeinfo: data2 });
+    var sql2;
+    if (isHos) {
+      sql2 =
+        "select h.Hnumber, ifnull(ht.Start_Mon, 900) as Start_Mon, ifnull(ht.Close_Mon, 1800) as Close_Mon, " +
+        "ifnull(ht.Start_Tue, 900) as Start_Tue, ifnull(ht.Close_Tue, 1800) as Close_Tue, ifnull(ht.Start_Wed, 900) as Start_Wed, " +
+        "ifnull(ht.Close_Wed, 1800) as Close_Wed, ifnull(ht.Start_Thu, 900) as Start_Thu, ifnull(ht.Close_Thu, 1800) as Close_Thu, " +
+        "ifnull(ht.Start_Fri, 900) as Start_Fri, ifnull(ht.Close_Fri, 1800) as Close_Fri, ifnull(ht.Start_Sat, 900) as Start_Sat, " +
+        "ifnull(ht.Close_Sat, 1300) as Close_Sat, ifnull(ht.Start_Sun, 1300) as Start_Sun, ifnull(ht.Close_Sun, 1300) as Close_Sun, " +
+        "ifnull(ht.IsOpenHoliday, '휴진') as IsOpenHoliday, " +
+        "ifnull(ht.Lunch_Week, '12:00에서 13:00까지') as Lunch_Week from hospital as h left join hospital_time as ht on h.Hnumber = ht.Number";
+    } else {
+      sql2 =
+        "select h.Pnumber, ifnull(ht.Start_Mon, 900) as Start_Mon, ifnull(ht.Close_Mon, 1800) as Close_Mon, " +
+        "ifnull(ht.Start_Tue, 900) as Start_Tue, ifnull(ht.Close_Tue, 1800) as Close_Tue, ifnull(ht.Start_Wed, 900) as Start_Wed, " +
+        "ifnull(ht.Close_Wed, 1800) as Close_Wed, ifnull(ht.Start_Thu, 900) as Start_Thu, ifnull(ht.Close_Thu, 1800) as Close_Thu, " +
+        "ifnull(ht.Start_Fri, 900) as Start_Fri, ifnull(ht.Close_Fri, 1800) as Close_Fri, ifnull(ht.Start_Sat, 900) as Start_Sat, " +
+        "ifnull(ht.Close_Sat, 1300) as Close_Sat, ifnull(ht.Start_Sun, 1300) as Start_Sun, ifnull(ht.Close_Sun, 1300) as Close_Sun, " +
+        "ifnull(ht.IsOpenHoliday, '휴진') as IsOpenHoliday, " +
+        "ifnull(ht.Lunch_Week, '12:00에서 13:00까지') as Lunch_Week from hospital as h left join pharmacy_time as ht on h.Pnumber = ht.Number";
     }
-    catch (err) {
-        if(err_code != 2)
-        {
-            err_msg = "서버 오류";
-            console.error("err : " + err);
-            throw err;
-        }
-        else err_msg = err.message;
-        res.status(500).send({ err : err_msg, ok : false });
-    }
-    finally {
-        connection.release();
-    }
+    const result2 = await connection.query(sql2, [idx]);
+    const data2 = result2[0];
+
+    res.send({ info: data1, timeinfo: data2 });
+  } catch (err) {
+    if (err_code != 2) {
+      err_msg = "서버 오류";
+      console.error("err : " + err);
+      throw err;
+    } else err_msg = err.message;
+    res.status(500).send({ err: err_msg, ok: false });
+  } finally {
+    connection.release();
+  }
 });
 
 module.exports = router;

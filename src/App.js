@@ -20,6 +20,7 @@ import FindIDResult from "./pages/findIDResult";
 import FindPWResult from "./pages/findPWResult";
 import ReservationFail from "./pages/reservationFail";
 import SignUpComplete from "./pages/signupComplete";
+import ReservationEdit from "./pages/reservationEdit";
 import "./App.css";
 
 const App = () => {
@@ -44,6 +45,7 @@ const App = () => {
             element={<ReservationComplete />}
           />
           <Route path="/reservation" element={<Reservation />} />
+          <Route path="/reservationEdit" element={<ReservationEdit />} />
           <Route path="/reservationNoShow" element={<ReservationNoShow />} />
           <Route path="/mypageStart" element={<MyPageStart />} />
           <Route path="/mypageInfo" element={<MyPageInfo />} />

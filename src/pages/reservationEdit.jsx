@@ -15,7 +15,7 @@ import {
 } from "../components/reservation/reservationSelect";
 import { Search, DetailSearch } from "../components/reservation/search";
 
-const Reservation = () => {
+const ReservationEdit = () => {
   const [selectedTime, setSelectedTime] = useState("없음");
   const [sido, setSido] = useState([]);
   const [sidoPick, setSidoPick] = useState("110000");
@@ -59,8 +59,8 @@ const Reservation = () => {
     <WholeScreenWithHeader>
       <section className="reservation">
         <Title
-          title={"사전 예약"}
-          subtitle={"지금 코로나19 백신을 예약하세요!"}
+          title={"예약 변경"}
+          subtitle={"코로나19 백신 예약을 변경하세요!"}
         />
         <section className="whiteSection">
           <strong className="title">집 근처의 의료 기관을 조회해보세요.</strong>
@@ -154,4 +154,4 @@ const Reservation = () => {
     </WholeScreenWithHeader>
   );
 };
-export default Reservation;
+export default ReservationEdit;
