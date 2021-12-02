@@ -15,7 +15,7 @@ import {
 } from "../components/reservation/reservationSelect";
 import { Search, DetailSearch } from "../components/reservation/search";
 
-const Reservation = () => {
+const ReservationEdit = () => {
   const [selectedTime, setSelectedTime] = useState("없음");
   const [sido, setSido] = useState([]);
   const [sidoPick, setSidoPick] = useState("110000");
@@ -154,4 +154,4 @@ const Reservation = () => {
     </WholeScreenWithHeader>
   );
 };
-export default Reservation;
+export default ReservationEdit;
