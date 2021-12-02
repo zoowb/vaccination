@@ -7,7 +7,7 @@ const pool2 = require('../modules/mysql2');
 
 /* ===== 홈페이지 데이터 처리 =====
  *
- * 홈페이지의 시각 데이터에 필요한 데이터를 반환합니다
+ * 홈페이지의 시각 데이터에 필요한 데이터를 반환합니다 (8월 1일부터 12월 15일까지)
  *
  * === client-input ===
  * NONE
@@ -18,8 +18,8 @@ const pool2 = require('../modules/mysql2');
  * person_vac2: 2차 접종자 명수 {count: 인원수}
  * byMonth_vac1: 월별 1차 누적 접종자 [{year: 연도, month: 월, count: 인원수}]
  * byMonth_vac2: 월별 2차 누적 접종자 [{year: 연도, month: 월, count: 인원수}]
- * byWeek_vac1: 주별 1차 누적 접종자 [{start: 주 시작일, end: 주 끝일, count: 인원수}] // 주 시작 = 월요일
- * byWeek_vac2: 주별 2차 누적 접종자 [{start: 주 시작일, end: 주 끝일, count: 인원수}]
+ * // byWeek_vac1: 주별 1차 누적 접종자 [{start: 주 시작일, end: 주 끝일, count: 인원수}] // 주 시작 = 월요일
+ * // byWeek_vac2: 주별 2차 누적 접종자 [{start: 주 시작일, end: 주 끝일, count: 인원수}]
  * byDay_vac1: 일별 1차 누적 접종자 [{year: 연도, month: 월, day: 일, count: 인원수}]
  * byDay_vac2: 일별 2차 누적 접종자 [{year: 연도, month: 월, day: 일, count: 인원수}]
  * byLoc_vac1: 지역별 1차 접종자 [{sido_code: 시도코드, sido_name: 시도명, count: 인원수}] // 분류기준 = 시도코드
@@ -34,6 +34,7 @@ router.post('/index', async function (req, res, next) {
 
     const connection = await pool2.getConnection(async conn => conn);
     try {
+        // 데이터 추출
         const result1 = await connection.query("select count(Ssn) as `count` from person;");
         const person_all = result1[0];
         const result2 = await connection.query("select count(Ssn) as `count` from person natural join reservation where IsVaccine in(1, 2);");
@@ -50,7 +51,7 @@ router.post('/index', async function (req, res, next) {
         const result5 = await connection.query(sqlmonth2);
         const byMonth_vac2 = result5[0];
 
-        const sqlweek1 = "select DATE_FORMAT(DATE_SUB(`Rdate1`, INTERVAL (DAYOFWEEK(`Rdate1`)-2) DAY), '%Y/%m/%d') as `start`, " + 
+        /*const sqlweek1 = "select DATE_FORMAT(DATE_SUB(`Rdate1`, INTERVAL (DAYOFWEEK(`Rdate1`)-2) DAY), '%Y/%m/%d') as `start`, " + 
             "DATE_FORMAT(DATE_SUB(`Rdate1`, INTERVAL (DAYOFWEEK(`Rdate1`)-8) DAY), '%Y/%m/%d') as `end`, count(Ssn) as count " + 
             "from person natural join reservation where IsVaccine in(1, 2) group by `start` order by `start`;"
         const sqlweek2 = "select DATE_FORMAT(DATE_SUB(`Rdate2`, INTERVAL (DAYOFWEEK(`Rdate2`)-2) DAY), '%Y/%m/%d') as `start`, " + 
@@ -59,7 +60,7 @@ router.post('/index', async function (req, res, next) {
         const result6 = await connection.query(sqlweek1);
         const byWeek_vac1 = result6[0];
         const result7 = await connection.query(sqlweek2);
-        const byWeek_vac2 = result7[0];
+        const byWeek_vac2 = result7[0];*/
 
         const sqlday1 = "select YEAR(Rdate1) as `year`, Month(Rdate1) as `month`, Day(Rdate1) as `day`, count(Ssn) as `count` " + 
             "from person natural join reservation where IsVaccine in(1, 2) group by `year`, `month`, `day` order by `year`, `month`, `day`;"
@@ -88,16 +89,88 @@ router.post('/index', async function (req, res, next) {
         const result13 = await connection.query(sqlAge2);
         const byAge_vac2 = result13[0];
 
+        // 데이터 가공
+        const date_ind = new Date("2021-08-01");
+        const date_last = new Date("2021-12-15");
+        const byMonth_cvac1 = []; // [{year: 연도, month: 월, count: 인원수}], 시간순으로 오름차순 정렬됨
+        const byMonth_cvac2 = [];
+        const byDay_cvac1 = []; // [{year: 연도, month: 월, day: 일, count: 인원수}], 시간순으로 오름차순 정렬됨
+        const byDay_cvac2 = [];
+        let mi1 = 0, mi2 = 0, di1 = 0, di2 = 0;
+        let ms1 = 0, ms2 = 0, ds1 = 0, ds2 = 0;
+
+        class MC { 
+            constructor (year, month, count) { 
+                this.year = year;
+                this.month = month;
+                this.count = count;
+            } 
+        }
+        class DC { 
+            constructor (year, month, day, count) { 
+                this.year = year;
+                this.month = month;
+                this.day = day;
+                this.count = count;
+            } 
+        }
+
+        while(date_ind <= date_last)
+        {
+            const year = date_ind.getFullYear();
+            const month = date_ind.getMonth();
+            const day = date_ind.getDate();
+
+            if(mi1 < byMonth_vac1.length)
+            {
+                if(byMonth_vac1[mi1].year == year && byMonth_vac1[mi1].month == month)
+                {
+                    ms1 += byMonth_vac1[mi1].count;
+                    mi1++;
+                }
+            }
+            if(mi2 < byMonth_vac2.length)
+            {
+                if(byMonth_vac2[mi2].year == year && byMonth_vac2[mi2].month == month)
+                {
+                    ms2 += byMonth_vac2[mi2].count;
+                    mi2++;
+                }
+            }
+            if(di1 < byDay_vac1.length)
+            {
+                if(byDay_vac1[di1].year == year && byDay_vac1[di1].month == month && byDay_vac1[di1].day == day)
+                {
+                    ds1 += byDay_vac1[di1].count;
+                    di1++;
+                }
+            }
+            if(di2 < byDay_vac2.length)
+            {
+                if(byDay_vac2[di2].year == year && byDay_vac2[di2].month == month && byDay_vac2[di2].day == day)
+                {
+                    ds2 += byDay_vac1[di2].count;
+                    di2++;
+                }
+            }
+
+            byMonth_cvac1.push(new MC(year, month, ms1));
+            byMonth_cvac2.push(new MC(year, month, ms2));
+            byDay_cvac1.push(new DC(year, month, day, ds1));
+            byDay_cvac2.push(new DC(year, month, day, ds2));
+
+            date_ind.setDate(date_ind.getDate() + 1);
+        }
+
+        // 데이터 송신
         const packet = {
             person_all: person_all,
             person_vac1: person_vac1,
             person_vac2: person_vac2,
-            byMonth_vac1: byMonth_vac1,
-            byMonth_vac2: byMonth_vac2,
-            byWeek_vac1: byWeek_vac1,
-            byWeek_vac2: byWeek_vac2,
-            byDay_vac1: byDay_vac1,
-            byDay_vac2: byDay_vac2,
+            byMonth_vac1: byMonth_cvac1,
+            byMonth_vac2: byMonth_cvac2,
+            byDay_vac1: byDay_cvac1,
+            byDay_vac2: byDay_cvac2,
             byLoc_vac1: byLoc_vac1,
             byLoc_vac2: byLoc_vac2,
             byAge_vac1: byAge_vac1,
