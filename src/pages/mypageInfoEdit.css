@@ -1,6 +1,9 @@
 .mypageInfoEdit .btnSection {
   display: flex;
+  padding: 0 64px;
+  width: 1033px;
   justify-content: flex-end;
+  align-items: center;
 }
 
 .mypageInfoEdit .background {

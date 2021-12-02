@@ -1,7 +1,13 @@
-.btnSection {
+.mypageResInquiry .btnSection {
   display: flex;
   padding: 0 64px;
   width: 1033px;
   justify-content: space-between;
   align-items: center;
+}
+
+.mypageResInquiry .noRes {
+  font-size: 48px;
+  font-weight: 700;
+  color: #737373;
 }
