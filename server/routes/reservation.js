@@ -300,7 +300,7 @@ router.post('/register', async function (req, res, next) {
     const rev_date = req.body.rev_date;
 
     const token_res = await jwt.verify(token); // 토큰 해독
-    const rev_ssn = token_res.ssn; // 예약자 ssn
+    const rev_ssn = "401880-237639"//token_res.ssn; // 예약자 ssn
     const rev_startdate = new Date();
     
     let err_code = 0;
@@ -329,7 +329,7 @@ router.post('/register', async function (req, res, next) {
 
         const sql2 = "select * from reservation where Ssn=?";
         const result2 = await connection.query(sql2, [rev_ssn]);
-        const data2 = result1[0];
+        const data2 = result2[0];
         if(data2.length == 0) // 새로운 예약 등록
             await connection.query("INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Rdate1`, `Rdate2`, `Ssn`, `IsVaccine`) values(?,?,?,?,?,0);", revcon);
         else // 기존 예약 수정
@@ -342,7 +342,7 @@ router.post('/register', async function (req, res, next) {
             await connection.query("update hospital_vaccine SET Amount=Amount-1 WHERE Hnumber=? and Vnumber=?", [rev_hos, rev_vacid]);
         else
             await connection.query("delete from hospital_vaccine WHERE Hnumber=? and Vnumber=?", [rev_hos, rev_vacid]);
-
+        
         res.send({ rev_vacname : rev_vac.Vname, rev_date2 : rev_date2, rev_date1 : new Date(rev_date) });
         await connection.commit(); // 트랜잭션 성공
     }
