@@ -333,7 +333,7 @@ router.post('/register', async function (req, res, next) {
         if(data2.length == 0) // 새로운 예약 등록
             await connection.query("INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Rdate1`, `Rdate2`, `Ssn`, `IsVaccine`) values(?,?,?,?,?,0);", revcon);
         else // 기존 예약 수정
-            await connection.query("update reservation set `Hnumber`=?, `Vnumber`=?, `Rdate1`=?, `Rdate2`=?, `IsVaccine`=0; where `Ssn`=?", revcon);
+            await connection.query("update reservation set `Hnumber`=?, `Vnumber`=?, `Rdate1`=?, `Rdate2`=?, `IsVaccine`=0 where `Ssn`=?", revcon);
 
         // const data3 = [rev_date, rev_ssn]; // 예약날짜 갱신
         // await connection.query("UPDATE PERSON SET Rdate=? WHERE Ssn=?;", data3);
