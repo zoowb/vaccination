@@ -203,7 +203,14 @@ router.get('/search/:idx/:date', async function (req, res, next) {
         const result2 = await connection.query(sql2, [idx, date]);
         const data2 = result2[0];
 
-        const sql3 = "select * from hospital_time where `Number`=?;";
+        // const sql3 = "select * from hospital_time where `Number`=?;";
+        const sql3 = "select h.Hnumber, ifnull(ht.Start_Mon, 900) as Start_Mon, ifnull(ht.Close_Mon, 1800) as Close_Mon, " + 
+            "ifnull(ht.Start_Tue, 900) as Start_Tue, ifnull(ht.Close_Tue, 1800) as Close_Tue, ifnull(ht.Start_Wed, 900) as Start_Wed, " + 
+            "ifnull(ht.Close_Wed, 1800) as Close_Wed, ifnull(ht.Start_Thu, 900) as Start_Thu, ifnull(ht.Close_Thu, 1800) as Close_Thu, " +
+            "ifnull(ht.Start_Fri, 900) as Start_Fri, ifnull(ht.Close_Fri, 1800) as Close_Fri, ifnull(ht.Start_Sat, 900) as Start_Sat, " +
+            "ifnull(ht.Close_Sat, 1300) as Close_Sat, ifnull(ht.Start_Sun, 1300) as Start_Sun, ifnull(ht.Close_Sun, 1300) as Close_Sun, " + 
+            "ifnull(ht.IsOpenHoliday, '휴진') as IsOpenHoliday, " +
+            "ifnull(ht.Lunch_Week, '12:00에서 13:00까지') as Lunch_Week from hospital as h left join hospital_time as ht on h.Hnumber = ht.Number"
         const result3 = await connection.query(sql3, [idx]);
         const data3 = result3[0];
 
@@ -248,6 +255,7 @@ router.get('/search/:idx/:date', async function (req, res, next) {
             date_ind.setMinutes(date_ind.getMinutes() + 30);
         }
 
+        console.log({ hos_info : data1[0], revp_bytime : revp_bytime, hos_timeinfo: data3[0] });
         res.send({ hos_info : data1[0], revp_bytime : revp_bytime, hos_timeinfo: data3[0] });
     }
     catch (err) {
@@ -268,12 +276,13 @@ router.get('/search/:idx/:date', async function (req, res, next) {
 
 /* ===== 사전예약-예약 처리 =====
  *
- * 새로운 예약 정보를 등록합니다
+ * 새로운 예약 정보를 등록합니다 (+수정 가능)
  * 예약번호(Rnumber)는 DB에서 auto increment속성을 가지므로 따로 인자를 줄 필요 없습니다 (자동으로 번호가 생성됨)
  * 백신 선택은 조건에 맞는 것을 랜덤으로 선택하며, 동시에 백신 잔여량이 1 감소합니다.
  * (조건 1: 예약날짜 기준, 유통기한이 남은 잔여백신 > 0) // 현재 날짜가 아닌 예약날짜 기준
  * (조건 2: 조건 1을 만족하는 백신이 접종자 신체조건을 만족함)
  * 백신 잔여량이 0이 되면, 해당 tuple을 삭제합니다
+ * 만약 이미 등록된 예약정보가 있으면, 해당 정보를 수정합니다
  *
  * === client-input ===
  * jwtToken = 사용자 정보 jwt토큰 (로그인에서 생성된 토큰)
@@ -317,8 +326,15 @@ router.post('/register', async function (req, res, next) {
 
         const rev_date2 = new Date(rev_date);
         rev_date2.setDate(rev_date2.getDate() + 28);
-        const data2 = [rev_hos, rev_vacid, rev_ssn, rev_date, rev_date2];
-        await connection.query("INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Ssn`, `Rdate1`, `Rdate2`, `IsVaccine`) values(?,?,?,?,?,0);", data2);
+        const revcon = [rev_hos, rev_vacid, rev_date, rev_date2, rev_ssn];
+
+        const sql2 = "select * from reservation where Ssn=?";
+        const result2 = await connection.query(sql2, [rev_ssn]);
+        const data2 = result1[0];
+        if(data2.length == 0) // 새로운 예약 등록
+            await connection.query("INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Rdate1`, `Rdate2`, `Ssn`, `IsVaccine`) values(?,?,?,?,?,0);", revcon);
+        else // 기존 예약 수정
+            await connection.query("update reservation set `Hnumber`=?, `Vnumber`=?, `Rdate1`=?, `Rdate2`=?, `IsVaccine`=0; where `Ssn`=?", revcon);
 
         // const data3 = [rev_date, rev_ssn]; // 예약날짜 갱신
         // await connection.query("UPDATE PERSON SET Rdate=? WHERE Ssn=?;", data3);
