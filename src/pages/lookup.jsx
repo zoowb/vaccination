@@ -19,6 +19,7 @@ const Lookup = () => {
   const [resultList, setResultList] = useState("");
   const [medicalPick, setMedicalPick] = useState("");
   const [medicalInfo, setMedicalInfo] = useState("");
+  const [timeInfo, setTimeInfo] = useState("");
 
   const searchMedical = () => {
     axios
@@ -46,7 +47,8 @@ const Lookup = () => {
     axios
       .post("/search/more", { idx: medicalPick, isHos: medicalType })
       .then((response) => {
-        setMedicalInfo(response.data.info);
+        setMedicalInfo(response.data.info[0]);
+        setTimeInfo(response.data.timeinfo[0]);
         console.log(response);
       })
       .catch((e) => {
@@ -108,6 +110,7 @@ const Lookup = () => {
                       addr={medicalInfo?.Hlocation}
                       phone={medicalInfo?.Hphone}
                       Other={medicalInfo?.Other}
+                      time={timeInfo}
                     />
                   ) : (
                     <MedicalDetail
@@ -115,6 +118,7 @@ const Lookup = () => {
                       addr={medicalInfo?.Plocation}
                       phone={medicalInfo?.Pphone}
                       Other={medicalInfo?.Other}
+                      time={timeInfo}
                     />
                   )
                 ) : (
@@ -129,9 +133,7 @@ const Lookup = () => {
             </div>
           ) : (
             <section className="beforeSearch">
-              <h1 className="text">
-                검색결과가 없습니다.
-              </h1>
+              <h1 className="text">검색결과가 없습니다.</h1>
             </section>
           )
         ) : (
