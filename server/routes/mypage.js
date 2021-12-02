@@ -259,7 +259,7 @@ router.post('/getrev', async function (req, res, next) {
 });
 
 
-/* ===== 예약정보 수정 처리 =====
+/* ===== 예약정보 수정 처리 ===== (해당 페이지는 사용되지 않습니다 -> reservation/register와 통합됨)
  *
  * 1차, 2차 예약정보를 수정합니다
  *
@@ -273,7 +273,7 @@ router.post('/getrev', async function (req, res, next) {
  * ok = 예약 변경 성공시 true 반환
  *
 */
-router.post('/changerev', function (req, res, next) {
+/*router.post('/changerev', function (req, res, next) {
     var rev_num = req.body.rev_num;
     var rev_vac = req.body.rev_vac;
     var rev_hos = req.body.rev_hos;
@@ -298,7 +298,7 @@ router.post('/changerev', function (req, res, next) {
             connection.release();
         });
     });
-});
+});*/
 
 
 /* ===== 예약정보 취소 처리 =====

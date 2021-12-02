@@ -114,8 +114,26 @@ router.post('/more', async function (req, res, next) {
         const data1 = result1[0];
 
         var sql2;
-        if(isHos) sql2 = "select * from hospital_time where `Number`=?;";
-        else sql2 = "select * from pharmacy_time WHERE Pnumber=?";
+        if(isHos)
+        {
+            sql2 = "select h.Hnumber, ifnull(ht.Start_Mon, 900) as Start_Mon, ifnull(ht.Close_Mon, 1800) as Close_Mon, " + 
+                "ifnull(ht.Start_Tue, 900) as Start_Tue, ifnull(ht.Close_Tue, 1800) as Close_Tue, ifnull(ht.Start_Wed, 900) as Start_Wed, " + 
+                "ifnull(ht.Close_Wed, 1800) as Close_Wed, ifnull(ht.Start_Thu, 900) as Start_Thu, ifnull(ht.Close_Thu, 1800) as Close_Thu, " +
+                "ifnull(ht.Start_Fri, 900) as Start_Fri, ifnull(ht.Close_Fri, 1800) as Close_Fri, ifnull(ht.Start_Sat, 900) as Start_Sat, " +
+                "ifnull(ht.Close_Sat, 1300) as Close_Sat, ifnull(ht.Start_Sun, 1300) as Start_Sun, ifnull(ht.Close_Sun, 1300) as Close_Sun, " + 
+                "ifnull(ht.IsOpenHoliday, '휴진') as IsOpenHoliday, " +
+                "ifnull(ht.Lunch_Week, '12:00에서 13:00까지') as Lunch_Week from hospital as h left join hospital_time as ht on h.Hnumber = ht.Number"
+        }
+        else 
+        {
+            sql2 = "select h.Pnumber, ifnull(ht.Start_Mon, 900) as Start_Mon, ifnull(ht.Close_Mon, 1800) as Close_Mon, " + 
+                "ifnull(ht.Start_Tue, 900) as Start_Tue, ifnull(ht.Close_Tue, 1800) as Close_Tue, ifnull(ht.Start_Wed, 900) as Start_Wed, " + 
+                "ifnull(ht.Close_Wed, 1800) as Close_Wed, ifnull(ht.Start_Thu, 900) as Start_Thu, ifnull(ht.Close_Thu, 1800) as Close_Thu, " +
+                "ifnull(ht.Start_Fri, 900) as Start_Fri, ifnull(ht.Close_Fri, 1800) as Close_Fri, ifnull(ht.Start_Sat, 900) as Start_Sat, " +
+                "ifnull(ht.Close_Sat, 1300) as Close_Sat, ifnull(ht.Start_Sun, 1300) as Start_Sun, ifnull(ht.Close_Sun, 1300) as Close_Sun, " + 
+                "ifnull(ht.IsOpenHoliday, '휴진') as IsOpenHoliday, " +
+                "ifnull(ht.Lunch_Week, '12:00에서 13:00까지') as Lunch_Week from hospital as h left join pharmacy_time as ht on h.Pnumber = ht.Number"
+        }
         const result2 = await connection.query(sql2, [idx]);
         const data2 = result2[0];
 
