@@ -191,6 +191,7 @@ router.post('/changeinfo', async function (req, res, next) {
  * hosname = 예약 병원 이름
  * date1 =  1차예약 날짜&시간
  * date2 =  2차예약 날짜&시간
+ * isvaccine =  실제 접종유무 (0 = 접종X, 1 = 1차접종완료, 2 = 2차접종완료)
  *
 */
 router.post('/getrev', async function (req, res, next) {
@@ -203,7 +204,7 @@ router.post('/getrev', async function (req, res, next) {
 
     const connection = await pool2.getConnection(async conn => conn);
     try {
-        const result1 = await connection.query("select Rnumber, `Name`, Vnumber, Hnumber, Rdate1, Rdate2 FROM PERSON natural join RESERVATION WHERE `Ssn`=?;", [ssn]);
+        const result1 = await connection.query("select Rnumber, `Name`, Vnumber, Hnumber, Rdate1, Rdate2, IsVaccine FROM PERSON natural join RESERVATION WHERE `Ssn`=?;", [ssn]);
         const data1 = result1[0];
 
         if(data1.length == 0)
@@ -238,8 +239,10 @@ router.post('/getrev', async function (req, res, next) {
             vacname: data5[0].Vname,
             hosname: data3[0].Hname,
             date1: data1[0].Rdate1,
-            date2: data1[0].Rdate2
+            date2: data1[0].Rdate2,
+            isvaccine: data1[0].IsVaccine
         }
+        console.log(packet);
         res.send(packet);
     }
     catch (err) {
