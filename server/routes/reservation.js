@@ -204,13 +204,13 @@ router.get('/search/:idx/:date', async function (req, res, next) {
         const data2 = result2[0];
 
         // const sql3 = "select * from hospital_time where `Number`=?;";
-        const sql3 = "select h.Hnumber, ifnull(ht.Start_Mon, 900) as Start_Mon, ifnull(ht.Close_Mon, 1800) as Close_Mon, " + 
-            "ifnull(ht.Start_Tue, 900) as Start_Tue, ifnull(ht.Close_Tue, 1800) as Close_Tue, ifnull(ht.Start_Wed, 900) as Start_Wed, " + 
-            "ifnull(ht.Close_Wed, 1800) as Close_Wed, ifnull(ht.Start_Thu, 900) as Start_Thu, ifnull(ht.Close_Thu, 1800) as Close_Thu, " +
-            "ifnull(ht.Start_Fri, 900) as Start_Fri, ifnull(ht.Close_Fri, 1800) as Close_Fri, ifnull(ht.Start_Sat, 900) as Start_Sat, " +
-            "ifnull(ht.Close_Sat, 1300) as Close_Sat, ifnull(ht.Start_Sun, 1300) as Start_Sun, ifnull(ht.Close_Sun, 1300) as Close_Sun, " + 
+        const sql3 = "select h.Hnumber, ifnull(ht.Start_Mon, '0900') as Start_Mon, ifnull(ht.Close_Mon, '1800') as Close_Mon, " + 
+            "ifnull(ht.Start_Tue, '0900') as Start_Tue, ifnull(ht.Close_Tue, '1800') as Close_Tue, ifnull(ht.Start_Wed, '0900') as Start_Wed, " + 
+            "ifnull(ht.Close_Wed, '1800') as Close_Wed, ifnull(ht.Start_Thu, '0900') as Start_Thu, ifnull(ht.Close_Thu, '1800') as Close_Thu, " +
+            "ifnull(ht.Start_Fri, '0900') as Start_Fri, ifnull(ht.Close_Fri, '1800') as Close_Fri, ifnull(ht.Start_Sat, '0900') as Start_Sat, " +
+            "ifnull(ht.Close_Sat, '1300') as Close_Sat, ifnull(ht.Start_Sun, '1300') as Start_Sun, ifnull(ht.Close_Sun, '1300') as Close_Sun, " + 
             "ifnull(ht.IsOpenHoliday, '휴진') as IsOpenHoliday, " +
-            "ifnull(ht.Lunch_Week, '12:00에서 13:00까지') as Lunch_Week from hospital as h left join hospital_time as ht on h.Hnumber = ht.Number"
+            "ifnull(ht.Lunch_Week, '12:00에서 13:00까지') as Lunch_Week from hospital as h left join hospital_time as ht on h.Hnumber = ht.Number where h.Hnumber=?"
         const result3 = await connection.query(sql3, [idx]);
         const data3 = result3[0];
 
@@ -255,7 +255,6 @@ router.get('/search/:idx/:date', async function (req, res, next) {
             date_ind.setMinutes(date_ind.getMinutes() + 30);
         }
 
-        console.log({ hos_info : data1[0], revp_bytime : revp_bytime, hos_timeinfo: data3[0] });
         res.send({ hos_info : data1[0], revp_bytime : revp_bytime, hos_timeinfo: data3[0] });
     }
     catch (err) {
