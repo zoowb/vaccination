@@ -7,7 +7,7 @@ const pool2 = require('../modules/mysql2');
 
 /* ===== 홈페이지 데이터 처리 =====
  *
- * 홈페이지의 시각 데이터에 필요한 데이터를 반환합니다 (8월 1일부터 12월 15일까지)
+ * 홈페이지의 시각 데이터에 필요한 데이터를 반환합니다 (8월 1일부터 12월 31일까지)
  *
  * === client-input ===
  * NONE
@@ -90,8 +90,8 @@ router.post('/index', async function (req, res, next) {
         const byAge_vac2 = result13[0];
 
         // 데이터 가공
-        const date_ind = new Date("2021-08-01");
-        const date_last = new Date("2021-12-15");
+        let date_ind = new Date("2021-08-01");
+        const date_last = new Date("2021-12-31");
         const byMonth_cvac1 = []; // [{year: 연도, month: 월, count: 인원수}], 시간순으로 오름차순 정렬됨
         const byMonth_cvac2 = [];
         const byDay_cvac1 = []; // [{year: 연도, month: 월, day: 일, count: 인원수}], 시간순으로 오름차순 정렬됨
@@ -115,10 +115,40 @@ router.post('/index', async function (req, res, next) {
             } 
         }
 
-        while(date_ind <= date_last)
+        while(date_ind.getTime() <= date_last.getTime())
         {
             const year = date_ind.getFullYear();
-            const month = date_ind.getMonth();
+            const month = date_ind.getMonth() + 1;
+            const day = date_ind.getDate();
+
+            if(di1 < byDay_vac1.length)
+            {
+                if(byDay_vac1[di1].year == year && byDay_vac1[di1].month == month && byDay_vac1[di1].day == day)
+                {
+                    ds1 += byDay_vac1[di1].count;
+                    di1++;
+                }
+            }
+            if(di2 < byDay_vac2.length)
+            {
+                if(byDay_vac2[di2].year == year && byDay_vac2[di2].month == month && byDay_vac2[di2].day == day)
+                {
+                    ds2 += byDay_vac1[di2].count;
+                    di2++;
+                }
+            }
+
+            byDay_cvac1.push(new DC(year, month, day, ds1));
+            byDay_cvac2.push(new DC(year, month, day, ds2));
+
+            date_ind.setDate(date_ind.getDate() + 1);
+        }
+
+        date_ind = new Date("2021-08-01");
+        while(date_ind.getTime() <= date_last.getTime())
+        {
+            const year = date_ind.getFullYear();
+            const month = date_ind.getMonth() + 1;
             const day = date_ind.getDate();
 
             if(mi1 < byMonth_vac1.length)
@@ -137,29 +167,10 @@ router.post('/index', async function (req, res, next) {
                     mi2++;
                 }
             }
-            if(di1 < byDay_vac1.length)
-            {
-                if(byDay_vac1[di1].year == year && byDay_vac1[di1].month == month && byDay_vac1[di1].day == day)
-                {
-                    ds1 += byDay_vac1[di1].count;
-                    di1++;
-                }
-            }
-            if(di2 < byDay_vac2.length)
-            {
-                if(byDay_vac2[di2].year == year && byDay_vac2[di2].month == month && byDay_vac2[di2].day == day)
-                {
-                    ds2 += byDay_vac1[di2].count;
-                    di2++;
-                }
-            }
 
             byMonth_cvac1.push(new MC(year, month, ms1));
             byMonth_cvac2.push(new MC(year, month, ms2));
-            byDay_cvac1.push(new DC(year, month, day, ds1));
-            byDay_cvac2.push(new DC(year, month, day, ds2));
-
-            date_ind.setDate(date_ind.getDate() + 1);
+            date_ind.setMonth(date_ind.getMonth() + 1);
         }
 
         // 데이터 송신
