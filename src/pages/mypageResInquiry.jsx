@@ -11,6 +11,7 @@ const MyPageResInquiry = () => {
   const [ssn, setSsn] = useState("");
   const [name, setName] = useState("");
   const [resInfo, setResInfo] = useState("");
+  const [err, setErr] = useState(false);
   const getRes = () => {
     const token = localStorage.getItem("accessToken");
     axios
@@ -25,8 +26,12 @@ const MyPageResInquiry = () => {
       .then((response) => {
         console.log(response.data);
         setResInfo(response.data);
+        setErr(false);
       })
-      .catch((e) => console.log(e));
+      .catch((e) => {
+        console.log(e);
+        setErr(true);
+      });
   };
 
   const transDate = (date) => {
@@ -42,44 +47,49 @@ const MyPageResInquiry = () => {
       <MyPageWhole>
         <MyPageCategory selected={3} />
         <MyPageWhite>
-          <MyPageBoxSet title={"예약번호"} value={"039202"} num={2} />
-          <MyPageBoxSet title={"접종자 이름"} value={name} num={2} />
-          <MyPageBoxSet
-            title={"1차 예약 백신"}
-            value={transVaccine(resInfo.rev1_vacname)}
-            num={2}
-          />
-          <MyPageBoxSet
-            title={"1차 예약 기관"}
-            value={resInfo.rev1_hosname}
-            num={2}
-          />
-          <MyPageBoxSet
-            title={"1차 접종 일시"}
-            value={transDate(resInfo.rev1_date)}
-            num={2}
-          />
-          <MyPageBoxSet
-            title={"2차 예약 백신"}
-            value={transVaccine(resInfo.rev2_vacname)}
-            num={2}
-          />
-          <MyPageBoxSet
-            title={"2차 예약 기관"}
-            value={resInfo.rev2_hosname}
-            num={2}
-          />
-          <MyPageBoxSet
-            title={"2차 접종 일시"}
-            value={transDate(resInfo.rev2_date)}
-            num={2}
-          />
-
-          <section className="btnSection">
-            <MyPageBtn text={"1차 접종 변경"} num={2} />
-            <MyPageBtn text={"2차 접종 변경"} num={2} />
-            <MyPageBtn text={"예약취소"} num={2} />
-          </section>
+          {err == true ? (
+            <h1 className="noRes">예약된 정보가 없습니다.</h1>
+          ) : (
+            <>
+              <MyPageBoxSet title={"예약번호"} value={resInfo.idx} num={2} />
+              <MyPageBoxSet title={"접종자 이름"} value={name} num={2} />
+              <MyPageBoxSet
+                title={"1차 예약 백신"}
+                value={transVaccine(resInfo.vacname)}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"1차 예약 기관"}
+                value={resInfo.hosname}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"1차 접종 일시"}
+                value={transDate(resInfo.date1)}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"2차 예약 백신"}
+                value={transVaccine(resInfo.vacname)}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"2차 예약 기관"}
+                value={resInfo.hosname}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"2차 접종 일시"}
+                value={transDate(resInfo.date2)}
+                num={2}
+              />
+              <section className="btnSection">
+                <MyPageBtn text={"1차 접종 변경"} num={2} />
+                <MyPageBtn text={"2차 접종 변경"} num={2} />
+                <MyPageBtn text={"예약취소"} num={2} />
+              </section>
+            </>
+          )}
         </MyPageWhite>
       </MyPageWhole>
     </section>

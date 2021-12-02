@@ -6,20 +6,19 @@ import initTmap from "../components/tmapfornoshow";
 import "./reservationNoShow.css";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import GeoCoder from "../components/modules/geocoder";
 
 const ReservationNoShow = () => {
   const [hosList, setHosList] = useState([]);
+  const [search, setSearch] = useState(true);
   let loc = {};
   let arr = [];
   let x = 0,
     y = 0;
-  const [flist, setFlist] = useState([1, 1, 0, 0]);
-  // let flist = [1, 1, 0, 0];
+  const [flist, setFlist] = useState([0, 0, 0, 0]);
+
   const token = localStorage.getItem("accessToken");
 
   const getNoShow = () => {
-    console.log("getnoshow 시작");
     const token = localStorage.getItem("accessToken");
     axios
       .post("/vaccine/index", { jwtToken: token, flist: flist })
@@ -40,7 +39,6 @@ const ReservationNoShow = () => {
               loc.name = response.data.info[0].Hname;
               loc.x = response.data.info[0].x;
               loc.y = response.data.info[0].y;
-              console.log(response);
               arr.push(loc);
               if (i == length - 1) {
                 initTmap(x, y, arr);
@@ -48,12 +46,9 @@ const ReservationNoShow = () => {
             })
             .catch((e) => console.log(e));
         });
-        if (response.data.hosList.length == 0) {
-          initTmap(x, y, arr);
-          console.log("따로");
-        } else {
-          console.log("따로x - hoslist: ", response.data.hosList);
-        }
+        // if (response.data.hosList.length == 0) {
+        //   initTmap(x, y, arr);
+        // }
       })
       .catch((e) => console.log(e));
   };
@@ -62,10 +57,9 @@ const ReservationNoShow = () => {
     getNoShow();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(flist);
-  //   getNoShow();
-  // }, [flist]);
+  useEffect(() => {
+    console.log("flist===", flist);
+  }, [flist]);
 
   return (
     <WholeScreenWithHeader>
@@ -84,15 +78,28 @@ const ReservationNoShow = () => {
                 name2={"모더나"}
                 name3={"아스트라제네카"}
                 name4={"얀센"}
+                flist={flist}
+                setFlist={setFlist}
               />
             </div>
-            <button className="checksearchbtn">
-              검색
+            <button
+              type="button"
+              className="checksearchbtn"
+              onClick={() => {
+                if (search) {
+                  console.log("noshow");
+                  getNoShow();
+                } else {
+                  window.location.reload();
+                }
+                setSearch(!search);
+              }}
+            >
+              {search == true ? "검색" : "초기화"}
             </button>
           </div>
           <div className="hospitalListBox">
             {hosList.map((data, i) => {
-              console.log(data);
               return (
                 <HospitalList
                   name={data.Hname}

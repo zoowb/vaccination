@@ -85,6 +85,9 @@ const Reservation = () => {
   const [cnt, setCnt] = useState(0);
   const [cnt2, setCnt2] = useState(0);
   const [disable, setDisable] = useState(true);
+
+  const [search, setSearch] = useState(true);
+
   const token = localStorage.getItem("accessToken");
   const navigate = useNavigate();
 
@@ -105,6 +108,7 @@ const Reservation = () => {
         rev_date: startDate.toISOString().substr(0, 10),
       })
       .then((response) => {
+        console.log(response);
         setResultList(response.data.hos_info);
         setMedicalPick("");
         setSelectedTime("없음");
@@ -123,8 +127,8 @@ const Reservation = () => {
         { idx: medicalPick, date: startDate.toISOString().substr(0, 10) }
       )
       .then((response) => {
-        setMedicalInfo(response.data.hos_info[0]);
-        console.log(response.data);
+        setMedicalInfo(response.data);
+        console.log(response);
       })
       .catch((e) => {
         console.log(e);
@@ -136,11 +140,11 @@ const Reservation = () => {
       .post("/reservation/register", {
         jwtToken: token,
         rev_hos: medicalPick,
-        rev_date: `${startDate}`,
+        rev_date: `${startDate.toISOString().substr(0, 10)} ${selectedTime}:00`,
       })
       .then((response) => {
         navigate("/reservationComplete");
-        console.log(response);
+        console.log("시간: ", new Date(response.data.rev_date2));
       })
       .catch((e) => {
         console.log(e);
@@ -188,9 +192,18 @@ const Reservation = () => {
               <button
                 type="button"
                 className="searchBtn"
-                onClick={() => Search()}
+                onClick={() => {
+                  if (search == true) {
+                    Search();
+                  } else {
+                    window.location.reload();
+                  }
+                  setSearch(!search);
+                }}
               >
-                <span className="text">검색하기</span>
+                <span className="text">
+                  {search == true ? "검색하기" : "초기화"}
+                </span>
               </button>
             </div>
           </section>
@@ -233,7 +246,7 @@ const Reservation = () => {
           className={
             selectedTime == "없음" ? "reservationBtnDisable" : "reservationBtn"
           }
-          onClick={MakeReservation}
+          onClick={() => MakeReservation()}
           disabled={selectedTime == "없음" ? disable : ""}
         >
           <span className="btnText">예약하기</span>

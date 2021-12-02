@@ -18,6 +18,8 @@ import Home from "./pages/home";
 import Lookup from "./pages/lookup";
 import FindIDResult from "./pages/findIDResult";
 import FindPWResult from "./pages/findPWResult";
+import ReservationFail from "./pages/reservationFail";
+import SignUpComplete from "./pages/signupComplete";
 import "./App.css";
 
 const App = () => {
@@ -29,9 +31,14 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/findID" element={<FindID />} />
           <Route path="/findPW" element={<FindPW />} />
+          <Route path="/findIDResult" element={<FindIDResult />} />
+          <Route path="/findPWResult" element={<FindPWResult />} />
+          <Route path="/signUpComplete" element={<SignUpComplete />} />
+
           <Route path="/reservationMain" element={<ResMain />} />
           <Route path="/reservationCheck" element={<ReservationCheck />} />
           <Route path="/reservationUnable" element={<ReservationUnable />} />
+          <Route path="/reservationFail" element={<ReservationFail />} />
           <Route
             path="/reservationComplete"
             element={<ReservationComplete />}
@@ -44,8 +51,6 @@ const App = () => {
           <Route path="/mypageResInquiry" element={<MyPageResInquiry />} />
           <Route path="/" element={<Home />} />
           <Route path="/lookup" element={<Lookup />} />
-          <Route path="/findIDResult" element={<FindIDResult />} />
-          <Route path="/findPWResult" element={<FindPWResult />} />
         </Routes>
       </div>
     </>

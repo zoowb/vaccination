@@ -11,12 +11,14 @@ const MyPageStart = () => {
   const [err, setErr] = useState(false);
   const [errContent, setErrContent] = useState("");
   const navigate = useNavigate();
+
+  const token = localStorage.getItem("accessToken");
   const checkMine = () => {
     axios
-      .post("/mypage/check", { passwd: pw })
+      .post("/mypage/check", { jwtToken: token, passwd: pw })
       .then((response) => {
         setErr(false);
-        navigate("/mypageInfoEdit");
+        navigate("/mypageInfo");
       })
       .catch((e) => {
         setErr(true);

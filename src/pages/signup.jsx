@@ -48,7 +48,7 @@ const SignUp = () => {
         y: y,
       })
       .then((response) => {
-        navigate("/");
+        navigate("/signUpComplete", { state: { name: name } });
       })
       .catch(function (error) {
         setError(true);
@@ -58,7 +58,17 @@ const SignUp = () => {
 
   useEffect(() => {
     console.log(error);
-    if (!ssnValidator(ssn)) {
+    if (
+      name == "" ||
+      ssn == "" ||
+      tel == "" ||
+      email == "" ||
+      pw == "" ||
+      addr == ""
+    ) {
+      setError(true);
+      setErrorContent("빈칸을 모두 채워주세요.");
+    } else if (!ssnValidator(ssn)) {
       setError(true);
       setErrorContent("주민번호를 올바르게 입력해주세요.");
     } else if (!telValidator(tel)) {
@@ -72,16 +82,6 @@ const SignUp = () => {
       setErrorContent(
         "비밀번호는 문자와 숫자를 모두 포함해\n 6~10자로 입력해주세요."
       );
-    } else if (
-      name == "" ||
-      ssn == "" ||
-      tel == "" ||
-      email == "" ||
-      pw == "" ||
-      addr == ""
-    ) {
-      setError(true);
-      setErrorContent("빈칸을 모두 채워주세요.");
     } else {
       setError(false);
     }
@@ -134,28 +134,28 @@ const SignUp = () => {
             />
             <InputBox
               type={"text"}
-              placeholder={"주민번호"}
+              placeholder={"주민번호 (000000-0000000)"}
               page={"회원가입"}
               value={ssn}
               setValue={setSSN}
             />
             <InputBox
               type={"tel"}
-              placeholder={"전화번호"}
+              placeholder={"전화번호 (010-0000-0000)"}
               page={"회원가입"}
               value={tel}
               setValue={setTel}
             />
             <InputBox
               type={"email"}
-              placeholder={"이메일"}
+              placeholder={"이메일 (example@email.com)"}
               page={"회원가입"}
               value={email}
               setValue={setEmail}
             />
             <InputBox
               type={"password"}
-              placeholder={"비밀번호"}
+              placeholder={"비밀번호 (6~10자, 문자+숫자)"}
               page={"회원가입"}
               value={pw}
               setValue={setPW}

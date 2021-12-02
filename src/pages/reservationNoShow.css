@@ -10,19 +10,19 @@
   align-items: flex-end;
 }
 
-.noshow .noshowdisplay{
+.noshow .noshowdisplay {
   width: 720px;
   height: 133px;
   justify-content: space-between;
 }
 
-.noshow .checksearchbtn
-{
+.noshow .checksearchbtn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 150px;
   height: 42px;
+  cursor: pointer;
   background-color: #5064c5;
   border-radius: 20px;
   font-family: Roboto;
@@ -41,18 +41,17 @@
   height: 140px;
 }
 
-.noshow .checkbig{
-    display: flex;
-    align-items: center;
-    width: 610px;
-    height: 64px;
-    left: 12px;
-    background-color: white;
-    box-shadow: 0px 4px 4px 4px
-    rgba(0, 0, 0, 0.25);
-    border-radius: 20px;
-    margin-bottom : 6px;
-    z-index: 1500;
+.noshow .checkbig {
+  display: flex;
+  align-items: center;
+  width: 610px;
+  height: 64px;
+  left: 12px;
+  background-color: white;
+  box-shadow: 0px 4px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  margin-bottom: 6px;
+  z-index: 1500;
 }
 
 .noshow .hospitalListBox {

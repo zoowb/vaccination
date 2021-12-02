@@ -17,10 +17,17 @@ const initTmap = (x, y, positions) => {
     for (var i = 0; i < positions.length; i++) {
       var lonlat = new Tmapv2.LatLng(positions[i].y, positions[i].x);
       var title = positions[i].name;
-      label =
-        "<span style='background-color: #5064c5; color:#fff; font-size:16px; font-weight:500;'>" +
-        title +
-        "</span>";
+      if (title == "현재 위치") {
+        label =
+          "<span style='background-color: #cd2a82; color:#fff; font-size:16px; font-weight:500;'>" +
+          title +
+          "</span>";
+      } else {
+        label =
+          "<span style='background-color: #5064c5; color:#fff; font-size:16px; font-weight:500;'>" +
+          title +
+          "</span>";
+      }
       marker = new Tmapv2.Marker({
         position: lonlat, //Marker의 중심좌표 설정.
         map: map, //Marker가 표시될 Map 설정.
