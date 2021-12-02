@@ -1,5 +1,10 @@
 import "./medicalDetail.css";
-const MedicalDetail = ({ name, addr, phone, Other }) => {
+const MedicalDetail = ({ name, addr, phone, Other, time }) => {
+  const makeTime = (time) => {
+    let newTime = time?.slice(0, 2) + ":" + time?.slice(2, 4);
+    return newTime;
+  };
+
   return (
     <section className="medicalDetail">
       <div className="mainInfo">
@@ -15,17 +20,23 @@ const MedicalDetail = ({ name, addr, phone, Other }) => {
           <tr>
             <th>운영시간</th>
             <td>
-              월요일: 09:00~18:00
+              월요일: {makeTime(time?.Start_Mon)}~{makeTime(time?.Close_Mon)}
               <br />
-              화요일: 10:00~20:00
+              화요일: {makeTime(time?.Start_Tue)}~{makeTime(time?.Close_Tue)}
               <br />
-              수요일: 09:00~17:00
+              수요일: {makeTime(time?.Start_Wed)}~{makeTime(time?.Close_Wed)}
               <br />
-              목요일: 10:00~20:00
+              목요일: {makeTime(time?.Start_Thu)}~{makeTime(time?.Close_Thu)}
               <br />
-              금요일: 09:00~18:00
+              금요일: {makeTime(time?.Start_Fri)}~{makeTime(time?.Close_Fri)}
               <br />
-              토요일: 09:00~14:00
+              토요일: {makeTime(time?.Start_Sat)}~{makeTime(time?.Close_Sat)}
+              <br />
+              일요일: {makeTime(time?.Start_Sun)}~{makeTime(time?.Close_Sun)}
+              <br />
+              점심시간: {time?.Lunch_Week}
+              <br />
+              공휴일: {time?.IsOpenHoliday}
             </td>
           </tr>
           <tr>
