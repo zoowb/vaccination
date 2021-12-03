@@ -14,10 +14,10 @@ const LineChart = ({check}) => {
   const getData = () => {
     axios.post("/home/index")
     .then((response)=>{
-      setFirstmonth(response.data.byMonth_vac1);
-      setDonemonth(response.data.byMonth_vac2);
-      setFirstday(response.data.byDay_vac1);
-      setDoneday(response.data.byDay_vac2);
+        setFirstmonth(response.data.byMonth_vac1);
+        setDonemonth(response.data.byMonth_vac2);
+        setFirstday(response.data.byDay_vac1);
+        setDoneday(response.data.byDay_vac2);      
     })
     .catch((e)=>{
       console.log(e)
@@ -32,17 +32,16 @@ const LineChart = ({check}) => {
     const montharr = [["1", "1차 접종", "완전 접종"]];
     if( donemonth.length != 0){
       for( let i=0; i<firstmonth.length; i++){
-           montharr.push([`${(todayMonth-4)+i}`, firstmonth[(firstmonth.length-5)+i].count, donemonth[(donemonth.length-5)+i].count]);
+           montharr.push([`${(todayMonth-4)+i}월`, firstmonth[(firstmonth.length-5)+i].count, donemonth[(donemonth.length-5)+i].count]);
       }
     }
-
-    return <Chart width={"511px"} height={"300px"} chartType="LineChart" loader={<div>Loading Chart</div>} data={montharr}
+    return <Chart width={"550px"} height={"350px"} chartType="LineChart" loader={<div>Loading Chart</div>} data={montharr}
     options={{ colors: ['#5064C5', '#CD2A82'], chartArea: { width: "80%", height: "80%" },}}
     />
   }
 
   const Makedayarr = () => {
-  const dayarr = [["1", "1차 접종", "완전 접종"]];
+    const dayarr = [["1", "1차 접종", "완전 접종"]];
     if( doneday.length != 0){
       for(let i=firstday.length-1; i>=0; i--){
         if(todayDate==firstday[i].day){
@@ -53,10 +52,10 @@ const LineChart = ({check}) => {
           }
       }
     }
-      return <Chart width={"511px"} height={"300px"} chartType="LineChart" loader={<div>Loading Chart</div>} data={dayarr}
-      options={{ colors: ['#5064C5', '#CD2A82'], chartArea: { width: "80%", height: "80%" },}}
-      />
-    }
+    return <Chart width={"550px"} height={"350px"} chartType="LineChart" loader={<div>Loading Chart</div>} data={dayarr}
+    options={{ colors: ['#5064C5', '#CD2A82'], chartArea: { width: "80%", height: "80%" },}}
+    />
+  }
 
   return (
     <div className="chart">
