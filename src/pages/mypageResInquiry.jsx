@@ -6,7 +6,7 @@ import MyPageBoxSet from "../components/mypage/mypageBoxes";
 import MyPageBtn from "../components/mypage/mypageBtn";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import transVaccine from "../components/modules/translation";
+import transVaccine, { transDate } from "../components/modules/translation";
 const MyPageResInquiry = () => {
   const [ssn, setSsn] = useState("");
   const [name, setName] = useState("");
@@ -32,10 +32,6 @@ const MyPageResInquiry = () => {
         console.log(e);
         setErr(true);
       });
-  };
-
-  const transDate = (date) => {
-    return `${date?.substr(0, 10)} / ${date?.substr(11, 5)}`;
   };
 
   useEffect(() => {
