@@ -72,6 +72,8 @@ router.post('/check', async function (req, res, next) {
  * Email : 아이디
  * Password : 비밀번호
  * Location : 주소
+ * Sido = 시도명
+ * Sigungu = 시군구명
  * err : 에러 발생시 메시지 반환
  *
 */
@@ -79,7 +81,9 @@ router.post('/getinfo', async function (req, res, next) {
     var token = req.body.jwtToken; // 토큰은 post로만 처리 가능
     var token_res = await jwt.verify(token); // 토큰 해독
 
-    pool.query("SELECT Name, Ssn, Phone, Email, Password, Location FROM PERSON WHERE Email=?;", [token_res.id], function (err, result) {
+    var sql = "select `Name`, `Ssn`, `Phone`, `Email`, `Password`, `Location`, D.`Sido`, G.`Sigungu` " + 
+        "from person P, sigungu G, sido D WHERE P.`sigungu`=G.`Code` and P.`sido`=D.`Code` and email=?;"
+    pool.query(sql, [token_res.id], function (err, result) {
         if (err)
         {
             res.send({ err : "DB 오류" });
@@ -94,7 +98,9 @@ router.post('/getinfo', async function (req, res, next) {
                     Phone: result[0].Phone,
                     Email: result[0].Email,
                     Password: result[0].Password,
-                    Location: result[0].Location
+                    Location: result[0].Location,
+                    Sido: result[0].Sido,
+                    Sigungu: result[0].Sigungu
                 });
             }
             else res.send({ err : "해당 회원정보가 존재하지 않습니다." });
