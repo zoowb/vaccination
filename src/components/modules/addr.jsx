@@ -1,6 +1,6 @@
 import DaumPostCode from "react-daum-postcode";
 import "./addr.css";
-const DaumPost = ({ setAddr, setSido, setSigungu }) => {
+const DaumPost = ({ setAddr, setSido, setSigungu, open, setOpen }) => {
   const handleComplete = (data) => {
     let fullAddress = data.address;
     let extraAddress = "";
@@ -16,7 +16,7 @@ const DaumPost = ({ setAddr, setSido, setSigungu }) => {
       setAddr(fullAddress);
       setSido(data.sido);
       setSigungu(data.sigungu);
-      // console.log(fullAddress);
+      setOpen(!open);
     }
   };
   return (

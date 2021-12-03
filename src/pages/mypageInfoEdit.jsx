@@ -75,10 +75,6 @@ const MyPageInfoEdit = () => {
       .catch((e) => console.log(e));
   };
 
-  useEffect(() => {
-    onChangeOpenPost();
-  }, [addr]);
-
   const onChangeOpenPost = () => {
     setOpen(!open);
   };
@@ -96,6 +92,8 @@ const MyPageInfoEdit = () => {
               setAddr={setAddr}
               setSido={setSido}
               setSigungu={setSigungu}
+              open={open}
+              setOpen={setOpen}
             />
           </div>
         </section>
@@ -151,7 +149,6 @@ const MyPageInfoEdit = () => {
             </button>
           </section>
 
-          {/* <MyPageAlarm /> */}
           {err ? <span className="error">{errContent}</span> : <></>}
           <section className="btnSection">
             <MyPageBtn
