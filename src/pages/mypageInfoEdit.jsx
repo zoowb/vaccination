@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { telValidator, pwValidator } from "../components/modules/validation";
 import DaumPost from "../components/modules/addr";
+import GeoCoder from "../components/modules/geocoder";
 const MyPageInfoEdit = () => {
   const [name, setName] = useState("");
   const [ssn, setSsn] = useState("");
@@ -21,6 +22,8 @@ const MyPageInfoEdit = () => {
   const [open, setOpen] = useState(false);
   const [sido, setSido] = useState("");
   const [sigungu, setSigungu] = useState("");
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
 
   const getMyInfo = () => {
     const token = localStorage.getItem("accessToken");
@@ -32,6 +35,8 @@ const MyPageInfoEdit = () => {
         setTel(response.data.Phone);
         setEmail(response.data.Email);
         setAddr(response.data.Location);
+        setSido(response.data.Sido);
+        setSigungu(response.data.Sigungu);
       })
       .catch((e) => console.log(e));
   };
@@ -68,6 +73,10 @@ const MyPageInfoEdit = () => {
         tel: tel,
         passwd: pw,
         location: addr,
+        sido: sido,
+        sigungu: sigungu,
+        x: x,
+        y: y,
       })
       .then((response) => {
         window.location.reload();
@@ -78,6 +87,12 @@ const MyPageInfoEdit = () => {
   const onChangeOpenPost = () => {
     setOpen(!open);
   };
+
+  useEffect(() => {
+    if (addr != "") {
+      GeoCoder(addr, setX, setY);
+    }
+  }, [addr]);
 
   return (
     <section className="mypageInfoEdit">
@@ -154,6 +169,7 @@ const MyPageInfoEdit = () => {
             <MyPageBtn
               text={"수정한 정보 저장"}
               num={2}
+              isvac={0}
               disable={err}
               onClick={editInfo}
             />

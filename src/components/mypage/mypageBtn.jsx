@@ -8,9 +8,9 @@ const MyPageBtn = ({ text, num, onClick, disable, isvac }) => {
           ? disable == true
             ? "mypageBlueDisabled"
             : "mypageBlueBtn"
-          : isvac == 0
-              ?"mypagePinkBtn"
-              :"mypagePinkDisabled"
+          : isvac == 0 && disable != true
+          ? "mypagePinkBtn"
+          : "mypagePinkDisabled"
       }
       onClick={onClick}
       disabled={disable == true ? "disabled" : false}
