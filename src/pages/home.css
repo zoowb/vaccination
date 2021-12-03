@@ -1,5 +1,7 @@
 .homeall{ 
     display: flex;
+    height: 100vh;
+    padding-top: 100px;
 }
 
 .homeall .leftside .smallleft{
