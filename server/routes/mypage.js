@@ -242,7 +242,6 @@ router.post('/getrev', async function (req, res, next) {
             date2: data1[0].Rdate2,
             isvaccine: data1[0].IsVaccine
         }
-        console.log(packet);
         res.send(packet);
     }
     catch (err) {
@@ -335,15 +334,16 @@ router.post('/delrev', async function (req, res, next) {
 
         const rday1 = new Date(data1[0].Rdate1);
         const rday2 = new Date(data1[0].Rdate2);
-        let now = new Date();
-        now.setDate(now.getDate()-1);
+        const now = new Date();
+        rday1.setDate(rday1.getDate()-1);
+        rday2.setDate(rday2.getDate()-1);
 
-        if(rday1 >= now)
+        if(now > rday1)
         {
             err_code = 2;
             throw new Error("1차 접종 하루 전에는 예약을 취소할 수 없습니다.");
         }
-        if(rday2 >= now)
+        if(now > rday2)
         {
             err_code = 2;
             throw new Error("2차 접종 하루 전에는 예약을 취소할 수 없습니다.");
