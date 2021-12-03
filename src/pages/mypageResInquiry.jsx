@@ -24,12 +24,12 @@ const MyPageResInquiry = () => {
     axios
       .post("/mypage/getrev", { jwtToken: token, ssn: ssn })
       .then((response) => {
-        console.log(response.data);
         setResInfo(response.data);
         setErr(false);
       })
       .catch((e) => {
         console.log(e);
+        setResInfo("없음");
         setErr(true);
       });
   };
@@ -38,13 +38,58 @@ const MyPageResInquiry = () => {
     getRes();
   }, []);
 
+  useEffect(() => {
+    console.log("err==", err);
+  }, [err]);
+
   return (
     <section className="mypageResInquiry">
       <MyPageWhole>
         <MyPageCategory selected={3} />
         <MyPageWhite>
-          {err == true ? (
-            <h1 className="noRes">예약된 정보가 없습니다.</h1>
+          {resInfo == "없음" ? (
+            <>
+              <MyPageBoxSet
+                title={"예약번호"}
+                value={"예약 정보 없음"}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"접종자 이름"}
+                value={"예약 정보 없음"}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"1차 예약 백신"}
+                value={"예약 정보 없음"}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"1차 예약 기관"}
+                value={"예약 정보 없음"}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"1차 접종 일시"}
+                value={"예약 정보 없음"}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"2차 예약 백신"}
+                value={"예약 정보 없음"}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"2차 예약 기관"}
+                value={"예약 정보 없음"}
+                num={2}
+              />
+              <MyPageBoxSet
+                title={"2차 접종 일시"}
+                value={"예약 정보 없음"}
+                num={2}
+              />
+            </>
           ) : (
             <>
               <MyPageBoxSet title={"예약번호"} value={resInfo.idx} num={2} />

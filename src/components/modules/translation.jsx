@@ -12,7 +12,11 @@ const transDate = (date) => {
       ? `0${newDate.getMonth() + 1}`
       : newDate.getMonth() + 1
   }-${newDate.getDate() < 10 ? `0${newDate.getDate()}` : newDate.getDate()}`;
-  const timeString = `${newDate.getHours()}:${newDate.getMinutes()}`;
+  const timeString = `${newDate.getHours()}:${
+    newDate.getMinutes() < 10
+      ? `0${newDate.getMinutes()}`
+      : newDate.getMinutes()
+  }`;
   return `${dateString}, ${timeString}`;
 };
 
