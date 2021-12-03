@@ -11,7 +11,7 @@ const MenuBtn = ({ text, url }) => {
   const Modal = () => {
       return(
         <div className="easymodal">
-          <div className="easybg"></div>
+          <div className="easybg" onClick={onOpenModal}></div>
           <EasyCheck />
         </div>
       );
