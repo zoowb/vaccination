@@ -108,12 +108,12 @@ const Home = () => {
               <div className={"done"}>
                 <div className={"bluetitle"}>1차 접종완료</div>
                 <div className={"bluenum"}>{firstnum}</div>
-                <div className={"blueper"}>({vac1_per}%)</div>
+                <div className={"blueper"}>({vac1_per.toFixed(2)}%)</div>
               </div>
               <div className={"done"}>
                 <div className={"redtitle"}>완전 접종완료</div>
                 <div className={"rednum"}>{donenum}</div>
-                <div className={"redper"}>({vac2_per}%)</div>
+                <div className={"redper"}>({vac2_per.toFixed(2)}%)</div>
               </div>
             </div>
             <div className={"linechart"}>
