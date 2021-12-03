@@ -1,5 +1,5 @@
 import "./mypageBtn.css";
-const MyPageBtn = ({ text, num, onClick, disable }) => {
+const MyPageBtn = ({ text, num, onClick, disable, isvac }) => {
   return (
     <button
       type="button"
@@ -8,9 +8,9 @@ const MyPageBtn = ({ text, num, onClick, disable }) => {
           ? disable == true
             ? "mypageBlueDisabled"
             : "mypageBlueBtn"
-          : disable == true
-          ? "mypagePinkDisabled"
-          : "mypagePinkBtn"
+          : isvac == 0
+              ?"mypagePinkBtn"
+              :"mypagePinkDisabled"
       }
       onClick={onClick}
       disabled={disable == true ? "disabled" : false}

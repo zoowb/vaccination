@@ -7,11 +7,15 @@ import MyPageBtn from "../components/mypage/mypageBtn";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import transVaccine, { transDate } from "../components/modules/translation";
+import { useNavigate } from "react-router-dom";
 const MyPageResInquiry = () => {
   const [ssn, setSsn] = useState("");
   const [name, setName] = useState("");
   const [resInfo, setResInfo] = useState("");
   const [err, setErr] = useState(false);
+  const [isvac, setIsvac] = useState(2);
+  const [resnum, setResnum] = useState("");
+  const navigate = useNavigate();
   const getRes = () => {
     const token = localStorage.getItem("accessToken");
     axios
@@ -25,13 +29,27 @@ const MyPageResInquiry = () => {
       .post("/mypage/getrev", { jwtToken: token, ssn: ssn })
       .then((response) => {
         setResInfo(response.data);
+        setIsvac(response.data.isvaccine);
         setErr(false);
+        setResnum(response.data.idx);
       })
       .catch((e) => {
         console.log(e);
         setResInfo("없음");
         setErr(true);
       });
+  };
+
+  const DeleteRes = () => {
+    axios
+    .post("/mypage/delrev", {rev_num: resnum})
+    .then((response) => {
+      navigate("/mypageResdelok");
+    })
+    .catch((e) => {
+      navigate("/mypageResdelerr");
+      console.log(e);
+    });
   };
 
   useEffect(() => {
@@ -124,10 +142,9 @@ const MyPageResInquiry = () => {
                 value={transDate(resInfo.date2)}
                 num={2}
               />
-              <section className="btnSection">
-                <MyPageBtn text={"1차 접종 변경"} num={2} />
-                <MyPageBtn text={"2차 접종 변경"} num={2} />
-                <MyPageBtn text={"예약취소"} num={2} />
+              <section className={"btnSection"}>
+                <MyPageBtn text={"접종 변경"} num={2} isvac={isvac} onClick={()=>{navigate("/reservationEdit")}}/>
+                <MyPageBtn text={"예약취소"} num={2} isvac={isvac} onClick={DeleteRes}/>
               </section>
             </>
           )}
