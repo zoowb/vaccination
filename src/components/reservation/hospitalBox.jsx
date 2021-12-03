@@ -45,13 +45,53 @@ const HospitalDetail = ({ medicalInfo, pickTime, selectedTime, cnt }) => {
     }
   }, [medicalInfo.hos_info?.x]);
 
+  let checkTimeCount = 0;
+
+  if(medicalInfo.length != 0){
+    checkTimeCount = medicalInfo.revp_bytime;
+    if(selectedTime=="10:00"){
+      checkTimeCount = checkTimeCount[0].count
+    }else if(selectedTime=="10:30"){
+      checkTimeCount = checkTimeCount[1].count
+    }else if(selectedTime=="11:00"){
+      checkTimeCount = checkTimeCount[2].count
+    }else if(selectedTime=="11:30"){
+      checkTimeCount = checkTimeCount[3].count
+    }else if(selectedTime=="12:00"){
+      checkTimeCount = checkTimeCount[4].count
+    }else if(selectedTime=="12:30"){
+      checkTimeCount = checkTimeCount[5].count
+    }else if(selectedTime=="13:00"){
+      checkTimeCount = checkTimeCount[6].count
+    }else if(selectedTime=="13:30"){
+      checkTimeCount = checkTimeCount[7].count
+    }else if(selectedTime=="14:00"){
+      checkTimeCount = checkTimeCount[8].count
+    }else if(selectedTime=="14:30"){
+      checkTimeCount = checkTimeCount[9].count
+    }else if(selectedTime=="15:00"){
+      checkTimeCount = checkTimeCount[10].count
+    }else if(selectedTime=="15:30"){
+      checkTimeCount = checkTimeCount[11].count
+    }else if(selectedTime=="16:00"){
+      checkTimeCount = checkTimeCount[12].count
+    }else if(selectedTime=="16:30"){
+      checkTimeCount = checkTimeCount[13].count
+    }else if(selectedTime=="17:00"){
+      checkTimeCount = checkTimeCount[14].count
+    }else if(selectedTime=="17:30"){
+      checkTimeCount = checkTimeCount[15].count
+    }
+  }
+
   return (
     <section className="hospitalDetailSection">
       <div className="selectionInfo">
         <h1 className="name">{medicalInfo.hos_info?.Hname}</h1>
         <div className="btns">
           <SelectInfoBtn title={"시간 선택"} content={selectedTime} />
-          <SelectInfoBtn title={"예약 현황"} content={"6/20명"} />
+          {selectedTime != "없음" ? <SelectInfoBtn title={"예약 현황"} content={`${checkTimeCount}/20`}/>
+          : <SelectInfoBtn title={"예약 현황"} content={"없음"}/>}
         </div>
       </div>
       <div className="selectBoxes">
