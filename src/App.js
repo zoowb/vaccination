@@ -14,6 +14,8 @@ import MyPageStart from "./pages/mypageStart";
 import MyPageInfo from "./pages/mypageInfo";
 import MyPageInfoEdit from "./pages/mypageInfoEdit";
 import MyPageResInquiry from "./pages/mypageResInquiry";
+import MypageResdelerr from "./pages/mypageResdelerr";
+import MypageResdelok from "./pages/mypageResdelok";
 import Home from "./pages/home";
 import Lookup from "./pages/lookup";
 import FindIDResult from "./pages/findIDResult";
@@ -51,6 +53,8 @@ const App = () => {
           <Route path="/mypageInfo" element={<MyPageInfo />} />
           <Route path="/mypageInfoEdit" element={<MyPageInfoEdit />} />
           <Route path="/mypageResInquiry" element={<MyPageResInquiry />} />
+          <Route path="/mypageResdelerr" element={<MypageResdelerr />} />
+          <Route path="/mypageResdelok" element={<MypageResdelok />} />
           <Route path="/" element={<Home />} />
           <Route path="/lookup" element={<Lookup />} />
         </Routes>

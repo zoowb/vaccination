@@ -28,10 +28,6 @@ const Home = () => {
         setDoneloc(response.data.byLoc_vac2);
         setFirstage(response.data.byAge_vac1);
         setDoneage(response.data.byAge_vac2);
-        console.log("firstloc==", response.data.byLoc_vac1);
-        console.log("loc==", response.data.byLoc_vac2);
-        console.log("firstage==", response.data.byAge_vac1);
-        console.log("age==", response.data.byAge_vac2);
       })
       .catch((e) => {
         console.log(e);
@@ -43,22 +39,18 @@ const Home = () => {
   }, []);
 
   const checkMonth = () => {
-    console.log("hello im month");
     setCheck1(true);
   };
 
   const checkDay = () => {
-    console.log("hello im day");
     setCheck1(false);
   };
 
   const checkLoc = () => {
-    console.log("hello im location");
     setCheck2(true);
   };
 
   const checkAge = () => {
-    console.log("hello im Age");
     setCheck2(false);
   };
 
