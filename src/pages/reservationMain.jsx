@@ -11,7 +11,7 @@ const ResMain = () => {
           <CategoryBox
             bTitle={"예방접종 사전예약"}
             content={"지금 코로나19 백신을 예약하세요!"}
-            url={"/reservation"}
+            url={"/reservationCheck"}
           />
           <CategoryBox
             bTitle={"잔여백신 조회"}
