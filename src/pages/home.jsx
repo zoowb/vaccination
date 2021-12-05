@@ -99,12 +99,12 @@ const Home = () => {
             <div className={"donebox"}>
               <div className={"done"}>
                 <div className={"bluetitle"}>1차 접종완료</div>
-                <div className={"bluenum"}>{firstnum}명</div>
+                <div className={"bluenum"}>{firstnum}</div>
                 <div className={"blueper"}>({vac1_per.toFixed(2)}%)</div>
               </div>
               <div className={"done"}>
                 <div className={"redtitle"}>완전 접종완료</div>
-                <div className={"rednum"}>{donenum}명</div>
+                <div className={"rednum"}>{donenum}</div>
                 <div className={"redper"}>({vac2_per.toFixed(2)}%)</div>
               </div>
             </div>
