@@ -14,7 +14,7 @@ const HospitalList = ({ id, name, vaccine, time }) => {
   };
 
   const getRev = () => {
-    setModalOn(!modalOn);
+    // setModalOn(!modalOn);
     const token = localStorage.getItem("accessToken");
     axios
       .post("/vaccine/register", {jwtToken: token, rev_hos: id, rev_vacname: selectedvac })
@@ -57,7 +57,7 @@ const HospitalList = ({ id, name, vaccine, time }) => {
               })}
             </div>
           </div>
-          <button className="closeBtn" onClick={getRev}>
+          <button className="closeBtn" onClick={() => getRev()}>
             <div className="btnText">선택완료 </div>
           </button>
         </div>

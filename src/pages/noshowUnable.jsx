@@ -15,7 +15,7 @@ const NoshowUnable = () => {
         />
         <section className="whiteSection">
           <span className="text">
-            1차 접종을 완료하시어 <br />
+            이미 1차접종이 완료되어 <br />
             잔여백신 예약이 불가합니다.
           </span>
         </section>
