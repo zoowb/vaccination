@@ -48,7 +48,7 @@ const ReservationNoShow = () => {
             })
             .catch((e) => {
               console.log(e);
-              navigate("/noshowUnavle")
+              navigate("/noshowUnable")
             });
         });
       })
