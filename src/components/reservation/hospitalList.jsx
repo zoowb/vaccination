@@ -9,9 +9,10 @@ const HospitalList = ({ name, vaccine, time }) => {
   };
 
   const Modal = () => {
+
     return (
       <div className="noshowmodal">
-        <div className="bg"></div>
+        <div className="bg" onClick={onOpenModal}></div>
         <div className="modalBox">
           <div className="modaltext">접종할 백신을 선택해주세요.</div>
           <div className="modalsm">
@@ -24,6 +25,7 @@ const HospitalList = ({ name, vaccine, time }) => {
                       type="radio"
                       id="vac"
                       name="vac"
+                      value={transVaccine(data.Vname)}
                     />
                     <div className={"checkboxtext"}>
                       {transVaccine(data.Vname)}
