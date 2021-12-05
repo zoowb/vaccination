@@ -11,8 +11,8 @@ const locationList = require('../modules/locationList');
  * 또한 인증을 완료하면 person.IsAuth를 true로 전환합니다
  *
  * === client-input ===
- * email : 사용자 아이디 [DB person.Email]
- * passwd : 사용자 패스워드 [DB person.Password]
+ * jwtToken : 로그인 토큰
+ * passwd : 사용자 패스워드
  *
  * === server-return ===
  * ok : 인증 성공시 true, 실패 시 false
@@ -28,9 +28,12 @@ const locationList = require('../modules/locationList');
  * 
 */
 router.post('/selfcheck', async function (req, res, next) {
-    const email = req.body.email;
+    const token = req.body.jwtToken;
     const pass = req.body.passwd;
 
+    const token_res = await jwt.verify(token); // 토큰 해독
+    const email = token_res.id; // email
+    
     let err_code = 0;
     let err_msg = "";
 
