@@ -46,9 +46,6 @@ const ReservationNoShow = () => {
             })
             .catch((e) => console.log(e));
         });
-        // if (response.data.hosList.length == 0) {
-        //   initTmap(x, y, arr);
-        // }
       })
       .catch((e) => console.log(e));
   };
@@ -104,7 +101,6 @@ const ReservationNoShow = () => {
                 <HospitalList
                   name={data.Hname}
                   vaccine={data.Vaccine}
-                  time={"운영시간: 10:00~18:00"}
                   key={i}
                 />
               );
