@@ -5,6 +5,13 @@ const transVaccine = (name) => {
   else if (name == "Janssen") return "얀센";
 };
 
+const transVaccinetoEng = (name) => {
+  if (name == "화이자") return "Pfizer";
+  else if (name == "모더나") return "Morderna";
+  else if (name == "아스트라제네카") return "AstraZeneca";
+  else if (name == "얀센") return "Janssen";
+};
+
 const transDate = (date) => {
   const newDate = new Date(date);
   const dateString = `${newDate.getFullYear()}-${
@@ -20,5 +27,5 @@ const transDate = (date) => {
   return `${dateString}, ${timeString}`;
 };
 
-export { transDate };
+export { transDate, transVaccinetoEng };
 export default transVaccine;
