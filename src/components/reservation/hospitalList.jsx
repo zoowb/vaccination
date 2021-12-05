@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import transVaccine from "../modules/translation";
 import "./hospitalList.css";
 
-const HospitalList = ({ name, vaccine, time }) => {
+const HospitalList = ({ name, vaccine }) => {
   const [modalOn, setModalOn] = useState(false);
   const onOpenModal = () => {
     setModalOn(!modalOn);
   };
 
   const Modal = () => {
-
     return (
       <div className="noshowmodal">
         <div className="bg" onClick={onOpenModal}></div>
@@ -62,7 +61,6 @@ const HospitalList = ({ name, vaccine, time }) => {
               );
             })}
           </div>
-          <div className={"hospitalTime"}>{time}</div>
         </div>
       </button>
       <button type="button" className="redButton" onClick={onOpenModal}>
