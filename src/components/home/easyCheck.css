@@ -24,12 +24,14 @@
 
 .easyCheck .inputBox {
   display: flex;
-  width: 450px;
+  width: 550px;
   height: 60px;
+  font-size: 25px;
   border: 0;
   border-bottom: 5px solid #dad8e0;
   border-radius: 0px;
   align-items: center;
+  outline: none;
 }
 
 .easyCheck .inputBox:hover {
@@ -39,7 +41,7 @@
 .easyCheck .inputBox::placeholder {
   color: #dad8e0;
   font-family: Noto Sans KR;
-  font-size: 18px;
+  font-size: 25px;
   font-style: normal;
   font-weight: 400;
   line-height: 1.44;
@@ -58,6 +60,7 @@
   font-weight: 700;
   line-height: 1.1875;
   text-align: center;
+  border: none;
 }
 
 .easyCheck .resultbox{
@@ -70,18 +73,23 @@
 .easyCheck .resultname{
   color: #737373;
   font-family: Noto Sans KR;
-  font-size: 18px;
+  font-size: 25px;
   font-style: normal;
   font-weight: 400;
   line-height: 1.44;
   text-align: left;
-  width: 120px;
+  width: 180px;
 }
 
 .easyCheck .result {
   display: flex;
   width: 450px;
   height: 30px;
+  font-family: Noto Sans KR;
+  font-size: 23px;
+  font-style: normal;
+  font-weight: 400;
+  text-align: left;
   border: 0;
   border-bottom: 2px solid #dad8e0;
   border-radius: 0px;
