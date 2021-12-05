@@ -37,6 +37,11 @@
   margin: 0 auto;
 }
 
+.reservationContent .err {
+  color: red;
+  font-size: 16px;
+}
+
 .reservationContent .btn {
   width: 335px;
   height: 70px;

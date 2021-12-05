@@ -6,22 +6,27 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 const ReservationCheck = () => {
-  const [id, setID] = useState("");
   const [pw, setPW] = useState("");
   const [err, setErr] = useState("");
   const navigate = useNavigate();
 
+  const token = localStorage.getItem("accessToken");
   const onClick = () => {
-    axios.post("/reservation/selfcheck", { email: id, passwd: pw })
+    axios
+      .post("/reservation/selfcheck", { jwtToken: token, passwd: pw })
       .then((response) => {
-        if(response.data.ok){
+        if (response.data.ok) {
           console.log(response.data.ok);
           navigate("/reservation");
         }
       })
-      .catch((e)=>{
+      .catch((e) => {
         console.log(e);
-        navigate("/reservationUnable");
+        if (e.response.data.err == "일치하는 회원정보가 없습니다.") {
+          setErr("비밀번호가 일치하지 않습니다.");
+        } else {
+          navigate("/reservationUnable");
+        }
       });
   };
   return (
@@ -35,15 +40,9 @@ const ReservationCheck = () => {
           <p className="content">
             본인 확인을 위해,
             <br />
-            아이디와 비밀번호를 다시 한 번 입력해주세요.
+            비밀번호를 다시 한 번 입력해주세요.
           </p>
           <div className="inputBox">
-            <InputBox
-              type="text"
-              placeholder={"아이디(이메일)"}
-              value={id}
-              setValue={setID}
-            />
             <InputBox
               type="password"
               placeholder={"비밀번호"}
@@ -51,6 +50,7 @@ const ReservationCheck = () => {
               setValue={setPW}
             />
           </div>
+          <h1 className="err">{err}</h1>
           <button type="button" onClick={onClick} className="btn">
             <span className="text">입력 완료</span>
           </button>
