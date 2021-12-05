@@ -16,7 +16,9 @@ const DaumPost = ({ setAddr, setSido, setSigungu, open, setOpen }) => {
       setAddr(fullAddress);
       setSido(data.sido);
       setSigungu(data.sigungu);
-      setOpen(!open);
+      if (open) {
+        setOpen(!open);
+      }
     }
   };
   return (
