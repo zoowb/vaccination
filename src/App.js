@@ -4,6 +4,7 @@ import Login from "./pages/login";
 import SignUp from "./pages/signup";
 import FindID from "./pages/findID";
 import FindPW from "./pages/findPW";
+import Loginfirst from "./pages/loginfirst";
 import ResMain from "./pages/reservationMain";
 import ReservationCheck from "./pages/reservationCheck";
 import ReservationUnable from "./pages/reservationUnable";
@@ -39,6 +40,7 @@ const App = () => {
           <Route path="/findPWResult" element={<FindPWResult />} />
           <Route path="/signUpComplete" element={<SignUpComplete />} />
 
+          <Route path="/loginfirst" element={<Loginfirst />} />
           <Route path="/reservationMain" element={<ResMain />} />
           <Route path="/reservationCheck" element={<ReservationCheck />} />
           <Route path="/reservationUnable" element={<ReservationUnable />} />
