@@ -51,9 +51,6 @@ const ReservationNoShow = () => {
               navigate("/noshowUnavle")
             });
         });
-        // if (response.data.hosList.length == 0) {
-        //   initTmap(x, y, arr);
-        // }
       })
       .catch((e) => console.log(e));
   };
@@ -110,7 +107,6 @@ const ReservationNoShow = () => {
                   id={data.Hnumber}
                   name={data.Hname}
                   vaccine={data.Vaccine}
-                  time={"운영시간: 10:00~18:00"}
                   key={i}
                 />
               );

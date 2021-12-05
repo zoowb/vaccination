@@ -84,7 +84,6 @@ const HospitalList = ({ id, name, vaccine, time }) => {
               );
             })}
           </div>
-          <div className={"hospitalTime"}>{time}</div>
         </div>
       </button>
       <button type="button" className="redButton" onClick={onOpenModal}>
