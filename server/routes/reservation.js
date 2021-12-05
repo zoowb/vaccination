@@ -335,9 +335,6 @@ router.post('/register', async function (req, res, next) {
         else // 기존 예약 수정
             await connection.query("update reservation set `Hnumber`=?, `Vnumber`=?, `Rdate1`=?, `Rdate2`=?, `IsVaccine`=0 where `Ssn`=?", revcon);
 
-        // const data3 = [rev_date, rev_ssn]; // 예약날짜 갱신
-        // await connection.query("UPDATE PERSON SET Rdate=? WHERE Ssn=?;", data3);
-
         if(rev_vac.Amount > 1) // 잔여백신이 2 이상이면 1 감소시킴. 아니면 삭제
             await connection.query("update hospital_vaccine SET Amount=Amount-1 WHERE Hnumber=? and Vnumber=?", [rev_hos, rev_vacid]);
         else
