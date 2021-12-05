@@ -10,8 +10,8 @@ const ReservationCheck = () => {
   const [err, setErr] = useState("");
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("accessToken");
   const onClick = () => {
+    const token = localStorage.getItem("accessToken");
     axios
       .post("/reservation/selfcheck", { jwtToken: token, passwd: pw })
       .then((response) => {

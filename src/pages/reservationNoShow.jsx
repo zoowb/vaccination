@@ -5,9 +5,11 @@ import HospitalList from "../components/reservation/hospitalList";
 import initTmap from "../components/tmapfornoshow";
 import "./reservationNoShow.css";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const ReservationNoShow = () => {
+  const navigate = useNavigate();
   const [hosList, setHosList] = useState([]);
   const [search, setSearch] = useState(true);
   let loc = {};
@@ -44,7 +46,10 @@ const ReservationNoShow = () => {
                 initTmap(x, y, arr);
               }
             })
-            .catch((e) => console.log(e));
+            .catch((e) => {
+              console.log(e);
+              navigate("/noshowUnavle")
+            });
         });
       })
       .catch((e) => console.log(e));
@@ -99,6 +104,7 @@ const ReservationNoShow = () => {
             {hosList.map((data, i) => {
               return (
                 <HospitalList
+                  id={data.Hnumber}
                   name={data.Hname}
                   vaccine={data.Vaccine}
                   key={i}

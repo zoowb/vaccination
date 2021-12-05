@@ -1,14 +1,36 @@
-import React, { useState } from "react";
-import transVaccine from "../modules/translation";
+import React, { useState, useEffect } from "react";
+import transVaccine, {transVaccinetoEng} from "../modules/translation";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import "./hospitalList.css";
 
-const HospitalList = ({ name, vaccine }) => {
+const HospitalList = ({ id, name, vaccine, time }) => {
+  const navigate = useNavigate();
   const [modalOn, setModalOn] = useState(false);
+  const [selectedvac, setSelectvac] = useState('');
+
   const onOpenModal = () => {
+      setModalOn(!modalOn);
+  };
+
+  const getRev = () => {
     setModalOn(!modalOn);
+    const token = localStorage.getItem("accessToken");
+    axios
+      .post("/vaccine/register", {jwtToken: token, rev_hos: id, rev_vacname: selectedvac })
+      .then((response)=>{
+        console.log("response받아옴!==", response.data);
+      })
+      .catch((e)=> console.log(e));
+    navigate("/reservationComplete");
   };
 
   const Modal = () => {
+    const handleChange = (e) => {
+      console.log("선택한 값:", e.target.value);
+      setSelectvac(transVaccinetoEng(e.target.value));
+    };
+
     return (
       <div className="noshowmodal">
         <div className="bg" onClick={onOpenModal}></div>
@@ -25,6 +47,7 @@ const HospitalList = ({ name, vaccine }) => {
                       id="vac"
                       name="vac"
                       value={transVaccine(data.Vname)}
+                      onChange={handleChange}
                     />
                     <div className={"checkboxtext"}>
                       {transVaccine(data.Vname)}
@@ -34,7 +57,7 @@ const HospitalList = ({ name, vaccine }) => {
               })}
             </div>
           </div>
-          <button className="closeBtn" onClick={onOpenModal}>
+          <button className="closeBtn" onClick={getRev}>
             <div className="btnText">선택완료 </div>
           </button>
         </div>
