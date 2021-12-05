@@ -62,7 +62,7 @@ const LineChart = ({ check }) => {
   };
 
   const Makedayarr = () => {
-    const dayarr = [["1", "1차접종", "완전접종"]];
+    const dayarr = [["1", "1차 접종", "완전 접종"]];
     if (doneday.length != 0) {
       for (let i = firstday.length - 1; i >= 0; i--) {
         if (todayDate == firstday[i].day) {
