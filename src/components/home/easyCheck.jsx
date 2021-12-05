@@ -3,14 +3,8 @@ import axios from "axios";
 import "./easyCheck.css";
 import { transDate } from "../modules/translation";
 const EasyCheck = () => {
-
-  const [name, setName] = useState('');
   const [rnum, setRnum] = useState('');
   const [data, setData] = useState('');
-
-  const onChangeName = (e) => {
-      setName(e.target.value);
-  };
 
   const onChangeRnum = (e) => {
     setRnum(e.target.value);
@@ -71,12 +65,11 @@ const EasyCheck = () => {
         ):(
           <>
             <h1 className="title">
-              간편 조회를 위해,
+              간편 조회를 위해
               <br />
-              예약번호와 이름을 입력해주세요.
+              예약번호를 입력해주세요.
             </h1>
             <input type="text" className="inputBox" placeholder={"예약번호"} onChange={onChangeRnum} value={rnum} />
-            <input type="text" className="inputBox" placeholder={"이름"} onChange={onChangeName} value={name} />
             <button type="button" className="btn" onClick={()=>getRinfo()}>
               입력 완료
             </button>
