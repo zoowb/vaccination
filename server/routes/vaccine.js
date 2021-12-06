@@ -98,7 +98,7 @@ router.post('/index', async function (req, res, next) {
  * rev_vacname = 백신 이름
  *
  * === server-return ===
- * rev_date1 = 1차예약 날짜&시간 (문자열, new Date(rev_date1)로 원래 시간 데이터로 변환 가능)
+ * rev_date1 = 1차예약 날짜&시간 (현재 시간에서 3시간 이후) (문자열, new Date(rev_date1)로 원래 시간 데이터로 변환 가능)
  * rev_date2 = 2차예약 날짜&시간
  *
 */
@@ -117,6 +117,7 @@ router.post('/register', async function (req, res, next) {
     try {
         await connection.beginTransaction(); // 트랜잭션 시작
         const rev_date = new Date();
+        rev_date.setHours(rev_date.getHours() + 3);
         
         const sql0 = "select Vnumber from vaccine where Vname=?;";
         const result0 = await connection.query(sql0, [rev_vacname]);
