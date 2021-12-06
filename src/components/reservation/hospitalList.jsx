@@ -20,9 +20,12 @@ const HospitalList = ({ id, name, vaccine, time }) => {
       .post("/vaccine/register", {jwtToken: token, rev_hos: id, rev_vacname: selectedvac })
       .then((response)=>{
         console.log("response받아옴!==", response.data);
+        navigate("/reservationComplete");
       })
-      .catch((e)=> console.log(e));
-    navigate("/reservationComplete");
+      .catch((e)=> {
+        console.log(e)
+        navigate("/noshowUnable")
+      });
   };
 
   const Modal = () => {
