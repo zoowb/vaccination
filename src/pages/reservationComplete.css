@@ -21,7 +21,6 @@
 
 .reservationComplete .whiteSection .nameSection {
   display: block;
-  margin-bottom: 31px;
 }
 
 .reservationComplete .whiteSection .name {
@@ -44,6 +43,18 @@
   line-height: 1.16;
   letter-spacing: 0em;
   text-align: center;
+}
+
+.reservationComplete .whiteSection .text2 {
+  color: #667089;
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: 0em;
+  text-align: center;
+  margin-bottom: 31px;
 }
 
 .reservationComplete .whiteSection .infoSection {
@@ -69,6 +80,7 @@
   font-weight: 700;
   line-height: 1.1875;
   letter-spacing: 0em;
+  text-align: center;
 }
 
 .reservationComplete .whiteSection .tableSection {
