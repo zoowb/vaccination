@@ -86,7 +86,7 @@ router.post('/index', async function (req, res, next) {
 
 /* ===== 잔여백신예약-예약 처리 =====
  *
- * 새로운 예약 정보를 등록합니다 (예약수정 기능 없음)
+ * 새로운 예약 정보를 등록합니다 (예약수정 가능, 방식은 사전예약 페이지와 동일)
  * 예약번호(Rnumber)는 DB에서 auto increment속성을 가지므로 따로 인자를 줄 필요 없습니다 (자동으로 번호가 생성됨)
  * 백신 선택은 클라이언트에서 가능하며, 1차예약날짜는 현재 날짜입니다.
  * 백신 잔여량이 0이 되면, 해당 tuple을 삭제합니다
@@ -146,11 +146,8 @@ router.post('/register', async function (req, res, next) {
         const data2 = result2[0];
         if(data2.length == 0) // 새로운 예약 등록
             await connection.query("INSERT INTO RESERVATION(`Hnumber`, `Vnumber`, `Rdate1`, `Rdate2`, `Ssn`, `IsVaccine`) values(?,?,?,?,?,0);", revcon);
-        else // 예약수정 불가
-        {
-            err_code = 2;
-            throw new Error("이미 등록된 예약이 존재합니다.");
-        }
+        else // 기존 예약 수정
+            await connection.query("update reservation set `Hnumber`=?, `Vnumber`=?, `Rdate1`=?, `Rdate2`=?, `IsVaccine`=0 where `Ssn`=?", revcon);
 
         if(rev_vac.Amount > 1) // 잔여백신이 2 이상이면 1 감소시킴. 아니면 삭제
             await connection.query("update hospital_vaccine SET Amount=Amount-1 WHERE Hnumber=? and Vnumber=?", [rev_hos, rev_vacid]);
