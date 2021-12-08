@@ -9,6 +9,7 @@ const AuthBtn = ({ text, url }) => {
       onClick={() => {
         if (text == "로그아웃") {
           localStorage.removeItem("accessToken");
+          navigate("/");
           window.location.reload();
         }
         navigate(url);
