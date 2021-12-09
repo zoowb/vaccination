@@ -59,6 +59,9 @@
   height: 761px;
   overflow-y: scroll;
   -ms-overflow-style: none;
+  color: #667089;
+  font-size: 36px;
+  text-align: center;
 }
 
 .noshow .hospitalListBox::-webkit-scrollbar {
@@ -67,12 +70,33 @@
 }
 
 .noshow .mapBox {
+  display: flex;
   width: 720px;
   height: 1034px;
-  background-color: bisque;
+  background-color:#eef5fc;
+  justify-content: center;
+  align-items: center;
 }
 
+.noshow .mapalarm{
+  color: #667089;
+  font-size: 36px;
+  text-align: center;
+
+}
 .noshow .mapMap {
   width: 720px;
   height: 100%;
+}
+
+.noshow .nobox {
+  display: flex;
+  width: 720px;
+  height: 100%;
+  background-color:#fff;
+  color: #667089;
+  font-size: 36px;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
