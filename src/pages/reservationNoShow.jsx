@@ -101,7 +101,8 @@ const ReservationNoShow = () => {
             </button>
           </div>
           <div className="hospitalListBox">
-            {hosList.map((data, i) => {
+          {search == false ? ( hosList != [] && hosList !="" ? (
+            hosList.map((data, i) => {
               return (
                 <HospitalList
                   id={data.Hnumber}
@@ -110,11 +111,14 @@ const ReservationNoShow = () => {
                   key={i}
                 />
               );
-            })}
+            })):(<div className="nobox">근처에 잔여백신이 없습니다</div>)
+          ):(
+            <div className="nobox">검색을 진행해주세요</div>
+          )}
           </div>
         </section>
         <div className="mapBox">
-          <div className="mapMap" id="map_div" />
+          {hosList != [] && hosList != "" ? <div className="mapMap" id="map_div" /> : <></> }
         </div>
       </section>
     </WholeScreenWithHeader>
