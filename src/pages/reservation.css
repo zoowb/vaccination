@@ -96,6 +96,14 @@
   height: 761px;
   overflow-y: scroll;
 }
+
+.reservation .hospitalSection .preview .noContent {
+  margin-top: 300px;
+  color: #667089;
+  font-size: 36px;
+  text-align: center;
+}
+
 .reservation .hospitalSection .preview::-webkit-scrollbar,
 .reservation .hospitalSection .detail::-webkit-scrollbar {
   width: 10px;
