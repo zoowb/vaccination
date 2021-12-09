@@ -5,7 +5,8 @@ const Search = (
   startDate,
   setResultList,
   setMedicalPick,
-  setSelectedTime
+  setSelectedTime,
+  setResponse
 ) => {
   let valid = !isNaN(startDate.valueOf());
   const token = localStorage.getItem("accessToken");
@@ -20,6 +21,9 @@ const Search = (
       })
       .then((response) => {
         console.log(response);
+        if (setResponse) {
+          setResponse(response);
+        }
         setResultList(response.data.hos_info);
         setMedicalPick("");
         setSelectedTime("없음");

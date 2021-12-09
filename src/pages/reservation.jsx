@@ -21,12 +21,13 @@ const Reservation = () => {
   const [sidoPick, setSidoPick] = useState("110000");
   const [sigungu, setSigungu] = useState([]);
   const [sigunguPick, setSigunguPick] = useState("110001");
-  const [resultList, setResultList] = useState([]);
+  const [resultList, setResultList] = useState("");
   const [medicalInfo, setMedicalInfo] = useState("");
   const [medicalPick, setMedicalPick] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [cnt, setCnt] = useState(0);
   const [disable, setDisable] = useState(true);
+  const [response, setResponse] = useState("");
 
   const [search, setSearch] = useState(true);
 
@@ -92,7 +93,8 @@ const Reservation = () => {
                       startDate,
                       setResultList,
                       setMedicalPick,
-                      setSelectedTime
+                      setSelectedTime,
+                      setResponse
                     );
                   } else {
                     window.location.reload();
@@ -108,7 +110,7 @@ const Reservation = () => {
           </section>
           <section className="hospitalSection">
             <div className="preview">
-              {resultList ? (
+              {resultList != [] && resultList != "" ? (
                 resultList.map((data, i) => {
                   return (
                     <HospitalBigBox
@@ -122,8 +124,10 @@ const Reservation = () => {
                     />
                   );
                 })
+              ) : !response ? (
+                <h1 className="noContent">검색을 진행해주세요</h1>
               ) : (
-                <></>
+                <h1 className="noContent">검색결과 없음</h1>
               )}
             </div>
             {medicalPick != "" ? (
