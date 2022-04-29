@@ -20,4 +20,4 @@ You will also see any lint errors in the console.
 <img src=https://user-images.githubusercontent.com/73322485/156969363-7dc2f6e5-eb7e-41fa-a586-35739f1584e5.gif>
 
 기관 조회
-<img src=![기관조회](https://user-images.githubusercontent.com/73322485/165975500-6457198e-7340-4ce9-b02b-4c65b4925465.gif)>
+<img src=https://user-images.githubusercontent.com/73322485/165975500-6457198e-7340-4ce9-b02b-4c65b4925465.gif>
