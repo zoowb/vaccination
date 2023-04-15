@@ -1,20 +1,10 @@
-# Getting Started with Create React App
+# 백신 접종 예약 웹사이트
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+COVID-19 백신 접종을 원활하게 진행하기 위한 웹사이트입니다.
 
-## Available Scripts
+## 기능 미리보기
+(.gif 파일로 조금의 로딩이 있을 수 있습니다. 잠시만 기다려주시면 모든 이미지를 확인하실 수 있습니다.)
 
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-## Example
 홈화면
 
 [홈화면 차트]
